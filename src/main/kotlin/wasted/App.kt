@@ -6,7 +6,5 @@ import wasted.bot.Bot
 
 fun main(args: Array<String>) {
     ApiContextInitializer.init()
-    val telegramBotApi = TelegramBotsApi()
-    val bot = Bot(args[0])
-    telegramBotApi.registerBot(bot)
+    TelegramBotsApi().registerBot(Bot(args[0]))
 }
