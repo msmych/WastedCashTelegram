@@ -3,6 +3,7 @@ package wasted.bot
 enum class Emoji(val code: String) {
 
     WHITE_CHECK_MARK("✅"),
+    X("❌"),
 
     ONE("1️⃣"),
     TWO("2️⃣"),

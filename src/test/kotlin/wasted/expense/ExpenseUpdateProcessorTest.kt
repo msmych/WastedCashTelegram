@@ -1,4 +1,4 @@
-package wasted.bot
+package wasted.expense
 
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -10,36 +10,36 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 
-internal class HelpUpdateProcessorTest {
+internal class ExpenseUpdateProcessorTest {
 
     private val bot = mock(TelegramLongPollingBot::class.java)
 
-    private val helpUpdateProcessor = HelpUpdateProcessor()
+    private val expenseUpdateProcessor = ExpenseUpdateProcessor()
 
-    private var update = mock(Update::class.java)
-    private var message = mock(Message::class.java)
+    private val update = mock(Update::class.java)
+    private val message = mock(Message::class.java)
 
     @BeforeEach
     fun setUp() {
-        helpUpdateProcessor.bot = bot
+        expenseUpdateProcessor.bot = bot
         `when`(update.message).thenReturn(message)
     }
 
     @Test
     fun applies() {
-        `when`(message.text).thenReturn("/help")
-        assertTrue(helpUpdateProcessor.appliesTo(update))
+        `when`(message.text).thenReturn("/waste")
+        assertTrue(expenseUpdateProcessor.appliesTo(update))
     }
 
     @Test
     fun notApplies() {
         `when`(message.text).thenReturn("/wrong")
-        assertFalse(helpUpdateProcessor.appliesTo(update))
+        assertFalse(expenseUpdateProcessor.appliesTo(update))
     }
 
     @Test
     fun sending() {
-        helpUpdateProcessor.process(update)
+        expenseUpdateProcessor.process(update)
         verify(bot).execute(isA(SendMessage::class.java))
     }
 }
