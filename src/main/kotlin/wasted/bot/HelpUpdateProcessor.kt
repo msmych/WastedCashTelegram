@@ -2,6 +2,7 @@ package wasted.bot
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
@@ -10,7 +11,7 @@ import wasted.bot.update.processor.UpdateProcessor
 class HelpUpdateProcessor : UpdateProcessor {
 
     @Inject
-    lateinit var bot: Bot
+    lateinit var bot: TelegramLongPollingBot
 
     override fun appliesTo(update: Update): Boolean {
         val message = update.message ?: return false
