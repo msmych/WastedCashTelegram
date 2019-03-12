@@ -1,10 +1,15 @@
 package wasted.bot
 
+import com.google.inject.Singleton
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
+import wasted.bot.update.processor.UpdateProcessor
 
-class Bot(private val token: String) : TelegramLongPollingBot() {
+@Singleton
+class Bot : TelegramLongPollingBot() {
+
+    private val updateProcessors = HashSet<UpdateProcessor>()
+    lateinit var token: String
 
     override fun getBotUsername(): String {
         return "WastedCashBot"
@@ -17,13 +22,12 @@ class Bot(private val token: String) : TelegramLongPollingBot() {
     override fun onUpdateReceived(update: Update?) {
         if (update == null)
             return
-        val message = update.message
-        val text = message.text ?: return
-        if (text == "/help")
-            help(message.chatId)
+        updateProcessors
+            .filter{ up -> up.appliesTo(update) }
+            .forEach{ up -> up.process(update) }
     }
 
-    private fun help(chatId: Long) {
-        execute(SendMessage(chatId, "https://telegra.ph/Wasted-cash-03-11"))
+    fun addUpdateProcessor(vararg updateProcessor: UpdateProcessor) {
+        updateProcessors.addAll(updateProcessor)
     }
 }

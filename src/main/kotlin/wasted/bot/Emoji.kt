@@ -1,0 +1,18 @@
+package wasted.bot
+
+enum class Emoji(val code: String) {
+
+    WHITE_CHECK_MARK("✅"),
+
+    ONE("1️⃣"),
+    TWO("2️⃣"),
+    THREE("3️⃣"),
+    FOUR("4️⃣"),
+    FIVE("5️⃣"),
+    SIX("6️⃣"),
+    SEVEN("7️⃣"),
+    EIGHT("8️⃣"),
+    NINE("9️⃣"),
+    ZERO("0️⃣")
+
+}
