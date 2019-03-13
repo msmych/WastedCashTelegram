@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.ApiContext
 import org.telegram.telegrambots.meta.TelegramBotsApi
 import wasted.bot.Bot
 import wasted.bot.HelpUpdateProcessor
-import wasted.expense.ExpenseUpdateProcessor
+import wasted.expense.WastedUpdateProcessor
 
 fun main(args: Array<String>) {
     ApiContextInitializer.init()
@@ -14,7 +14,7 @@ fun main(args: Array<String>) {
     val bot = ApiContext.getInstance(Bot::class.java)
     bot.token = args[0]
     bot.addUpdateProcessor(
-        ApiContext.getInstance(ExpenseUpdateProcessor::class.java),
+        ApiContext.getInstance(WastedUpdateProcessor::class.java),
         ApiContext.getInstance(HelpUpdateProcessor::class.java))
     TelegramBotsApi().registerBot(bot)
 }

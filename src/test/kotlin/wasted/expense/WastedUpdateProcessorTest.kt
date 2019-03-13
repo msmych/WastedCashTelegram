@@ -9,25 +9,29 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
+import org.telegram.telegrambots.meta.api.objects.User
 
-internal class ExpenseUpdateProcessorTest {
+internal class WastedUpdateProcessorTest {
 
+    private val expenseCache = mock(ExpenseCache::class.java)
     private val bot = mock(TelegramLongPollingBot::class.java)
 
-    private val expenseUpdateProcessor = ExpenseUpdateProcessor()
+    private val expenseUpdateProcessor = WastedUpdateProcessor()
 
     private val update = mock(Update::class.java)
     private val message = mock(Message::class.java)
 
     @BeforeEach
     fun setUp() {
+        expenseUpdateProcessor.expenseCache = expenseCache
         expenseUpdateProcessor.bot = bot
         `when`(update.message).thenReturn(message)
+        `when`(message.from).thenReturn(mock(User::class.java))
     }
 
     @Test
     fun applies() {
-        `when`(message.text).thenReturn("/waste")
+        `when`(message.text).thenReturn("/wasted")
         assertTrue(expenseUpdateProcessor.appliesTo(update))
     }
 
@@ -40,6 +44,7 @@ internal class ExpenseUpdateProcessorTest {
     @Test
     fun sending() {
         expenseUpdateProcessor.process(update)
+        verify(expenseCache).put(anyInt(), anyLong())
         verify(bot).execute(isA(SendMessage::class.java))
     }
 }
