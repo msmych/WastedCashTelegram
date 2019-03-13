@@ -1,0 +1,13 @@
+package wasted.expense
+
+data class ExpenseCacheItem(val chatId: Long,
+                val amount: Long,
+                val currency: String,
+                val category: String) {
+
+    companion object {
+        fun updateAmount(item: ExpenseCacheItem, amount: Long): ExpenseCacheItem {
+            return ExpenseCacheItem(item.chatId, amount, item.currency, item.category)
+        }
+    }
+}
