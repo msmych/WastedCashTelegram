@@ -15,10 +15,14 @@ class WastedClickUpdateProcessor : UpdateProcessor {
     override fun appliesTo(update: Update): Boolean {
         val callbackQuery = update.callbackQuery ?: return false
         val data = callbackQuery.data ?: return false
-        return data.length <= 10
-                && data.toLongOrNull() != null
-                && expenseCache.contains(update.callbackQuery.from.id)
-                && (expenseCache.get(update.callbackQuery.from.id).amount != 0L || data.toLong() != 0L)
+        val fromId = callbackQuery.from.id
+        if (data.length > 10
+            || data.toLongOrNull() == null
+            || !expenseCache.contains(fromId))
+            return false
+        val item = expenseCache.get(fromId)
+        return (item.amount != 0L || data.toLong() != 0L)
+                && item.chatId == callbackQuery.message.chatId
     }
 
     override fun process(update: Update) {

@@ -16,13 +16,19 @@ class ExpenseCacheInMemory : ExpenseCache {
         return cache.containsKey(userId)
     }
 
+    override fun get(userId: Int): ExpenseCacheItem {
+        return cache[userId] ?: throw IllegalArgumentException()
+    }
+
     override fun updateAmount(userId: Int, amount: Long): ExpenseCacheItem {
         val item = ExpenseCacheItem.updateAmount(cache[userId] ?: throw IllegalArgumentException(), amount)
         cache[userId] = item
         return item
     }
 
-    override fun get(userId: Int): ExpenseCacheItem {
-        return cache[userId] ?: throw IllegalArgumentException()
+    override fun updateCurrency(userId: Int, currency: Currency): ExpenseCacheItem {
+        val item = ExpenseCacheItem.updateCurrency(cache[userId] ?: throw IllegalArgumentException(), currency)
+        cache[userId] = item
+        return item
     }
 }

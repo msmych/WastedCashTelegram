@@ -18,6 +18,7 @@ enum class Emoji(val code: String) {
 
     WHITE_CHECK_MARK("✅"),
     X("❌"),
+    ARROW_LEFT("⬅️"),
     ARROW_BACKWARD("◀️"),
 
     ONE("1️⃣"),

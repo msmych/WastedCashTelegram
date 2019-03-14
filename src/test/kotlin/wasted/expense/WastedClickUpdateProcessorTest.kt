@@ -41,6 +41,7 @@ internal class WastedClickUpdateProcessorTest {
         whenever(callbackQuery.from).thenReturn(from)
         whenever(callbackQuery.data).thenReturn("12345")
         whenever(callbackQuery.message).thenReturn(message)
+        whenever(message.chatId).thenReturn(1)
         whenever(expenseCache.contains(any())).thenReturn(true)
         whenever(expenseCache.get(any())).thenReturn(ExpenseCacheItem(1, 1000, usd, SHOPPING))
     }
@@ -65,6 +66,12 @@ internal class WastedClickUpdateProcessorTest {
     @Test
     fun notInCacheNotApplies() {
         whenever(expenseCache.contains(any())).thenReturn(false)
+        assertFalse(wastedClickUpdateProcessor.appliesTo(update))
+    }
+
+    @Test
+    fun anotherChatNotApplies() {
+        whenever(expenseCache.get(any())).thenReturn(ExpenseCacheItem(111, 1000, usd, SHOPPING))
         assertFalse(wastedClickUpdateProcessor.appliesTo(update))
     }
 

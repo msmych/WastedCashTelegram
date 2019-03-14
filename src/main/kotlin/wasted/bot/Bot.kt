@@ -23,8 +23,8 @@ class Bot : TelegramLongPollingBot() {
         if (update == null)
             return
         updateProcessors
-            .filter{ up -> up.appliesTo(update) }
-            .forEach{ up -> up.process(update) }
+            .filter{ it.appliesTo(update) }
+            .forEach{ it.process(update) }
     }
 
     fun addUpdateProcessor(vararg updateProcessor: UpdateProcessor) {

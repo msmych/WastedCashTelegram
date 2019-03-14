@@ -8,4 +8,5 @@ interface ExpenseCache {
     fun contains(userId: Int): Boolean
     fun get(userId: Int): ExpenseCacheItem
     fun updateAmount(userId: Int, amount: Long): ExpenseCacheItem
+    fun updateCurrency(userId: Int, currency: Currency): ExpenseCacheItem
 }

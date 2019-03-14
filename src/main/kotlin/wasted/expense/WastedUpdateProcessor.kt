@@ -5,18 +5,18 @@ import com.google.inject.Singleton
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
 import wasted.expense.ExpenseCategory.OTHER
+import wasted.expense.currency.UserCurrenciesService
 import wasted.keypad.NumericKeypad
-import java.util.*
 
 @Singleton
 class WastedUpdateProcessor : UpdateProcessor {
-
-    private val usd = Currency.getInstance("USD")
 
     @Inject
     lateinit var expenseCache: ExpenseCache
     @Inject
     lateinit var numericKeypad: NumericKeypad
+    @Inject
+    lateinit var userCurrenciesService: UserCurrenciesService
 
     override fun appliesTo(update: Update): Boolean {
         val message = update.message ?: return false
@@ -25,7 +25,9 @@ class WastedUpdateProcessor : UpdateProcessor {
     }
 
     override fun process(update: Update) {
-        expenseCache.put(update.message.from.id, update.message.chatId, usd, OTHER)
-        numericKeypad.send(update.message.chatId, 0, usd)
+        val fromId = update.message.from.id
+        val currency = userCurrenciesService.getCurrencies(fromId)[0]
+        expenseCache.put(fromId, update.message.chatId, currency, OTHER)
+        numericKeypad.send(update.message.chatId, 0, currency)
     }
 }
