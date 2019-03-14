@@ -11,7 +11,7 @@ import wasted.keypad.NumericKeypad
 class NextCurrencyUpdateProcessor : UpdateProcessor {
 
     @Inject
-    lateinit var userCurrenciesService: UserCurrenciesService
+    lateinit var userCurrencies: UserCurrencies
     @Inject
     lateinit var expenseCache: ExpenseCache
     @Inject
@@ -28,7 +28,7 @@ class NextCurrencyUpdateProcessor : UpdateProcessor {
 
     override fun process(update: Update) {
         val fromId = update.callbackQuery.from.id
-        val currencies = userCurrenciesService.getCurrencies(fromId)
+        val currencies = userCurrencies.getCurrencies(fromId)
         val item = expenseCache.updateCurrency(fromId,
             currencies[(currencies.indexOf(expenseCache.get(fromId).currency) + 1) % currencies.size])
         numericKeypad.update(

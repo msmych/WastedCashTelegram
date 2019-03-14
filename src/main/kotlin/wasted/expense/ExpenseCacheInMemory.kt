@@ -20,8 +20,8 @@ class ExpenseCacheInMemory : ExpenseCache {
         return cache[userId] ?: throw IllegalArgumentException()
     }
 
-    override fun remove(fromId: Int) {
-        cache.remove(fromId)
+    override fun remove(fromId: Int): ExpenseCacheItem {
+        return cache.remove(fromId) ?: throw IllegalArgumentException()
     }
 
     override fun updateAmount(userId: Int, amount: Long): ExpenseCacheItem {

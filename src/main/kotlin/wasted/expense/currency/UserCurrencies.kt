@@ -2,7 +2,7 @@ package wasted.expense.currency
 
 import java.util.*
 
-interface UserCurrenciesService {
+interface UserCurrencies {
 
     fun getCurrencies(userId: Int): List<Currency>
 }

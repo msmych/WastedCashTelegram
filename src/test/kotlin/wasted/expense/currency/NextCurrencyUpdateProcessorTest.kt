@@ -27,7 +27,7 @@ internal class NextCurrencyUpdateProcessorTest {
     private val currencies = Stream.of("USD", "EUR", "RUB").map{ Currency.getInstance(it) }.toList()
 
     private val bot = mock<TelegramLongPollingBot>()
-    private val userCurrenciesService = mock<UserCurrenciesService>()
+    private val userCurrenciesService = mock<UserCurrencies>()
     private val expenseCache = mock<ExpenseCache>()
     private val numericKeypad = NumericKeypad()
 
@@ -40,7 +40,7 @@ internal class NextCurrencyUpdateProcessorTest {
 
     @BeforeEach
     fun setUp() {
-        nextCurrencyUpdateProcessor.userCurrenciesService = userCurrenciesService
+        nextCurrencyUpdateProcessor.userCurrencies = userCurrenciesService
         numericKeypad.bot = bot
         nextCurrencyUpdateProcessor.numericKeypad = numericKeypad
         nextCurrencyUpdateProcessor.expenseCache = expenseCache

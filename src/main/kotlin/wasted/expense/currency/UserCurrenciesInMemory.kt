@@ -6,7 +6,7 @@ import java.util.stream.Stream
 import kotlin.streams.toList
 
 @Singleton
-class UserCurrenciesServiceInMemory : UserCurrenciesService {
+class UserCurrenciesInMemory : UserCurrencies {
 
     override fun getCurrencies(userId: Int): List<Currency> {
         return Stream.of("USD", "EUR", "RUB")
