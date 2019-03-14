@@ -42,11 +42,11 @@ class NumericKeypad {
         return "`$sb ${currency.symbol}`"
     }
 
-    private fun getMarkup(amount: Long, currency: Currency): InlineKeyboardMarkup {
+    private fun getMarkup(a: Long, c: Currency): InlineKeyboardMarkup {
         return InlineKeyboardMarkup().setKeyboard(listOf(
-            listOf(ikb(ONE, "${amount}1"), ikb(TWO, "${amount}2"), ikb(THREE, "${amount}3"), ikb(WHITE_CHECK_MARK, "ok")),
-            listOf(ikb(FOUR, "${amount}4"), ikb(FIVE, "${amount}5"), ikb(SIX, "${amount}6"), ikb(ARROW_BACKWARD, "${amount / 10}")),
-            listOf(ikb(SEVEN, "${amount}7"), ikb(EIGHT, "${amount}8"), ikb(NINE, "${amount}9"), ikb(ARROW_LEFT, "0")),
-            listOf(ikb(currency.symbol, "next_currency"), ikb(ZERO, "${amount}0"), ikb(ZERO.code + ZERO.code, "${amount}00"), ikb(X, "cancel"))))
+            listOf(ikb(ONE, "${a}1"), ikb(TWO, "${a}2"), ikb(THREE, "${a}3"), ikb(WHITE_CHECK_MARK, "ok")),
+            listOf(ikb(FOUR, "${a}4"), ikb(FIVE, "${a}5"), ikb(SIX, "${a}6"), ikb(ARROW_BACKWARD, "${a / 10}")),
+            listOf(ikb(SEVEN, "${a}7"), ikb(EIGHT, "${a}8"), ikb(NINE, "${a}9"), ikb(ARROW_LEFT, "0")),
+            listOf(ikb(c.symbol, "next_currency"), ikb(ZERO, "${a}0"), ikb(ZERO.code + ZERO.code, "${a}00"), ikb(X, "cancel"))))
     }
 }

@@ -20,6 +20,10 @@ class ExpenseCacheInMemory : ExpenseCache {
         return cache[userId] ?: throw IllegalArgumentException()
     }
 
+    override fun remove(fromId: Int) {
+        cache.remove(fromId)
+    }
+
     override fun updateAmount(userId: Int, amount: Long): ExpenseCacheItem {
         val item = ExpenseCacheItem.updateAmount(cache[userId] ?: throw IllegalArgumentException(), amount)
         cache[userId] = item
