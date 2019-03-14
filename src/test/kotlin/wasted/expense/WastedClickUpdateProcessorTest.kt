@@ -13,6 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
+import wasted.expense.ExpenseCategory.SHOPPING
 import wasted.keypad.NumericKeypad
 import java.util.*
 
@@ -41,7 +42,7 @@ internal class WastedClickUpdateProcessorTest {
         whenever(callbackQuery.data).thenReturn("12345")
         whenever(callbackQuery.message).thenReturn(message)
         whenever(expenseCache.contains(any())).thenReturn(true)
-        whenever(expenseCache.get(any())).thenReturn(ExpenseCacheItem(1, 1000, usd, "FOOD"))
+        whenever(expenseCache.get(any())).thenReturn(ExpenseCacheItem(1, 1000, usd, SHOPPING))
     }
 
     @Test
@@ -70,7 +71,7 @@ internal class WastedClickUpdateProcessorTest {
     @Test
     fun noChangeNotApplies() {
         whenever(expenseCache.get(any()))
-            .thenReturn(ExpenseCacheItem(1, 0, usd, "FOOD"))
+            .thenReturn(ExpenseCacheItem(1, 0, usd, SHOPPING))
         whenever(callbackQuery.data).thenReturn("0")
         assertFalse(wastedClickUpdateProcessor.appliesTo(update))
     }
@@ -78,7 +79,7 @@ internal class WastedClickUpdateProcessorTest {
     @Test
     fun processing() {
         whenever(expenseCache.updateAmount(any(), any()))
-            .thenReturn(ExpenseCacheItem(1, 1000, usd, "FOOD"))
+            .thenReturn(ExpenseCacheItem(1, 1000, usd, SHOPPING))
         wastedClickUpdateProcessor.process(update)
         verify(expenseCache).updateAmount(any(), any())
     }

@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap
 class ExpenseCacheInMemory : ExpenseCache {
     private val cache = ConcurrentHashMap<Int, ExpenseCacheItem>()
 
-    override fun put(userId: Int, chatId: Long, currency: Currency, category: String) {
+    override fun put(userId: Int, chatId: Long, currency: Currency, category: ExpenseCategory) {
         cache[userId] = ExpenseCacheItem(chatId, 0, currency, category)
     }
 

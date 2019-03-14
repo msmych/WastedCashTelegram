@@ -4,6 +4,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
+import wasted.expense.ExpenseCategory.OTHER
 import wasted.keypad.NumericKeypad
 import java.util.*
 
@@ -24,7 +25,7 @@ class WastedUpdateProcessor : UpdateProcessor {
     }
 
     override fun process(update: Update) {
-        expenseCache.put(update.message.from.id, update.message.chatId, usd, "FOOD")
+        expenseCache.put(update.message.from.id, update.message.chatId, usd, OTHER)
         numericKeypad.send(update.message.chatId, 0, usd)
     }
 }

@@ -5,7 +5,7 @@ import java.util.*
 data class ExpenseCacheItem(val chatId: Long,
                             val amount: Long,
                             val currency: Currency,
-                            val category: String) {
+                            val category: ExpenseCategory) {
 
     companion object {
         fun updateAmount(item: ExpenseCacheItem, amount: Long): ExpenseCacheItem {
