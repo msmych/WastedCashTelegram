@@ -4,7 +4,6 @@ import com.google.inject.Inject
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
 import wasted.keypad.NumericKeypad
-import java.util.*
 
 class WastedClickUpdateProcessor : UpdateProcessor {
 
@@ -28,6 +27,6 @@ class WastedClickUpdateProcessor : UpdateProcessor {
             update.callbackQuery.message.chatId,
             update.callbackQuery.message.messageId,
             item.amount,
-            Currency.getInstance(item.currency))
+            item.currency)
     }
 }

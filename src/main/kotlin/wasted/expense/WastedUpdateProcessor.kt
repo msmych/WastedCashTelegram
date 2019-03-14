@@ -10,6 +10,8 @@ import java.util.*
 @Singleton
 class WastedUpdateProcessor : UpdateProcessor {
 
+    private val usd = Currency.getInstance("USD")
+
     @Inject
     lateinit var expenseCache: ExpenseCache
     @Inject
@@ -22,7 +24,7 @@ class WastedUpdateProcessor : UpdateProcessor {
     }
 
     override fun process(update: Update) {
-        expenseCache.put(update.message.from.id, update.message.chatId, "USD", "FOOD")
-        numericKeypad.send(update.message.chatId, 0, Currency.getInstance("USD"))
+        expenseCache.put(update.message.from.id, update.message.chatId, usd, "FOOD")
+        numericKeypad.send(update.message.chatId, 0, usd)
     }
 }

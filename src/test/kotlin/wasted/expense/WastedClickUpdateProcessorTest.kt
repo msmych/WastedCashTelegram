@@ -1,42 +1,47 @@
 package wasted.expense
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.Mockito.*
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
 import wasted.keypad.NumericKeypad
+import java.util.*
 
 internal class WastedClickUpdateProcessorTest {
 
-    private val expenseCache = mock(ExpenseCache::class.java)
+    private val usd = Currency.getInstance("USD")
+
+    private val expenseCache = mock<ExpenseCache>()
     private val numericKeypad = NumericKeypad()
-    private val bot = mock(TelegramLongPollingBot::class.java)
+    private val bot = mock<TelegramLongPollingBot>()
 
     private val wastedClickUpdateProcessor = WastedClickUpdateProcessor()
 
-    private val update = mock(Update::class.java)
-    private val callbackQuery = mock(CallbackQuery::class.java)
-    private val from = mock(User::class.java)
-    private val message = mock(Message::class.java)
+    private val update = mock<Update>()
+    private val callbackQuery = mock<CallbackQuery>()
+    private val from = mock<User>()
+    private val message = mock<Message>()
 
     @BeforeEach
     fun setUp() {
         numericKeypad.bot = bot
         wastedClickUpdateProcessor.numericKeypad = numericKeypad
         wastedClickUpdateProcessor.expenseCache = expenseCache
-        `when`(update.callbackQuery).thenReturn(callbackQuery)
-        `when`(callbackQuery.from).thenReturn(from)
-        `when`(callbackQuery.data).thenReturn("12345")
-        `when`(callbackQuery.message).thenReturn(message)
-        `when`(expenseCache.contains(anyInt())).thenReturn(true)
-        `when`(expenseCache.get(anyInt())).thenReturn(ExpenseCacheItem(1, 1000, "USD", "FOOD"))
+        whenever(update.callbackQuery).thenReturn(callbackQuery)
+        whenever(callbackQuery.from).thenReturn(from)
+        whenever(callbackQuery.data).thenReturn("12345")
+        whenever(callbackQuery.message).thenReturn(message)
+        whenever(expenseCache.contains(any())).thenReturn(true)
+        whenever(expenseCache.get(any())).thenReturn(ExpenseCacheItem(1, 1000, usd, "FOOD"))
     }
 
     @Test
@@ -46,35 +51,35 @@ internal class WastedClickUpdateProcessorTest {
 
     @Test
     fun over10notApplies() {
-        `when`(callbackQuery.data).thenReturn("12345678901234")
+        whenever(callbackQuery.data).thenReturn("12345678901234")
         assertFalse(wastedClickUpdateProcessor.appliesTo(update))
     }
 
     @Test
     fun lettersNotApplies() {
-        `when`(callbackQuery.data).thenReturn("asdf")
+        whenever(callbackQuery.data).thenReturn("asdf")
         assertFalse(wastedClickUpdateProcessor.appliesTo(update))
     }
 
     @Test
     fun notInCacheNotApplies() {
-        `when`(expenseCache.contains(anyInt())).thenReturn(false)
+        whenever(expenseCache.contains(any())).thenReturn(false)
         assertFalse(wastedClickUpdateProcessor.appliesTo(update))
     }
 
     @Test
     fun noChangeNotApplies() {
-        `when`(expenseCache.get(anyInt()))
-            .thenReturn(ExpenseCacheItem(1, 0, "USD", "FOOD"))
-        `when`(callbackQuery.data).thenReturn("0")
+        whenever(expenseCache.get(any()))
+            .thenReturn(ExpenseCacheItem(1, 0, usd, "FOOD"))
+        whenever(callbackQuery.data).thenReturn("0")
         assertFalse(wastedClickUpdateProcessor.appliesTo(update))
     }
 
     @Test
     fun processing() {
-        `when`(expenseCache.updateAmount(anyInt(), anyLong()))
-            .thenReturn(ExpenseCacheItem(1, 1000, "USD", "FOOD"))
+        whenever(expenseCache.updateAmount(any(), any()))
+            .thenReturn(ExpenseCacheItem(1, 1000, usd, "FOOD"))
         wastedClickUpdateProcessor.process(update)
-        verify(expenseCache).updateAmount(anyInt(), anyLong())
+        verify(expenseCache).updateAmount(any(), any())
     }
 }

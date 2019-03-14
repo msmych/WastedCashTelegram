@@ -1,9 +1,11 @@
 package wasted.expense
 
+import java.util.*
+
 data class ExpenseCacheItem(val chatId: Long,
-                val amount: Long,
-                val currency: String,
-                val category: String) {
+                            val amount: Long,
+                            val currency: Currency,
+                            val category: String) {
 
     companion object {
         fun updateAmount(item: ExpenseCacheItem, amount: Long): ExpenseCacheItem {
