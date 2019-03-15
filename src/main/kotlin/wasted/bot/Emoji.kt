@@ -20,6 +20,7 @@ enum class Emoji(val code: String) {
     X("❌"),
     ARROW_LEFT("⬅️"),
     ARROW_BACKWARD("◀️"),
+    E1234("\uD83D\uDD22"),
 
     ONE("1️⃣"),
     TWO("2️⃣"),

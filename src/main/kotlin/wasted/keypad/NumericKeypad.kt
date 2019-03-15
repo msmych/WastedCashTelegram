@@ -35,9 +35,9 @@ class NumericKeypad {
 
     private fun getMarkup(a: Long, c: Currency): InlineKeyboardMarkup {
         return InlineKeyboardMarkup().setKeyboard(listOf(
-            listOf(ikb(ONE, "${a}1"), ikb(TWO, "${a}2"), ikb(THREE, "${a}3"), ikb(WHITE_CHECK_MARK, "ok")),
-            listOf(ikb(FOUR, "${a}4"), ikb(FIVE, "${a}5"), ikb(SIX, "${a}6"), ikb(ARROW_BACKWARD, "${a / 10}")),
-            listOf(ikb(SEVEN, "${a}7"), ikb(EIGHT, "${a}8"), ikb(NINE, "${a}9"), ikb(ARROW_LEFT, "0")),
-            listOf(ikb(c.symbol, "next_currency"), ikb(ZERO, "${a}0"), ikb(ZERO.code + ZERO.code, "${a}00"), ikb(X, "cancel"))))
+            listOf(ikb("·  1  ·", "${a}1"), ikb("·  2  ·", "${a}2"), ikb("·  3  ·", "${a}3"), ikb(c.symbol, "next_currency")),
+            listOf(ikb("·  4  ·", "${a}4"), ikb("·  5  ·", "${a}5"), ikb("·  6  ·", "${a}6"), ikb("←", "${a / 10}")),
+            listOf(ikb("·  7  ·", "${a}7"), ikb("·  8  ·", "${a}8"), ikb("·  9  ·", "${a}9"), ikb("AC", "0")),
+            listOf(ikb(X, "cancel"), ikb("·  0  ·", "${a}0"), ikb("· 00 ·", "${a}00"), ikb(WHITE_CHECK_MARK, "ok"))))
     }
 }
