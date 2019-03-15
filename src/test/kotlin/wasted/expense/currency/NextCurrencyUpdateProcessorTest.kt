@@ -17,7 +17,10 @@ import org.telegram.telegrambots.meta.api.objects.User
 import wasted.expense.ExpenseCache
 import wasted.expense.ExpenseCacheItem
 import wasted.expense.ExpenseCategory.SHOPPING
+import wasted.expense.NextCurrencyUpdateProcessor
 import wasted.keypad.NumericKeypad
+import wasted.rest.RestClient
+import wasted.user.UserService
 import java.util.*
 import java.util.stream.Stream
 import kotlin.streams.toList
@@ -27,7 +30,8 @@ internal class NextCurrencyUpdateProcessorTest {
     private val currencies = Stream.of("USD", "EUR", "RUB").map{ Currency.getInstance(it) }.toList()
 
     private val bot = mock<TelegramLongPollingBot>()
-    private val userCurrenciesService = mock<UserCurrencies>()
+    private val userService = UserService()
+    private val restClient = mock<RestClient>()
     private val expenseCache = mock<ExpenseCache>()
     private val numericKeypad = NumericKeypad()
 
@@ -40,7 +44,8 @@ internal class NextCurrencyUpdateProcessorTest {
 
     @BeforeEach
     fun setUp() {
-        nextCurrencyUpdateProcessor.userCurrencies = userCurrenciesService
+        nextCurrencyUpdateProcessor.userService = userService
+        userService.restClient = restClient
         numericKeypad.bot = bot
         nextCurrencyUpdateProcessor.numericKeypad = numericKeypad
         nextCurrencyUpdateProcessor.expenseCache = expenseCache
@@ -73,7 +78,8 @@ internal class NextCurrencyUpdateProcessorTest {
 
     @Test
     fun processing() {
-        whenever(userCurrenciesService.getCurrencies(any())).thenReturn(currencies)
+        whenever(restClient.getUserCurrencies(any()))
+            .thenReturn(listOf(Currency.getInstance("USD")))
         whenever(expenseCache.get(any()))
             .thenReturn(ExpenseCacheItem(1, 1000, currencies[0], SHOPPING))
         whenever(expenseCache.updateCurrency(any(), any()))

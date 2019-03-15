@@ -1,17 +1,17 @@
-package wasted.expense.currency
+package wasted.expense
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
-import wasted.expense.ExpenseCache
 import wasted.keypad.NumericKeypad
+import wasted.user.UserService
 
 @Singleton
 class NextCurrencyUpdateProcessor : UpdateProcessor {
 
     @Inject
-    lateinit var userCurrencies: UserCurrencies
+    lateinit var userService: UserService
     @Inject
     lateinit var expenseCache: ExpenseCache
     @Inject
@@ -28,7 +28,7 @@ class NextCurrencyUpdateProcessor : UpdateProcessor {
 
     override fun process(update: Update) {
         val fromId = update.callbackQuery.from.id
-        val currencies = userCurrencies.getCurrencies(fromId)
+        val currencies = userService.getCurrencies(fromId)
         val item = expenseCache.updateCurrency(fromId,
             currencies[(currencies.indexOf(expenseCache.get(fromId).currency) + 1) % currencies.size])
         numericKeypad.update(

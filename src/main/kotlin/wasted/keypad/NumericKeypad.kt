@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 import wasted.bot.Emoji.*
 import wasted.bot.ikb
+import wasted.expense.formatAmount
 import java.util.*
 
 @Singleton
@@ -18,7 +19,7 @@ class NumericKeypad {
     lateinit var bot: TelegramLongPollingBot
 
     fun send(chatId: Long, amount: Long, currency: Currency) {
-        bot.execute(SendMessage(chatId, formatText(amount, currency))
+        bot.execute(SendMessage(chatId, formatAmount(amount, currency))
             .setParseMode(MARKDOWN)
             .setReplyMarkup(getMarkup(amount, currency)))
     }
@@ -27,19 +28,9 @@ class NumericKeypad {
         bot.execute(EditMessageText()
             .setChatId(chatId)
             .setMessageId(messageId)
-            .setText(formatText(amount, currency))
+            .setText(formatAmount(amount, currency))
             .setParseMode(MARKDOWN)
             .setReplyMarkup(getMarkup(amount, currency)))
-    }
-
-    private fun formatText(amount: Long, currency: Currency): String {
-        val sb = StringBuilder(amount.toString())
-        if (amount < 100)
-            sb.insert(0, '0')
-        if (amount < 10)
-            sb.insert(0, '0')
-        sb.insert(sb.length - 2, '.')
-        return "`$sb ${currency.symbol}`"
     }
 
     private fun getMarkup(a: Long, c: Currency): InlineKeyboardMarkup {

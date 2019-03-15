@@ -32,7 +32,7 @@ class OkUpdateProcessor : UpdateProcessor {
         bot.execute(EditMessageText()
             .setChatId(update.callbackQuery.message.chatId)
             .setMessageId(update.callbackQuery.message.messageId)
-            .setText("Wasted `${item.amount} ${item.currency.symbol}`")
+            .setText("Wasted ${formatAmount(item.amount, item.currency)}")
             .setParseMode(MARKDOWN))
     }
 }

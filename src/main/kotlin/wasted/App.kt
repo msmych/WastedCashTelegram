@@ -8,9 +8,7 @@ import org.telegram.telegrambots.meta.TelegramBotsApi
 import wasted.bot.Bot
 import wasted.bot.HelpUpdateProcessor
 import wasted.expense.*
-import wasted.expense.currency.NextCurrencyUpdateProcessor
-import wasted.expense.currency.UserCurrencies
-import wasted.expense.currency.UserCurrenciesInMemory
+import wasted.expense.NextCurrencyUpdateProcessor
 import wasted.rest.RestClient
 import wasted.rest.RestClientStub
 
@@ -18,7 +16,6 @@ fun main(args: Array<String>) {
     init()
     register(TelegramLongPollingBot::class.java, Bot::class.java)
     register(ExpenseCache::class.java, ExpenseCacheInMemory::class.java)
-    register(UserCurrencies::class.java, UserCurrenciesInMemory::class.java)
     register(RestClient::class.java, RestClientStub::class.java)
     val bot = getInstance(Bot::class.java)
     bot.token = args[0]
