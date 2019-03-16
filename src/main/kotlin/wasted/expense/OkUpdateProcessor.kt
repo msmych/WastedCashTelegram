@@ -32,10 +32,11 @@ class OkUpdateProcessor : UpdateProcessor {
 
     override fun process(update: Update) {
         val fromId = update.callbackQuery.from.id
+        val chatId = update.callbackQuery.message.chatId
         val item = expenseCache.remove(fromId)
-        restClient.saveExpense(fromId, update.callbackQuery.message.chatId, item.amount, item.currency, item.category)
+        restClient.saveExpense(fromId, chatId, item.amount, item.currency, item.category)
         bot.execute(EditMessageText()
-            .setChatId(update.callbackQuery.message.chatId)
+            .setChatId(chatId)
             .setMessageId(update.callbackQuery.message.messageId)
             .setText("Wasted ${formatAmount(item.amount, item.currency)}")
             .setParseMode(MARKDOWN)
