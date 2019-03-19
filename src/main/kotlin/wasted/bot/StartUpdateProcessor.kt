@@ -1,10 +1,10 @@
-package wasted.user
+package wasted.bot
 
+import com.google.inject.Inject
+import com.google.inject.Singleton
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
 import wasted.rest.RestClient
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
 class StartUpdateProcessor : UpdateProcessor {

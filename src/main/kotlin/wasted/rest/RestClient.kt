@@ -5,7 +5,7 @@ import java.util.*
 
 interface RestClient  {
 
-    fun createUser(userId: Int)
+    fun updateUser(userId: Int)
     fun getUserCurrencies(userId: Int): List<Currency>
     fun saveExpense(userId: Int, chatId: Long, amount: Long, currency: Currency, category: ExpenseCategory)
 }

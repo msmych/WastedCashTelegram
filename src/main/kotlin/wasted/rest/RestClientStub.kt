@@ -9,7 +9,7 @@ import kotlin.streams.toList
 
 class RestClientStub : RestClient {
 
-    override fun createUser(userId: Int) {}
+    override fun updateUser(userId: Int) {}
 
     override fun getUserCurrencies(userId: Int): List<Currency> {
         return Stream.of("USD", "EUR", "RUB")

@@ -7,8 +7,8 @@ import org.telegram.telegrambots.meta.ApiContext.register
 import org.telegram.telegrambots.meta.TelegramBotsApi
 import wasted.bot.Bot
 import wasted.bot.HelpUpdateProcessor
+import wasted.bot.StartUpdateProcessor
 import wasted.expense.*
-import wasted.expense.NextCurrencyUpdateProcessor
 import wasted.rest.RestClient
 import wasted.rest.RestClientStub
 
@@ -20,6 +20,7 @@ fun main(args: Array<String>) {
     val bot = getInstance(Bot::class.java)
     bot.token = args[0]
     bot.addUpdateProcessor(
+        getInstance(StartUpdateProcessor::class.java),
         getInstance(WastedUpdateProcessor::class.java),
         getInstance(WastedClickUpdateProcessor::class.java),
         getInstance(HelpUpdateProcessor::class.java),
