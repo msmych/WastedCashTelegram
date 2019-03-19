@@ -2,14 +2,12 @@ package wasted.rest
 
 import wasted.expense.ExpenseCategory
 import java.util.*
-import java.util.stream.Collectors
-import java.util.stream.Collectors.*
 import java.util.stream.Stream
 import kotlin.streams.toList
 
 class RestClientStub : RestClient {
 
-    override fun updateUser(userId: Int) {}
+    override fun createUser(userId: Int) {}
 
     override fun getUserCurrencies(userId: Int): List<Currency> {
         return Stream.of("USD", "EUR", "RUB")
@@ -17,5 +15,6 @@ class RestClientStub : RestClient {
             .toList()
     }
 
-    override fun saveExpense(userId: Int, chatId: Long, amount: Long, currency: Currency, category: ExpenseCategory) {}
+    override fun saveExpense(userId: Int, chatId: Long, messageId: Int,
+                             amount: Long, currency: Currency, category: ExpenseCategory) {}
 }

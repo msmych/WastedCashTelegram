@@ -7,8 +7,8 @@ import org.telegram.telegrambots.meta.api.methods.ParseMode.MARKDOWN
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
-import wasted.bot.Emoji
-import wasted.bot.Emoji.*
+import wasted.bot.Emoji.E1234
+import wasted.bot.Emoji.X
 import wasted.bot.ikb
 import wasted.bot.update.processor.UpdateProcessor
 import wasted.expense.ExpenseCategory.*
@@ -33,11 +33,12 @@ class OkUpdateProcessor : UpdateProcessor {
     override fun process(update: Update) {
         val fromId = update.callbackQuery.from.id
         val chatId = update.callbackQuery.message.chatId
+        val messageId = update.callbackQuery.message.messageId
         val item = expenseCache.remove(fromId)
-        restClient.saveExpense(fromId, chatId, item.amount, item.currency, item.category)
+        restClient.saveExpense(fromId, chatId, messageId, item.amount, item.currency, item.category)
         bot.execute(EditMessageText()
             .setChatId(chatId)
-            .setMessageId(update.callbackQuery.message.messageId)
+            .setMessageId(messageId)
             .setText("Wasted ${formatAmount(item.amount, item.currency)}")
             .setParseMode(MARKDOWN)
             .setReplyMarkup(getMarkup()))

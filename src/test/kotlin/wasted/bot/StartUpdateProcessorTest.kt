@@ -35,6 +35,6 @@ internal class StartUpdateProcessorTest {
     @Test
     fun processing() {
         startUpdateProcessor.process(update)
-        verify(restClient).updateUser(any())
+        verify(restClient).createUser(any())
     }
 }

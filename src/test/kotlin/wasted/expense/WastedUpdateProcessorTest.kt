@@ -36,6 +36,7 @@ internal class WastedUpdateProcessorTest {
         expenseUpdateProcessor.expenseCache = expenseCache
         expenseUpdateProcessor.userService = userService
         userService.restClient = restClient
+        expenseUpdateProcessor.restClient = restClient
         whenever(update.message).thenReturn(message)
         whenever(message.from).thenReturn(mock())
     }
@@ -57,6 +58,7 @@ internal class WastedUpdateProcessorTest {
         whenever(restClient.getUserCurrencies(any()))
             .thenReturn(listOf(Currency.getInstance("USD")))
         expenseUpdateProcessor.process(update)
+        verify(restClient).createUser(any())
         verify(expenseCache).put(any(), any(), any(), any())
     }
 }

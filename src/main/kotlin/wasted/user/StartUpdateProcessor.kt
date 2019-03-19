@@ -19,6 +19,6 @@ class StartUpdateProcessor : UpdateProcessor {
     }
 
     override fun process(update: Update) {
-        restClient.updateUser(update.message.from.id)
+        restClient.createUser(update.message.from.id)
     }
 }
