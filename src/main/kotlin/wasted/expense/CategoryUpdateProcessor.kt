@@ -38,7 +38,7 @@ class CategoryUpdateProcessor : UpdateProcessor {
         bot.execute(EditMessageText()
             .setChatId(chatId)
             .setMessageId(messageId)
-            .setText("${formatAmount(expense.amount, currency)} for ${category.emoji.code}")
+            .setText("Wasted ${formatAmount(expense.amount, currency)} for ${category.emoji.code}")
             .setParseMode(MARKDOWN)
             .setReplyMarkup(InlineKeyboardMarkup().setKeyboard(listOf(
                 listOf(ikb(X, "cancel"), ikb(E1234, "edit_amount"), ikb(BLACK_JOKER, "edit_category"))))))
