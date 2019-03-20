@@ -4,6 +4,7 @@ import wasted.bot.Emoji
 import wasted.bot.Emoji.*
 
 enum class ExpenseCategory(val emoji: Emoji) {
+
     GROCERIES(PIZZA),
     SHOPPING(SHOPPING_CART),
     TRANSPORT(STEAM_LOCOMOTIVE),
@@ -17,5 +18,11 @@ enum class ExpenseCategory(val emoji: Emoji) {
     SPORT(TABLE_TENNIS),
     HOBBIES(TELESCOPE),
     BEAUTY(LIPSTICK),
-    OTHER(BLACK_JOKER)
+    OTHER(BLACK_JOKER);
+
+    companion object {
+        fun fromName(name: String): ExpenseCategory? {
+            return values().firstOrNull { it.name == name }
+        }
+    }
 }

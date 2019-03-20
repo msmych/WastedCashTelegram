@@ -33,5 +33,11 @@ enum class Emoji(val code: String) {
     NINE("9️⃣"),
     ZERO("0️⃣"),
 
-    BLACK_JOKER("🃏")
+    BLACK_JOKER("🃏");
+
+    companion object {
+        fun fromCode(code: String): Emoji? {
+            return values().firstOrNull{ it.code == code }
+        }
+    }
 }
