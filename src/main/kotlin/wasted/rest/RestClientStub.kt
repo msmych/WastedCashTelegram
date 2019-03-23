@@ -9,6 +9,10 @@ import kotlin.streams.toList
 
 class RestClientStub : RestClient {
 
+    private val currencies = Stream.of("USD", "EUR", "RUB")
+        .map { Currency.getInstance(it) }
+        .toList()
+
     override fun existsUser(id: Int): Boolean {
         return false
     }
@@ -16,9 +20,11 @@ class RestClientStub : RestClient {
     override fun createUser(userId: Int) {}
 
     override fun getUserCurrencies(userId: Int): List<Currency> {
-        return Stream.of("USD", "EUR", "RUB")
-            .map { c -> Currency.getInstance(c) }
-            .toList()
+        return currencies
+    }
+
+    override fun toggleCurrency(userId: Int, currency: String): List<Currency> {
+        return currencies
     }
 
     override fun getExpense(userId: Int, chatId: Long, messageId: Int): Expense {

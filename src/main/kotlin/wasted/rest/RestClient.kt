@@ -9,6 +9,7 @@ interface RestClient  {
     fun existsUser(id: Int): Boolean
     fun createUser(userId: Int)
     fun getUserCurrencies(userId: Int): List<Currency>
+    fun toggleCurrency(userId: Int, currency: String): List<Currency>
     fun getExpense(userId: Int, chatId: Long, messageId: Int): Expense
     fun saveExpense(userId: Int, chatId: Long, messageId: Int, amount: Long, currency: Currency, category: ExpenseCategory)
 }

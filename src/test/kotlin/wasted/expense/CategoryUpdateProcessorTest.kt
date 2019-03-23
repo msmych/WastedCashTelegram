@@ -34,7 +34,7 @@ internal class CategoryUpdateProcessorTest {
         categoryUpdateProcessor.restClient = restClient
         categoryUpdateProcessor.bot = bot
         whenever(update.callbackQuery).thenReturn(callbackQuery)
-        whenever(callbackQuery.data).thenReturn("\uD83C\uDF55")
+        whenever(callbackQuery.data).thenReturn("SHOPPING")
         whenever(callbackQuery.from).thenReturn(user)
         whenever(callbackQuery.message).thenReturn(message)
     }
