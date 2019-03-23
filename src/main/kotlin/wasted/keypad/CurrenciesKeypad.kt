@@ -4,6 +4,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 import wasted.bot.Emoji.BALLOT_BOX_WITH_CHECK
@@ -17,7 +18,13 @@ import kotlin.streams.toList
 @Singleton
 class CurrenciesKeypad {
 
-    private val allCurrencies = Stream.of("USD", "EUR", "RUB", "CHF").map { Currency.getInstance(it) }.toList()
+    companion object {
+        val AVAILABLE_CURRENCIES = Stream.of(
+            "USD", "EUR", "RUB",
+            "CHF")
+            .map { Currency.getInstance(it) }
+            .toList()
+    }
 
     @Inject
     lateinit var bot: TelegramLongPollingBot
@@ -27,13 +34,20 @@ class CurrenciesKeypad {
             .setReplyMarkup(getMarkup(currencies)))
     }
 
+    fun update(chatId: Long, messageId: Int, currencies: List<Currency>) {
+        bot.execute(EditMessageReplyMarkup()
+            .setChatId(chatId)
+            .setMessageId(messageId)
+            .setReplyMarkup(getMarkup(currencies)))
+    }
+
     private fun getMarkup(currencies: List<Currency>): InlineKeyboardMarkup {
         val buttons = ArrayList<InlineKeyboardButton>()
-        val availableCurrencies = allCurrencies.groupBy { currencies.contains(it) }
-        buttons.addAll(availableCurrencies.getValue(true)
-            .map{ ikb("${BALLOT_BOX_WITH_CHECK.code} ${it.symbol}", it.currencyCode) })
-        buttons.addAll(availableCurrencies.getValue(false)
-            .map{ ikb(it.symbol, it.currencyCode) })
+        val availableCurrencies = AVAILABLE_CURRENCIES.groupBy { currencies.contains(it) }
+        buttons.addAll(availableCurrencies[true]
+            ?.map{ ikb("${BALLOT_BOX_WITH_CHECK.code} ${it.symbol}", it.currencyCode) } ?: emptyList())
+        buttons.addAll(availableCurrencies[false]
+            ?.map{ ikb(it.symbol, it.currencyCode) } ?: emptyList())
         val keyboard = ArrayList<List<InlineKeyboardButton>>()
         var index = 0
         while (index < buttons.size) {

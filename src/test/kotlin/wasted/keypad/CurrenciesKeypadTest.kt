@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup
 
 internal class CurrenciesKeypadTest {
 
@@ -23,5 +24,11 @@ internal class CurrenciesKeypadTest {
     fun sending() {
         currenciesKeypad.send(1, ArrayList())
         verify(bot).execute(any<SendMessage>())
+    }
+
+    @Test
+    fun updating() {
+        currenciesKeypad.update(1, 2, ArrayList())
+        verify(bot).execute(any<EditMessageReplyMarkup>())
     }
 }
