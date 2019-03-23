@@ -11,6 +11,7 @@ import wasted.bot.StartUpdateProcessor
 import wasted.expense.*
 import wasted.rest.RestClient
 import wasted.rest.RestClientStub
+import wasted.user.ConfirmCurrenciesUpdateProcessor
 import wasted.user.ToggleCurrencyUpdateProcessor
 
 fun main(args: Array<String>) {
@@ -23,6 +24,7 @@ fun main(args: Array<String>) {
     bot.addUpdateProcessor(
         getInstance(StartUpdateProcessor::class.java),
         getInstance(ToggleCurrencyUpdateProcessor::class.java),
+        getInstance(ConfirmCurrenciesUpdateProcessor::class.java),
         getInstance(WastedUpdateProcessor::class.java),
         getInstance(WastedClickUpdateProcessor::class.java),
         getInstance(HelpUpdateProcessor::class.java),
