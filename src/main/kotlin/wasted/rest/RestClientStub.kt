@@ -8,6 +8,11 @@ import java.util.stream.Stream
 import kotlin.streams.toList
 
 class RestClientStub : RestClient {
+
+    override fun existsUser(id: Int): Boolean {
+        return false
+    }
+
     override fun createUser(userId: Int) {}
 
     override fun getUserCurrencies(userId: Int): List<Currency> {

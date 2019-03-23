@@ -17,6 +17,7 @@ enum class Emoji(val code: String) {
     LIPSTICK("\uD83D\uDC84"),
 
     WHITE_CHECK_MARK("✅"),
+    BALLOT_BOX_WITH_CHECK("☑️"),
     X("❌"),
     ARROW_LEFT("⬅️"),
     ARROW_BACKWARD("◀️"),
