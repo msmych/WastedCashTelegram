@@ -31,7 +31,7 @@ fun main(args: Array<String>) {
         getInstance(NextCurrencyUpdateProcessor::class.java),
         getInstance(CancelUpdateProcessor::class.java),
         getInstance(OkUpdateProcessor::class.java),
-        getInstance(CategoryUpdateProcessor::class.java))
+        getInstance(EditCategoryUpdateProcessor::class.java))
     TelegramBotsApi().registerBot(bot)
     System.out.println("Поехали")
 }

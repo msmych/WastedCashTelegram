@@ -50,7 +50,7 @@ internal class NextCurrencyUpdateProcessorTest {
         nextCurrencyUpdateProcessor.numericKeypad = numericKeypad
         nextCurrencyUpdateProcessor.expenseCache = expenseCache
         whenever(update.callbackQuery).thenReturn(callbackQuery)
-        whenever(callbackQuery.data).thenReturn("next_currency")
+        whenever(callbackQuery.data).thenReturn("next-currency")
         whenever(callbackQuery.from).thenReturn(from)
         whenever(from.id).thenReturn(2)
         whenever(callbackQuery.message).thenReturn(message)

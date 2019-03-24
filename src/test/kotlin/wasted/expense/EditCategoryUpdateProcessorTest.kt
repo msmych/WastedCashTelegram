@@ -17,12 +17,12 @@ import wasted.expense.ExpenseCategory.SHOPPING
 import wasted.rest.RestClient
 import java.util.*
 
-internal class CategoryUpdateProcessorTest {
+internal class EditCategoryUpdateProcessorTest {
 
     private val restClient = mock<RestClient>()
     private val bot = mock<TelegramLongPollingBot>()
 
-    private val categoryUpdateProcessor = CategoryUpdateProcessor()
+    private val categoryUpdateProcessor = EditCategoryUpdateProcessor()
 
     private val update = mock<Update>()
     private val callbackQuery = mock<CallbackQuery>()

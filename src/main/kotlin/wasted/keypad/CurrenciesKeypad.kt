@@ -21,7 +21,7 @@ class CurrenciesKeypad {
     companion object {
         val AVAILABLE_CURRENCIES = Stream.of(
             "USD", "EUR", "RUB",
-            "CHF")
+            "GBP", "CHF", "JPY")
             .map { Currency.getInstance(it) }
             .toList()
     }

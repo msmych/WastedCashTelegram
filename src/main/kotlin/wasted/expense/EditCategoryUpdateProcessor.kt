@@ -15,7 +15,7 @@ import wasted.rest.RestClient
 import java.util.*
 
 @Singleton
-class CategoryUpdateProcessor : UpdateProcessor {
+class EditCategoryUpdateProcessor : UpdateProcessor {
 
     @Inject
     lateinit var restClient: RestClient

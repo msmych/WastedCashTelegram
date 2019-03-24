@@ -6,6 +6,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.ParseMode.MARKDOWN
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 import wasted.bot.Emoji.WHITE_CHECK_MARK
 import wasted.bot.Emoji.X
 import wasted.bot.ikb
@@ -29,9 +30,13 @@ class NumericKeypad {
 
     private fun getMarkup(a: Long, c: Currency): InlineKeyboardMarkup {
         return InlineKeyboardMarkup().setKeyboard(listOf(
-            listOf(ikb("·  1  ·", "${a}1"), ikb("·  2  ·", "${a}2"), ikb("·  3  ·", "${a}3"), ikb(c.symbol, "next_currency")),
-            listOf(ikb("·  4  ·", "${a}4"), ikb("·  5  ·", "${a}5"), ikb("·  6  ·", "${a}6"), ikb("←", "${a / 10}")),
-            listOf(ikb("·  7  ·", "${a}7"), ikb("·  8  ·", "${a}8"), ikb("·  9  ·", "${a}9"), ikb("AC", "0")),
-            listOf(ikb(X, "cancel"), ikb("·  0  ·", "${a}0"), ikb("· 00 ·", "${a}00"), ikb(WHITE_CHECK_MARK, "ok"))))
+            listOf(ikbd(a, 1), ikbd(a, 2), ikbd(a, 3), ikb(c.symbol, "next-currency")),
+            listOf(ikbd(a, 4), ikbd(a, 5), ikbd(a, 6), ikb("←", "${a / 10}")),
+            listOf(ikbd(a, 7), ikbd(a, 8), ikbd(a, 9), ikb("AC", "0")),
+            listOf(ikb(X, "remove-expense"), ikbd(a, 0), ikb("· 00 ·", "${a}00"), ikb(WHITE_CHECK_MARK, "edit-category"))))
+    }
+
+    private fun ikbd(amount: Long, digit: Int): InlineKeyboardButton {
+        return ikb("·  $digit  ·", "$amount$digit")
     }
 }

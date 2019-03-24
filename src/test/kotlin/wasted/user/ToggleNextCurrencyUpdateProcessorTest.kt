@@ -16,7 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.User
 import wasted.keypad.CurrenciesKeypad
 import wasted.rest.RestClient
 
-internal class ToggleCurrencyUpdateProcessorTest {
+internal class ToggleNextCurrencyUpdateProcessorTest {
 
     private val currenciesKeypad = CurrenciesKeypad()
     private val restClient = mock<RestClient>()

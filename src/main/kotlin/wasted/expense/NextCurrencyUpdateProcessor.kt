@@ -21,7 +21,7 @@ class NextCurrencyUpdateProcessor : UpdateProcessor {
         val callbackQuery = update.callbackQuery ?: return false
         val data = callbackQuery.data ?: return false
         val fromId = update.callbackQuery.from.id
-        return data == "next_currency"
+        return data == "next-currency"
                 && expenseCache.contains(fromId)
                 && expenseCache.get(fromId).chatId == update.callbackQuery.message.chatId
     }
