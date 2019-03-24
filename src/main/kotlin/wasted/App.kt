@@ -26,7 +26,7 @@ fun main(args: Array<String>) {
         getInstance(ToggleCurrencyUpdateProcessor::class.java),
         getInstance(ConfirmCurrenciesUpdateProcessor::class.java),
         getInstance(WastedUpdateProcessor::class.java),
-        getInstance(WastedClickUpdateProcessor::class.java),
+        getInstance(AmountUpdateProcessor::class.java),
         getInstance(HelpUpdateProcessor::class.java),
         getInstance(NextCurrencyUpdateProcessor::class.java),
         getInstance(CancelUpdateProcessor::class.java),
