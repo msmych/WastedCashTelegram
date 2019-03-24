@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
 import java.util.*
 
@@ -21,12 +20,6 @@ internal class NumericKeypadTest {
     @BeforeEach
     fun setUp() {
         numericKeypad.bot = bot
-    }
-
-    @Test
-    fun sending() {
-        numericKeypad.send(1, 1000, usd)
-        verify(bot).execute(any<SendMessage>())
     }
 
     @Test

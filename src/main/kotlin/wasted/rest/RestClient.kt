@@ -11,4 +11,5 @@ interface RestClient  {
     fun toggleCurrency(userId: Int, currency: String): List<Currency>
     fun getExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int): Expense
     fun createExpense(request: CreateExpenseRequest): Expense
+    fun updateExpense(expense: Expense)
 }

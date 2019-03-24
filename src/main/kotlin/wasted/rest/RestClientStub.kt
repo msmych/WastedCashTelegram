@@ -7,7 +7,6 @@ import java.util.stream.Stream
 import kotlin.streams.toList
 
 class RestClientStub : RestClient {
-
     private val currencies = Stream.of("USD", "EUR", "RUB")
         .map { Currency.getInstance(it) }
         .toList()
@@ -33,4 +32,6 @@ class RestClientStub : RestClient {
     override fun createExpense(request: CreateExpenseRequest): Expense {
         return Expense(1, request.userId, request.groupId, request.telegramMessageId, 1000, "USD", SHOPPING, Date())
     }
+
+    override fun updateExpense(expense: Expense) {}
 }

@@ -4,10 +4,10 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.ParseMode.MARKDOWN
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
-import wasted.bot.Emoji.*
+import wasted.bot.Emoji.WHITE_CHECK_MARK
+import wasted.bot.Emoji.X
 import wasted.bot.ikb
 import wasted.expense.formatAmount
 import java.util.*
@@ -17,12 +17,6 @@ class NumericKeypad {
 
     @Inject
     lateinit var bot: TelegramLongPollingBot
-
-    fun send(chatId: Long, amount: Long, currency: Currency) {
-        bot.execute(SendMessage(chatId, formatAmount(amount, currency))
-            .setParseMode(MARKDOWN)
-            .setReplyMarkup(getMarkup(amount, currency)))
-    }
 
     fun update(chatId: Long, messageId: Int, amount: Long, currency: Currency) {
         bot.execute(EditMessageText()
