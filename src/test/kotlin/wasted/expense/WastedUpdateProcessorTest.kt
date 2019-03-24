@@ -9,19 +9,18 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
+import wasted.expense.ExpenseCategory.SHOPPING
 import wasted.keypad.NumericKeypad
 import wasted.rest.RestClient
-import wasted.user.UserService
 import java.util.*
 
 internal class WastedUpdateProcessorTest {
 
     private val bot = mock<TelegramLongPollingBot>()
     private val numericKeypad = NumericKeypad()
-    private val expenseCache = mock<ExpenseCache>()
-    private val userService = UserService()
     private val restClient = mock<RestClient>()
 
     private val expenseUpdateProcessor = WastedUpdateProcessor()
@@ -33,10 +32,8 @@ internal class WastedUpdateProcessorTest {
     fun setUp() {
         numericKeypad.bot = bot
         expenseUpdateProcessor.numericKeypad = numericKeypad
-        expenseUpdateProcessor.expenseCache = expenseCache
-        expenseUpdateProcessor.userService = userService
-        userService.restClient = restClient
         expenseUpdateProcessor.restClient = restClient
+        expenseUpdateProcessor.bot = bot
         whenever(update.message).thenReturn(message)
         whenever(message.from).thenReturn(mock())
     }
@@ -55,10 +52,10 @@ internal class WastedUpdateProcessorTest {
 
     @Test
     fun sending() {
-        whenever(restClient.getUserCurrencies(any()))
-            .thenReturn(listOf(Currency.getInstance("USD")))
+        whenever(restClient.createExpense(any()))
+            .thenReturn(Expense(1, 2, 3, 4, 1000, "USD", SHOPPING, Date()))
+        whenever(bot.execute(any<SendMessage>())).thenReturn(message)
         expenseUpdateProcessor.process(update)
-        verify(restClient).createUser(any())
-        verify(expenseCache).put(any(), any(), any(), any())
+        verify(restClient).createExpense(any())
     }
 }

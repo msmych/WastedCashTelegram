@@ -12,6 +12,7 @@ import wasted.bot.Emoji.X
 import wasted.bot.ikb
 import wasted.bot.update.processor.UpdateProcessor
 import wasted.expense.ExpenseCategory.*
+import wasted.rest.CreateExpenseRequest
 import wasted.rest.RestClient
 
 @Singleton
@@ -35,7 +36,7 @@ class OkUpdateProcessor : UpdateProcessor {
         val chatId = update.callbackQuery.message.chatId
         val messageId = update.callbackQuery.message.messageId
         val item = expenseCache.remove(fromId)
-        restClient.saveExpense(fromId, chatId, messageId, item.amount, item.currency, item.category)
+        restClient.createExpense(CreateExpenseRequest(fromId, chatId, messageId))
         bot.execute(EditMessageText()
             .setChatId(chatId)
             .setMessageId(messageId)

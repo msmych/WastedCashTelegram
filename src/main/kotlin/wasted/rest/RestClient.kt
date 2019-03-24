@@ -1,7 +1,6 @@
 package wasted.rest
 
 import wasted.expense.Expense
-import wasted.expense.ExpenseCategory
 import java.util.*
 
 interface RestClient  {
@@ -10,6 +9,6 @@ interface RestClient  {
     fun createUser(userId: Int)
     fun getUserCurrencies(userId: Int): List<Currency>
     fun toggleCurrency(userId: Int, currency: String): List<Currency>
-    fun getExpense(userId: Int, chatId: Long, messageId: Int): Expense
-    fun saveExpense(userId: Int, chatId: Long, messageId: Int, amount: Long, currency: Currency, category: ExpenseCategory)
+    fun getExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int): Expense
+    fun createExpense(request: CreateExpenseRequest): Expense
 }

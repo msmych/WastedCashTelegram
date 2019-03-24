@@ -1,7 +1,6 @@
 package wasted.rest
 
 import wasted.expense.Expense
-import wasted.expense.ExpenseCategory
 import wasted.expense.ExpenseCategory.SHOPPING
 import java.util.*
 import java.util.stream.Stream
@@ -27,10 +26,11 @@ class RestClientStub : RestClient {
         return currencies
     }
 
-    override fun getExpense(userId: Int, chatId: Long, messageId: Int): Expense {
-        return Expense(1, userId, chatId, messageId, 1000, "USD", SHOPPING, Date())
+    override fun getExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int): Expense {
+        return Expense(1, groupId.toInt(), groupId, telegramMessageId, 1000, "USD", SHOPPING, Date())
     }
 
-    override fun saveExpense(userId: Int, chatId: Long, messageId: Int,
-                             amount: Long, currency: Currency, category: ExpenseCategory) {}
+    override fun createExpense(request: CreateExpenseRequest): Expense {
+        return Expense(1, request.userId, request.groupId, request.telegramMessageId, 1000, "USD", SHOPPING, Date())
+    }
 }

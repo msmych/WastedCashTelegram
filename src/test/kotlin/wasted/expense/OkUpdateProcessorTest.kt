@@ -57,7 +57,7 @@ internal class OkUpdateProcessorTest {
         whenever(expenseCache.remove(any())).thenReturn(ExpenseCacheItem(1, 1000, usd, SHOPPING))
         okUpdateProcessor.process(update)
         verify(expenseCache).remove(any())
-        verify(restClient).saveExpense(any(), any(), any(), any(), any(), any())
+        verify(restClient).createExpense(any())
         verify(bot).execute(any<EditMessageText>())
     }
 }

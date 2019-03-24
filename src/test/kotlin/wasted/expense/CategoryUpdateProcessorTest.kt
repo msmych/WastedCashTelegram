@@ -46,10 +46,10 @@ internal class CategoryUpdateProcessorTest {
 
     @Test
     fun processing() {
-        whenever(restClient.getExpense(any(), any(), any()))
+        whenever(restClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 2, 3, 4, 1000, "USD", SHOPPING, Date()))
         categoryUpdateProcessor.process(update)
-        verify(restClient).saveExpense(any(), any(), any(), any(), any(), any())
+        verify(restClient).createExpense(any())
         verify(bot).execute(any<EditMessageText>())
     }
 }
