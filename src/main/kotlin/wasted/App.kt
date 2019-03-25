@@ -9,6 +9,7 @@ import wasted.bot.Bot
 import wasted.bot.HelpUpdateProcessor
 import wasted.bot.StartUpdateProcessor
 import wasted.expense.*
+import wasted.keypad.OptionsUpdateProcessor
 import wasted.rest.RestClient
 import wasted.rest.RestClientStub
 import wasted.user.ConfirmCurrenciesUpdateProcessor
@@ -32,7 +33,8 @@ fun main(args: Array<String>) {
         getInstance(NextCurrencyUpdateProcessor::class.java),
         getInstance(RemoveExpenseUpdateProcessor::class.java),
         getInstance(EditCategoryUpdateProcessor::class.java),
-        getInstance(CategoryUpdateProcessor::class.java))
+        getInstance(CategoryUpdateProcessor::class.java),
+        getInstance(OptionsUpdateProcessor::class.java))
     TelegramBotsApi().registerBot(bot)
     System.out.println("Поехали")
 }

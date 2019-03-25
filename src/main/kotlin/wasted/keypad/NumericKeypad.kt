@@ -35,7 +35,7 @@ class NumericKeypad {
             listOf(ikbd(a, 1), ikbd(a, 2), ikbd(a, 3), ikb(c.symbol, "next-currency")),
             listOf(ikbd(a, 4), ikbd(a, 5), ikbd(a, 6), ikb("←", "${a / 10}")),
             listOf(ikbd(a, 7), ikbd(a, 8), ikbd(a, 9), ikb("AC", "0")),
-            listOf(ikb(X, "remove-expense"), ikbd(a, 0), ikb("· 00 ·", "${a}00"), ikb(WHITE_CHECK_MARK, "edit-category"))))
+            listOf(ikb(X, "remove-expense"), ikbd(a, 0), ikb("· 00 ·", "${a}00"), ikb(WHITE_CHECK_MARK, "options"))))
     }
 
     private fun ikbd(amount: Long, digit: Int): InlineKeyboardButton {
