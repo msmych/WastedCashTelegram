@@ -18,7 +18,6 @@ import wasted.user.ToggleCurrencyUpdateProcessor
 fun main(args: Array<String>) {
     init()
     register(TelegramLongPollingBot::class.java, Bot::class.java)
-    register(ExpenseCache::class.java, ExpenseCacheInMemory::class.java)
     register(RestClient::class.java, RestClientStub::class.java)
     val bot = getInstance(Bot::class.java)
     bot.token = args[0]
