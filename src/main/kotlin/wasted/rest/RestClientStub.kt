@@ -34,4 +34,6 @@ class RestClientStub : RestClient {
     }
 
     override fun updateExpense(expense: Expense) {}
+
+    override fun removeExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int) {}
 }

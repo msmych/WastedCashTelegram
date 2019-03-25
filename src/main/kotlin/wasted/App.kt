@@ -29,7 +29,7 @@ fun main(args: Array<String>) {
         getInstance(AmountUpdateProcessor::class.java),
         getInstance(HelpUpdateProcessor::class.java),
         getInstance(NextCurrencyUpdateProcessor::class.java),
-        getInstance(CancelUpdateProcessor::class.java),
+        getInstance(RemoveExpenseUpdateProcessor::class.java),
         getInstance(OkUpdateProcessor::class.java),
         getInstance(EditCategoryUpdateProcessor::class.java))
     TelegramBotsApi().registerBot(bot)

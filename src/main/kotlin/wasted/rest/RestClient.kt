@@ -12,4 +12,5 @@ interface RestClient  {
     fun getExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int): Expense
     fun createExpense(request: CreateExpenseRequest): Expense
     fun updateExpense(expense: Expense)
+    fun removeExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int)
 }
