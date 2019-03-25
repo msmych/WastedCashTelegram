@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
+import wasted.expense.Expense
+import wasted.expense.Expense.Category.SHOPPING
 import java.util.*
 
 internal class NumericKeypadTest {
@@ -24,7 +26,8 @@ internal class NumericKeypadTest {
 
     @Test
     fun updating() {
-        numericKeypad.update(1, 2, 1000, usd)
+        numericKeypad.update(
+            Expense(1, 1, 1, 2, 1000, "USD", SHOPPING, Date()))
         verify(bot).execute(any<EditMessageText>())
     }
 }

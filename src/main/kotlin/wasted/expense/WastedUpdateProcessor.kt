@@ -9,7 +9,6 @@ import wasted.bot.update.processor.UpdateProcessor
 import wasted.keypad.NumericKeypad
 import wasted.rest.CreateExpenseRequest
 import wasted.rest.RestClient
-import java.util.*
 
 @Singleton
 class WastedUpdateProcessor : UpdateProcessor {
@@ -32,6 +31,6 @@ class WastedUpdateProcessor : UpdateProcessor {
         val messageId = bot.execute(SendMessage(chatId, "Un momento...")).messageId
         val expense = restClient.createExpense(CreateExpenseRequest(
             update.message.from.id, chatId, messageId))
-        numericKeypad.update(chatId, messageId, expense.amount, Currency.getInstance(expense.currency))
+        numericKeypad.update(expense)
     }
 }

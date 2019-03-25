@@ -33,17 +33,18 @@ class NextCurrencyUpdateProcessor : UpdateProcessor {
         val chatId = update.callbackQuery.message.chatId
         val messageId = update.callbackQuery.message.messageId
         val currencies = restClient.getUserCurrencies(fromId)
-        val expense = restClient.getExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
-        val currency = currencies[(currencies.indexOf(Currency.getInstance(expense.currency)) + 1) % currencies.size].currencyCode
-        restClient.updateExpense(Expense(
-            expense.id,
-            expense.userId,
-            expense.groupId,
-            expense.telegramMessageId,
-            expense.amount,
+        val lastExpense = restClient.getExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
+        val currency = currencies[(currencies.indexOf(Currency.getInstance(lastExpense.currency)) + 1) % currencies.size].currencyCode
+        val expense = Expense(
+            lastExpense.id,
+            lastExpense.userId,
+            lastExpense.groupId,
+            lastExpense.telegramMessageId,
+            lastExpense.amount,
             currency,
-            expense.category,
-            expense.date))
-        numericKeypad.update(chatId, messageId, expense.amount, Currency.getInstance(currency))
+            lastExpense.category,
+            lastExpense.date)
+        restClient.updateExpense(expense)
+        numericKeypad.update(expense)
     }
 }

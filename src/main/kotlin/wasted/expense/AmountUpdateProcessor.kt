@@ -5,7 +5,6 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
 import wasted.keypad.NumericKeypad
 import wasted.rest.RestClient
-import java.util.*
 
 class AmountUpdateProcessor : UpdateProcessor {
 
@@ -31,16 +30,17 @@ class AmountUpdateProcessor : UpdateProcessor {
         val chatId = update.callbackQuery.message.chatId
         val messageId = update.callbackQuery.message.messageId
         val amount = update.callbackQuery.data.toLong()
-        val expense = restClient.getExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
-        restClient.updateExpense(Expense(
-            expense.id,
-            expense.userId,
-            expense.groupId,
-            expense.telegramMessageId,
+        val lastExpense = restClient.getExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
+        val expense = Expense(
+            lastExpense.id,
+            lastExpense.userId,
+            lastExpense.groupId,
+            lastExpense.telegramMessageId,
             amount,
-            expense.currency,
-            expense.category,
-            expense.date))
-        numericKeypad.update(chatId, messageId, amount, Currency.getInstance(expense.currency))
+            lastExpense.currency,
+            lastExpense.category,
+            lastExpense.date)
+        restClient.updateExpense(expense)
+        numericKeypad.update(expense)
     }
 }

@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import wasted.bot.Emoji.WHITE_CHECK_MARK
 import wasted.bot.Emoji.X
 import wasted.bot.ikb
+import wasted.expense.Expense
 import wasted.expense.formatAmount
 import java.util.*
 
@@ -19,13 +20,14 @@ class NumericKeypad {
     @Inject
     lateinit var bot: TelegramLongPollingBot
 
-    fun update(chatId: Long, messageId: Int, amount: Long, currency: Currency) {
+    fun update(expense: Expense) {
+        val currency = Currency.getInstance(expense.currency)
         bot.execute(EditMessageText()
-            .setChatId(chatId)
-            .setMessageId(messageId)
-            .setText(formatAmount(amount, currency))
+            .setChatId(expense.groupId)
+            .setMessageId(expense.telegramMessageId)
+            .setText("Wasted ${formatAmount(expense.amount, currency)} for ${expense.category.emoji.code}")
             .setParseMode(MARKDOWN)
-            .setReplyMarkup(getMarkup(amount, currency)))
+            .setReplyMarkup(getMarkup(expense.amount, currency)))
     }
 
     private fun getMarkup(a: Long, c: Currency): InlineKeyboardMarkup {
