@@ -5,15 +5,14 @@ import com.google.inject.Singleton
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
 import wasted.keypad.NumericKeypad
-import wasted.user.UserService
+import wasted.rest.RestClient
+import java.util.*
 
 @Singleton
 class NextCurrencyUpdateProcessor : UpdateProcessor {
 
     @Inject
-    lateinit var userService: UserService
-    @Inject
-    lateinit var expenseCache: ExpenseCache
+    lateinit var restClient: RestClient
     @Inject
     lateinit var numericKeypad: NumericKeypad
 
@@ -22,19 +21,29 @@ class NextCurrencyUpdateProcessor : UpdateProcessor {
         val data = callbackQuery.data ?: return false
         val fromId = update.callbackQuery.from.id
         return data == "next-currency"
-                && expenseCache.contains(fromId)
-                && expenseCache.get(fromId).chatId == update.callbackQuery.message.chatId
+                && restClient.getExpenseByGroupIdAndTelegramMessageId(
+            callbackQuery.message.chatId,
+            callbackQuery.message.messageId)
+            .userId == fromId
+                && restClient.getUserCurrencies(fromId).size > 1
     }
 
     override fun process(update: Update) {
         val fromId = update.callbackQuery.from.id
-        val currencies = userService.getCurrencies(fromId)
-        val item = expenseCache.updateCurrency(fromId,
-            currencies[(currencies.indexOf(expenseCache.get(fromId).currency) + 1) % currencies.size])
-        numericKeypad.update(
-            update.callbackQuery.message.chatId,
-            update.callbackQuery.message.messageId,
-            item.amount,
-            item.currency)
+        val chatId = update.callbackQuery.message.chatId
+        val messageId = update.callbackQuery.message.messageId
+        val currencies = restClient.getUserCurrencies(fromId)
+        val expense = restClient.getExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
+        val currency = currencies[(currencies.indexOf(Currency.getInstance(expense.currency)) + 1) % currencies.size].currencyCode
+        restClient.updateExpense(Expense(
+            expense.id,
+            expense.userId,
+            expense.groupId,
+            expense.telegramMessageId,
+            expense.amount,
+            currency,
+            expense.category,
+            expense.date))
+        numericKeypad.update(chatId, messageId, expense.amount, Currency.getInstance(currency))
     }
 }

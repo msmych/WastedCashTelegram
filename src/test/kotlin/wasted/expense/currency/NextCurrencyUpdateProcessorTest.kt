@@ -14,25 +14,17 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
-import wasted.expense.ExpenseCache
-import wasted.expense.ExpenseCacheItem
+import wasted.expense.Expense
 import wasted.expense.ExpenseCategory.SHOPPING
 import wasted.expense.NextCurrencyUpdateProcessor
 import wasted.keypad.NumericKeypad
 import wasted.rest.RestClient
-import wasted.user.UserService
 import java.util.*
-import java.util.stream.Stream
-import kotlin.streams.toList
 
 internal class NextCurrencyUpdateProcessorTest {
 
-    private val currencies = Stream.of("USD", "EUR", "RUB").map{ Currency.getInstance(it) }.toList()
-
     private val bot = mock<TelegramLongPollingBot>()
-    private val userService = UserService()
     private val restClient = mock<RestClient>()
-    private val expenseCache = mock<ExpenseCache>()
     private val numericKeypad = NumericKeypad()
 
     private val nextCurrencyUpdateProcessor = NextCurrencyUpdateProcessor()
@@ -44,19 +36,19 @@ internal class NextCurrencyUpdateProcessorTest {
 
     @BeforeEach
     fun setUp() {
-        nextCurrencyUpdateProcessor.userService = userService
-        userService.restClient = restClient
         numericKeypad.bot = bot
         nextCurrencyUpdateProcessor.numericKeypad = numericKeypad
-        nextCurrencyUpdateProcessor.expenseCache = expenseCache
+        nextCurrencyUpdateProcessor.restClient = restClient
         whenever(update.callbackQuery).thenReturn(callbackQuery)
         whenever(callbackQuery.data).thenReturn("next-currency")
         whenever(callbackQuery.from).thenReturn(from)
         whenever(from.id).thenReturn(2)
         whenever(callbackQuery.message).thenReturn(message)
         whenever(message.chatId).thenReturn(1)
-        whenever(expenseCache.contains(any())).thenReturn(true)
-        whenever(expenseCache.get(any())).thenReturn(ExpenseCacheItem(1, 1000, currencies[0], SHOPPING))
+        whenever(restClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+            .thenReturn(Expense(1, 2, 1, 3, 1000, "USD", SHOPPING, Date()))
+        whenever(restClient.getUserCurrencies(any()))
+            .thenReturn(listOf(Currency.getInstance("USD"), Currency.getInstance("EUR")))
     }
 
     @Test
@@ -65,14 +57,15 @@ internal class NextCurrencyUpdateProcessorTest {
     }
 
     @Test
-    fun notInCacheNotApplies() {
-        whenever(expenseCache.contains(any())).thenReturn(false)
+    fun notOwnNotApplies() {
+        whenever(restClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+            .thenReturn(Expense(1, 111, 1, 3, 1000, "USD", SHOPPING, Date()))
         assertFalse(nextCurrencyUpdateProcessor.appliesTo(update))
     }
 
     @Test
-    fun anotherChatNotApplies() {
-        whenever(expenseCache.get(any())).thenReturn(ExpenseCacheItem(111, 1000, currencies[0], SHOPPING))
+    fun lastCurrencyNotApplies() {
+        whenever(restClient.getUserCurrencies(any())).thenReturn(listOf(Currency.getInstance("USD")))
         assertFalse(nextCurrencyUpdateProcessor.appliesTo(update))
     }
 
@@ -80,12 +73,7 @@ internal class NextCurrencyUpdateProcessorTest {
     fun processing() {
         whenever(restClient.getUserCurrencies(any()))
             .thenReturn(listOf(Currency.getInstance("USD")))
-        whenever(expenseCache.get(any()))
-            .thenReturn(ExpenseCacheItem(1, 1000, currencies[0], SHOPPING))
-        whenever(expenseCache.updateCurrency(any(), any()))
-            .thenReturn(ExpenseCacheItem(1, 1000, currencies[1], SHOPPING))
         nextCurrencyUpdateProcessor.process(update)
-        verify(expenseCache).updateCurrency(any(), any())
         verify(bot).execute(any<EditMessageText>())
     }
 }
