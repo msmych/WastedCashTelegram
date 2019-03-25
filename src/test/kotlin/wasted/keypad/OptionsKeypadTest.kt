@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
 import wasted.expense.Expense
-import wasted.expense.ExpenseCategory.SHOPPING
+import wasted.expense.Expense.Category.SHOPPING
 import java.util.*
 
 internal class OptionsKeypadTest {

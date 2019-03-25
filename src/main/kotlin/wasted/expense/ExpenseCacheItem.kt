@@ -1,11 +1,13 @@
 package wasted.expense
 
+import wasted.expense.Expense.Category
 import java.util.*
 
 data class ExpenseCacheItem(val chatId: Long,
                             val amount: Long,
                             val currency: Currency,
-                            val category: ExpenseCategory) {
+                            val category: Category
+) {
 
     companion object {
 

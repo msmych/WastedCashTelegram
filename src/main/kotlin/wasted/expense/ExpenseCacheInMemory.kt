@@ -1,6 +1,7 @@
 package wasted.expense
 
 import com.google.inject.Singleton
+import wasted.expense.Expense.Category
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -8,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap
 class ExpenseCacheInMemory : ExpenseCache {
     private val cache = ConcurrentHashMap<Int, ExpenseCacheItem>()
 
-    override fun put(userId: Int, chatId: Long, currency: Currency, category: ExpenseCategory) {
+    override fun put(userId: Int, chatId: Long, currency: Currency, category: Category) {
         cache[userId] = ExpenseCacheItem(chatId, 0, currency, category)
     }
 

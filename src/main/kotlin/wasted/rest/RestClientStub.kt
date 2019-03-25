@@ -1,7 +1,7 @@
 package wasted.rest
 
 import wasted.expense.Expense
-import wasted.expense.ExpenseCategory.SHOPPING
+import wasted.expense.Expense.Category.SHOPPING
 import java.util.*
 import java.util.stream.Stream
 import kotlin.streams.toList

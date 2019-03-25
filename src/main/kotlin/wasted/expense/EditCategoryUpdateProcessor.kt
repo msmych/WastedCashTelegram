@@ -10,7 +10,7 @@ import wasted.bot.Emoji.E1234
 import wasted.bot.Emoji.X
 import wasted.bot.ikb
 import wasted.bot.update.processor.UpdateProcessor
-import wasted.expense.ExpenseCategory.*
+import wasted.expense.Expense.Category.*
 import wasted.rest.RestClient
 
 @Singleton

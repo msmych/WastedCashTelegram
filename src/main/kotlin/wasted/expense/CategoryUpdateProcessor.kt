@@ -4,7 +4,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
-import wasted.expense.ExpenseCategory.OTHER
+import wasted.expense.Expense.Category.Companion.fromName
 import wasted.keypad.OptionsKeypad
 import wasted.rest.RestClient
 
@@ -19,7 +19,7 @@ class CategoryUpdateProcessor : UpdateProcessor {
     override fun appliesTo(update: Update): Boolean {
         val callbackQuery = update.callbackQuery ?: return false
         val data = callbackQuery.data ?: return false
-        return ExpenseCategory.fromName(data) != null
+        return fromName(data) != null
                 && restClient.getExpenseByGroupIdAndTelegramMessageId(
             callbackQuery.message.chatId,
             callbackQuery.message.messageId)
@@ -37,7 +37,7 @@ class CategoryUpdateProcessor : UpdateProcessor {
             lastExpense.telegramMessageId,
             lastExpense.amount,
             lastExpense.currency,
-            ExpenseCategory.fromName(update.callbackQuery.data) ?: OTHER,
+            Expense.Category.fromName(update.callbackQuery.data) ?: Expense.Category.OTHER,
             lastExpense.date)
         restClient.updateExpense(expense)
         optionsKeypad.update(expense)

@@ -14,7 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
-import wasted.expense.ExpenseCategory.SHOPPING
+import wasted.expense.Expense.Category.SHOPPING
 import wasted.keypad.OptionsKeypad
 import wasted.rest.RestClient
 import java.util.*

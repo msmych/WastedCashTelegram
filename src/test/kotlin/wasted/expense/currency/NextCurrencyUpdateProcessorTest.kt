@@ -15,7 +15,7 @@ import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
 import wasted.expense.Expense
-import wasted.expense.ExpenseCategory.SHOPPING
+import wasted.expense.Expense.Category.SHOPPING
 import wasted.expense.NextCurrencyUpdateProcessor
 import wasted.keypad.NumericKeypad
 import wasted.rest.RestClient

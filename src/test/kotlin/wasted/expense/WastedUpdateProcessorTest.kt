@@ -12,7 +12,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
-import wasted.expense.ExpenseCategory.SHOPPING
+import wasted.expense.Expense.Category.SHOPPING
 import wasted.keypad.NumericKeypad
 import wasted.rest.RestClient
 import java.util.*
