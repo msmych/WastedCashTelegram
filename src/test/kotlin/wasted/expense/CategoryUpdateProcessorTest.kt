@@ -9,53 +9,59 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery
+import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
 import wasted.expense.ExpenseCategory.SHOPPING
+import wasted.keypad.OptionsKeypad
 import wasted.rest.RestClient
 import java.util.*
 
-internal class EditCategoryUpdateProcessorTest {
+internal class CategoryUpdateProcessorTest {
 
     private val restClient = mock<RestClient>()
+    private val optionsKeypad = OptionsKeypad()
     private val bot = mock<TelegramLongPollingBot>()
 
-    private val editCategoryUpdateProcessor = EditCategoryUpdateProcessor()
+    private val categoryUpdateProcessor = CategoryUpdateProcessor()
 
     private val update = mock<Update>()
     private val callbackQuery = mock<CallbackQuery>()
     private val user = mock<User>()
+    private val message = mock<Message>()
 
     @BeforeEach
     fun setUp() {
-        editCategoryUpdateProcessor.restClient = restClient
-        editCategoryUpdateProcessor.bot = bot
+        categoryUpdateProcessor.restClient = restClient
+        categoryUpdateProcessor.optionsKeypad = optionsKeypad
+        optionsKeypad.bot = bot
         whenever(update.callbackQuery).thenReturn(callbackQuery)
-        whenever(callbackQuery.data).thenReturn("edit-category")
+        whenever(callbackQuery.data).thenReturn("SHOPPING")
         whenever(callbackQuery.from).thenReturn(user)
-        whenever(user.id).thenReturn(1)
-        whenever(callbackQuery.message).thenReturn(mock())
+        whenever(user.id).thenReturn(2)
+        whenever(callbackQuery.message).thenReturn(message)
         whenever(restClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
-            .thenReturn(Expense(1, 1, 2, 3, 1000, "USD", SHOPPING, Date()))
+            .thenReturn(Expense(1, 2, 3, 4, 1000, "USD", SHOPPING, Date()))
     }
 
     @Test
     fun applies() {
-        assertTrue(editCategoryUpdateProcessor.appliesTo(update))
+        assertTrue(categoryUpdateProcessor.appliesTo(update))
     }
 
     @Test
     fun notOwnNotApplies() {
         whenever(restClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 111, 2, 3, 1000, "USD", SHOPPING, Date()))
-        assertFalse(editCategoryUpdateProcessor.appliesTo(update))
+        assertFalse(categoryUpdateProcessor.appliesTo(update))
     }
 
     @Test
     fun processing() {
-        editCategoryUpdateProcessor.process(update)
-        verify(bot).execute(any<EditMessageReplyMarkup>())
+        categoryUpdateProcessor.process(update)
+        verify(restClient).updateExpense(any())
+        verify(bot).execute(any<EditMessageText>())
     }
 }

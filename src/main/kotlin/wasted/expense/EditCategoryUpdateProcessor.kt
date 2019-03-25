@@ -3,16 +3,15 @@ package wasted.expense
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
-import org.telegram.telegrambots.meta.api.methods.ParseMode.MARKDOWN
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
-import wasted.bot.Emoji.*
+import wasted.bot.Emoji.E1234
+import wasted.bot.Emoji.X
 import wasted.bot.ikb
 import wasted.bot.update.processor.UpdateProcessor
-import wasted.rest.CreateExpenseRequest
+import wasted.expense.ExpenseCategory.*
 import wasted.rest.RestClient
-import java.util.*
 
 @Singleton
 class EditCategoryUpdateProcessor : UpdateProcessor {
@@ -25,23 +24,28 @@ class EditCategoryUpdateProcessor : UpdateProcessor {
     override fun appliesTo(update: Update): Boolean {
         val callbackQuery = update.callbackQuery ?: return false
         val data = callbackQuery.data ?: return false
-        return ExpenseCategory.fromName(data) != null
+        return data == "edit-category"
+                && restClient.getExpenseByGroupIdAndTelegramMessageId(
+            callbackQuery.message.chatId,
+            callbackQuery.message.messageId)
+            .userId == callbackQuery.from.id
     }
 
     override fun process(update: Update) {
-        val fromId = update.callbackQuery.from.id
         val chatId = update.callbackQuery.message.chatId
         val messageId = update.callbackQuery.message.messageId
-        val expense = restClient.getExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
-        val currency = Currency.getInstance(expense.currency)
-        val category = ExpenseCategory.fromName(update.callbackQuery.data)!!
-        restClient.createExpense(CreateExpenseRequest(fromId, chatId, messageId))
-        bot.execute(EditMessageText()
+        bot.execute(EditMessageReplyMarkup()
             .setChatId(chatId)
             .setMessageId(messageId)
-            .setText("Wasted ${formatAmount(expense.amount, currency)} for ${category.emoji.code}")
-            .setParseMode(MARKDOWN)
-            .setReplyMarkup(InlineKeyboardMarkup().setKeyboard(listOf(
-                listOf(ikb(X, "cancel"), ikb(E1234, "edit_amount"), ikb(BLACK_JOKER, "edit_category"))))))
+            .setReplyMarkup(getMarkup()))
+    }
+
+    private fun getMarkup(): InlineKeyboardMarkup {
+        return InlineKeyboardMarkup()
+            .setKeyboard(listOf(
+                listOf(ikb(GROCERIES), ikb(SHOPPING), ikb(TRANSPORT), ikb(HOME)),
+                listOf(ikb(FEES), ikb(ENTERTAINMENT), ikb(TRAVEL), ikb(HEALTH)),
+                listOf(ikb(CAREER), ikb(GIFTS), ikb(SPORT), ikb(HOBBIES)),
+                listOf(ikb(X, "remove-expense"), ikb(BEAUTY), ikb(OTHER), ikb(E1234, "edit-amount"))))
     }
 }
