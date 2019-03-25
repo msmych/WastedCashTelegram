@@ -5,7 +5,7 @@ import java.util.*
 
 interface RestClient  {
 
-    fun existsUser(id: Int): Boolean
+    fun existsUser(userId: Int): Boolean
     fun createUser(userId: Int)
     fun getUserCurrencies(userId: Int): List<Currency>
     fun toggleCurrency(userId: Int, currency: String): List<Currency>
