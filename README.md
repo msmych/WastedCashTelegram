@@ -1,4 +1,3 @@
 # Wasted cash Telegram bot
 
-### Help
-`/help` — help message
+Project [**help page**](https://telegra.ph/Wasted-cash-03-11)
