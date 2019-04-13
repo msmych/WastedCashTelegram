@@ -10,10 +10,11 @@ repositories {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compile 'com.google.code.gson:gson:2.8.5'
     compile 'org.telegram:telegrambots:4.1.2'
     compile 'org.apache.httpcomponents:fluent-hc:4.5.8'
     compile 'ch.qos.logback:logback-classic:1.2.3'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
     testCompile 'com.github.tomakehurst:wiremock:2.22.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'

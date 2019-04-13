@@ -1,7 +1,8 @@
 package wasted.rest
 
-import org.apache.http.client.fluent.Request
-import org.apache.http.client.fluent.Request.Post
+import com.google.gson.Gson
+import org.apache.http.client.fluent.Request.*
+import org.apache.http.entity.ByteArrayEntity
 import wasted.expense.Expense
 import java.util.*
 import javax.inject.Singleton
@@ -9,10 +10,11 @@ import javax.inject.Singleton
 @Singleton
 class RestHttpClient : RestClient {
 
+    private val gson = Gson()
     private val baseUrl = "http://localhost:8080"
 
     override fun existsUser(userId: Int): Boolean {
-        return Request.Get("$baseUrl/user/$userId/exists").execute().returnContent().asString() == "true"
+        return Get("$baseUrl/user/$userId/exists").execute().returnContent().asString() == "true"
     }
 
     override fun createUser(userId: Int) {
@@ -20,26 +22,38 @@ class RestHttpClient : RestClient {
     }
 
     override fun getUserCurrencies(userId: Int): List<Currency> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return gson.fromJson(
+            Get("$baseUrl/user/$userId/currencies").execute().returnContent().asString(),
+            Array<String>::class.java)
+            .map { Currency.getInstance(it) }
     }
 
     override fun toggleCurrency(userId: Int, currency: String): List<Currency> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return gson.fromJson(
+            Patch("$baseUrl/user/$userId/currency/$currency").execute().returnContent().asString(),
+            Array<String>::class.java)
+            .map { Currency.getInstance(it) }
     }
 
     override fun getExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int): Expense {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return gson.fromJson(
+            Get("$baseUrl/expense?groupId=$groupId&telegramMessageId=$telegramMessageId")
+                .execute().returnContent().asString(),
+            Expense::class.java)
     }
 
     override fun createExpense(request: CreateExpenseRequest): Expense {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return gson.fromJson(
+            Post("$baseUrl/expense").body(ByteArrayEntity(gson.toJson(request).toByteArray()))
+                .execute().returnContent().asString(),
+            Expense::class.java)
     }
 
     override fun updateExpense(expense: Expense) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Put("$baseUrl/expense").body(ByteArrayEntity(gson.toJson(expense).toByteArray()))
     }
 
     override fun removeExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Delete("$baseUrl/expense?groupId=$groupId&telegramMessageId=$telegramMessageId")
     }
 }
