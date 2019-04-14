@@ -13,8 +13,6 @@ import java.util.*
 
 internal class NumericKeypadTest {
 
-    private val usd = Currency.getInstance("USD")
-
     private val bot = mock<TelegramLongPollingBot>()
 
     private val numericKeypad = NumericKeypad()

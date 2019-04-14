@@ -33,9 +33,9 @@ class RestClientStub : RestClient {
     }
 
     override fun toggleCurrency(userId: Int, currency: String): List<Currency> {
-        if (!userCurrencies.containsKey(userId))
+        if (userCurrencies[userId]?.contains(Currency.getInstance(currency)) != true)
             userCurrencies[userId]?.add(Currency.getInstance(currency))
-        else if (userCurrencies.size > 1)
+        else if (userCurrencies[userId]?.size ?: 0 > 1)
             userCurrencies[userId]?.remove(Currency.getInstance(currency))
         return userCurrencies[userId] ?: emptyList()
     }
@@ -54,7 +54,7 @@ class RestClientStub : RestClient {
             request.userId,
             request.groupId,
             request.telegramMessageId,
-            0,
+            request.amount,
             userCurrencies[request.userId]?.get(0)?.currencyCode ?: "USD",
             OTHER,
             Date())

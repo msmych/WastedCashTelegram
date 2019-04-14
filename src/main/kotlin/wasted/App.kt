@@ -13,6 +13,7 @@ import wasted.keypad.OptionsUpdateProcessor
 import wasted.rest.RestClient
 import wasted.rest.RestClientStub
 import wasted.user.ConfirmCurrenciesUpdateProcessor
+import wasted.user.CurrenciesUpdateProcessor
 import wasted.user.ToggleCurrencyUpdateProcessor
 
 fun main(args: Array<String>) {
@@ -23,10 +24,12 @@ fun main(args: Array<String>) {
     bot.token = args[0]
     bot.addUpdateProcessor(
         getInstance(StartUpdateProcessor::class.java),
+        getInstance(CurrenciesUpdateProcessor::class.java),
         getInstance(ToggleCurrencyUpdateProcessor::class.java),
         getInstance(ConfirmCurrenciesUpdateProcessor::class.java),
         getInstance(WastedUpdateProcessor::class.java),
         getInstance(AmountUpdateProcessor::class.java),
+        getInstance(ExpenseUpdateProcessor::class.java),
         getInstance(EditAmountUpdateProcessor::class.java),
         getInstance(HelpUpdateProcessor::class.java),
         getInstance(NextCurrencyUpdateProcessor::class.java),
