@@ -16,7 +16,7 @@ class HelpUpdateProcessor : UpdateProcessor {
     override fun appliesTo(update: Update): Boolean {
         val message = update.message ?: return false
         val text = message.text ?: return false
-        return text == "/help"
+        return text == "/help" || text == "/help@${bot.botUsername}"
     }
 
     override fun process(update: Update) {

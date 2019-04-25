@@ -23,7 +23,7 @@ class WastedUpdateProcessor : UpdateProcessor {
     override fun appliesTo(update: Update): Boolean {
         val message = update.message ?: return false
         val text = message.text ?: return false
-        return text == "/wasted"
+        return text == "/wasted" || text == "/wasted@${bot.botUsername}"
     }
 
     override fun process(update: Update) {
