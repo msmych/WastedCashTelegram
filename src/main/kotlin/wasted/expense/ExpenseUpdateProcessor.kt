@@ -32,7 +32,13 @@ class ExpenseUpdateProcessor : UpdateProcessor {
             update.message.from.id,
             chatId,
             messageId,
-            update.message.text.substring(1).replace(".", "").toLong()))
+            parseAmount(update.message.text)))
         optionsKeypad.update(expense)
+    }
+
+    private fun parseAmount(str: String): Long {
+        if (str.indexOf('.') != -1)
+            return str.substring(1).replace(".", "").toLong()
+        return str.substring(1).toLong() * 100
     }
 }
