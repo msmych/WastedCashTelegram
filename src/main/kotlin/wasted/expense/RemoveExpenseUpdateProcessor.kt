@@ -5,7 +5,10 @@ import com.google.inject.Singleton
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
 import org.telegram.telegrambots.meta.api.objects.Update
-import wasted.bot.Emoji.HEAVY_MULTIPLICATION_X
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
+import wasted.bot.Emoji.ARROW_LEFT
+import wasted.bot.Emoji.X
 import wasted.bot.update.processor.UpdateProcessor
 import wasted.rest.RestClient
 
@@ -29,12 +32,14 @@ class RemoveExpenseUpdateProcessor : UpdateProcessor {
     }
 
     override fun process(update: Update) {
-        val chatId = update.callbackQuery.message.chatId
-        val messageId = update.callbackQuery.message.messageId
-        restClient.removeExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
-        bot.execute(EditMessageText()
-            .setChatId(chatId)
-            .setMessageId(messageId)
-            .setText("${HEAVY_MULTIPLICATION_X.code} Cancelled"))
+        bot.execute(
+            EditMessageText()
+                .setChatId(update.callbackQuery.message.chatId)
+                .setMessageId(update.callbackQuery.message.messageId)
+                .setText("Are you sure want to remove the expense?")
+                .setReplyMarkup(InlineKeyboardMarkup()
+                    .setKeyboard(listOf(listOf(
+                        InlineKeyboardButton("${ARROW_LEFT.code} Cancel").setCallbackData("cancel-expense-removal"),
+                        InlineKeyboardButton("${X.code} Remove").setCallbackData("confirm-expense-removal"))))))
     }
 }

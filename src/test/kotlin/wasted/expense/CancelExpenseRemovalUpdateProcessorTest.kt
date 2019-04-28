@@ -4,59 +4,65 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import org.junit.Assert.assertTrue
 import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery
+import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
 import wasted.expense.Expense.Category.SHOPPING
+import wasted.keypad.OptionsKeypad
 import wasted.rest.RestClient
 import java.util.*
 
-internal class RemoveExpenseUpdateProcessorTest {
+internal class CancelExpenseRemovalUpdateProcessorTest {
 
     private val restClient = mock<RestClient>()
     private val bot = mock<TelegramLongPollingBot>()
+    private val optionsKeypad = OptionsKeypad()
 
-    private val removeExpenseUpdateProcessor = RemoveExpenseUpdateProcessor()
+    private val cancelExpenseRemovalUpdateProcessor = CancelExpenseRemovalUpdateProcessor()
 
     private val update = mock<Update>()
-
     private val callbackQuery = mock<CallbackQuery>()
     private val user = mock<User>()
+    private val message = mock<Message>()
 
     @BeforeEach
-    fun setUp() {
-        removeExpenseUpdateProcessor.restClient = restClient
-        removeExpenseUpdateProcessor.bot = bot
+    private fun setUp() {
+        cancelExpenseRemovalUpdateProcessor.restClient = restClient
+        cancelExpenseRemovalUpdateProcessor.optionsKeypad = optionsKeypad
+        optionsKeypad.bot = bot
+
         whenever(update.callbackQuery).thenReturn(callbackQuery)
-        whenever(callbackQuery.data).thenReturn("remove-expense")
-        whenever(callbackQuery.message).thenReturn(mock())
+        whenever(callbackQuery.data).thenReturn("cancel-expense-removal")
         whenever(callbackQuery.from).thenReturn(user)
+        whenever(callbackQuery.message).thenReturn(message)
         whenever(user.id).thenReturn(1)
+
         whenever(restClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 1, 2, 3, 1000, "USD", SHOPPING, Date()))
     }
 
     @Test
     fun applies() {
-        assertTrue(removeExpenseUpdateProcessor.appliesTo(update))
+        assertTrue(cancelExpenseRemovalUpdateProcessor.appliesTo(update))
     }
 
     @Test
     fun notOwnNotApplies() {
         whenever(restClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 111, 2, 3, 1000, "USD", SHOPPING, Date()))
-        assertFalse(removeExpenseUpdateProcessor.appliesTo(update))
+        assertFalse(cancelExpenseRemovalUpdateProcessor.appliesTo(update))
     }
 
     @Test
     fun processing() {
-        removeExpenseUpdateProcessor.process(update)
+        cancelExpenseRemovalUpdateProcessor.process(update)
         verify(bot).execute(any<EditMessageText>())
     }
 }
