@@ -12,6 +12,7 @@ import wasted.expense.*
 import wasted.keypad.OptionsUpdateProcessor
 import wasted.rest.RestClient
 import wasted.rest.RestClientStub
+import wasted.rest.RestHttpClient
 import wasted.user.ConfirmCurrenciesUpdateProcessor
 import wasted.user.CurrenciesUpdateProcessor
 import wasted.user.ToggleCurrencyUpdateProcessor
@@ -19,7 +20,8 @@ import wasted.user.ToggleCurrencyUpdateProcessor
 fun main(args: Array<String>) {
     init()
     register(TelegramLongPollingBot::class.java, Bot::class.java)
-    register(RestClient::class.java, RestClientStub::class.java)
+    if (args.size > 1 && args[1] == "--prod") configureProd()
+    else configure()
     val bot = getInstance(Bot::class.java)
     bot.token = args[0]
     bot.addUpdateProcessor(
@@ -42,4 +44,12 @@ fun main(args: Array<String>) {
         getInstance(OptionsUpdateProcessor::class.java))
     TelegramBotsApi().registerBot(bot)
     System.out.println("Поехали")
+}
+
+fun configure() {
+    register(RestClient::class.java, RestClientStub::class.java)
+}
+
+fun configureProd() {
+    register(RestClient::class.java, RestHttpClient::class.java)
 }
