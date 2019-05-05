@@ -39,3 +39,9 @@ compileTestKotlin {
 test {
     useJUnitPlatform()
 }
+
+shadowJar {
+    manifest {
+        attributes 'Main-Class': 'wasted.AppKt'
+    }
+}
