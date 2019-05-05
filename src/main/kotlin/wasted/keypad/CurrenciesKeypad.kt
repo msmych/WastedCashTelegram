@@ -43,11 +43,11 @@ class CurrenciesKeypad {
 
     private fun getMarkup(currencies: List<Currency>): InlineKeyboardMarkup {
         val buttons = ArrayList<InlineKeyboardButton>()
-        val availableCurrencies = AVAILABLE_CURRENCIES.groupBy { currencies.contains(it) }
-        buttons.addAll(availableCurrencies[true]
-            ?.map{ ikb("${BALLOT_BOX_WITH_CHECK.code} ${it.symbol}", it.currencyCode) } ?: emptyList())
-        buttons.addAll(availableCurrencies[false]
-            ?.map{ ikb(it.symbol, it.currencyCode) } ?: emptyList())
+        buttons.addAll(currencies
+            .map{ ikb("${WHITE_CHECK_MARK.code} ${it.symbol}", it.currencyCode) })
+        buttons.addAll(AVAILABLE_CURRENCIES
+            .filter{ !currencies.contains(it) }
+            .map{ ikb(it.symbol, it.currencyCode) })
         val keyboard = ArrayList<List<InlineKeyboardButton>>()
         var index = 0
         while (index < buttons.size) {
@@ -59,7 +59,7 @@ class CurrenciesKeypad {
                 row.add(buttons[index++])
             keyboard.add(row)
         }
-        keyboard.add(listOf(ikb(WHITE_CHECK_MARK, "confirm-currencies")))
+        keyboard.add(listOf(ikb("${BALLOT_BOX_WITH_CHECK.code} Confirm", "confirm-currencies")))
         return InlineKeyboardMarkup().setKeyboard(keyboard)
     }
 }
