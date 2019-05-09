@@ -2,7 +2,8 @@ package wasted.rest
 
 import com.google.gson.Gson
 import org.apache.http.client.fluent.Request.*
-import org.apache.http.entity.ByteArrayEntity
+import org.apache.http.entity.ContentType.APPLICATION_JSON
+import org.apache.http.entity.StringEntity
 import wasted.expense.Expense
 import java.util.*
 import javax.inject.Singleton
@@ -44,13 +45,13 @@ class RestHttpClient : RestClient {
 
     override fun createExpense(request: CreateExpenseRequest): Expense {
         return gson.fromJson(
-            Post("$baseUrl/expense").body(ByteArrayEntity(gson.toJson(request).toByteArray()))
+            Post("$baseUrl/expense").body(StringEntity(gson.toJson(request), APPLICATION_JSON))
                 .execute().returnContent().asString(),
             Expense::class.java)
     }
 
     override fun updateExpense(expense: Expense) {
-        Put("$baseUrl/expense").body(ByteArrayEntity(gson.toJson(expense).toByteArray()))
+        Put("$baseUrl/expense").body(StringEntity(gson.toJson(expense), APPLICATION_JSON))
     }
 
     override fun removeExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int) {
