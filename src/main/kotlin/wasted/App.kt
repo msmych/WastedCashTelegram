@@ -1,5 +1,6 @@
 package wasted
 
+import org.slf4j.LoggerFactory
 import org.telegram.telegrambots.ApiContextInitializer.init
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.ApiContext.getInstance
@@ -43,7 +44,7 @@ fun main(args: Array<String>) {
         getInstance(CategoryUpdateProcessor::class.java),
         getInstance(OptionsUpdateProcessor::class.java))
     TelegramBotsApi().registerBot(bot)
-    System.out.println("Поехали")
+    LoggerFactory.getLogger("App").info("Поехали")
 }
 
 fun configure() {

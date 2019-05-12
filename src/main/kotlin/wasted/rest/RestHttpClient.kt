@@ -54,6 +54,6 @@ class RestHttpClient : RestClient {
     }
 
     override fun removeExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int) {
-        Delete("$baseUrl/expense?groupId=$groupId&telegramMessageId=$telegramMessageId")
+        Delete("$baseUrl/expense?groupId=$groupId&telegramMessageId=$telegramMessageId").execute()
     }
 }
