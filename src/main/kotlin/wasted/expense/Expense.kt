@@ -1,7 +1,6 @@
 package wasted.expense
 
 import wasted.bot.Emoji
-import wasted.expense.Expense.Category
 import java.util.*
 
 data class Expense(val id: Long,
@@ -32,7 +31,7 @@ data class Expense(val id: Long,
 
         companion object {
             fun fromName(name: String): Category? {
-                return Category.values().firstOrNull { it.name == name }
+                return values().firstOrNull { it.name == name }
             }
         }
     }

@@ -50,8 +50,22 @@ class RestHttpClient : RestClient {
     }
 
     override fun updateExpense(expense: Expense) {
-        Put("$baseUrl/expense").bodyString(gson.toJson(expense), APPLICATION_JSON)
+        Put("$baseUrl/expense")
+            .bodyString(
+                gson.toJson(
+                    UpdateExpenseRequest(
+                        expense.id,
+                        expense.amount,
+                        expense.currency,
+                        expense.category)),
+                APPLICATION_JSON)
+            .execute()
     }
+
+    data class UpdateExpenseRequest(val id: Long,
+                                    val amount: Long,
+                                    val currency: String,
+                                    val category: Expense.Category)
 
     override fun removeExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int) {
         Delete("$baseUrl/expense?groupId=$groupId&telegramMessageId=$telegramMessageId").execute()
