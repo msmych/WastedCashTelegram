@@ -24,7 +24,7 @@ class ToggleCurrencyUpdateProcessor : UpdateProcessor {
 
     override fun process(update: Update) {
         val fromId = update.callbackQuery.from.id
-        val currencies = restClient.toggleCurrency(fromId, update.callbackQuery.data)
+        val currencies = restClient.toggleUserCurrency(fromId, update.callbackQuery.data)
         currenciesKeypad.update(
             update.callbackQuery.message.chatId,
             update.callbackQuery.message.messageId,

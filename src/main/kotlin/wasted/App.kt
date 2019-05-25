@@ -10,6 +10,7 @@ import wasted.bot.Bot
 import wasted.bot.HelpUpdateProcessor
 import wasted.bot.StartUpdateProcessor
 import wasted.expense.*
+import wasted.expense.clear.ClearByTypeUpdateProcessor
 import wasted.expense.clear.ClearUpdateProcessor
 import wasted.keypad.OptionsUpdateProcessor
 import wasted.rest.RestClient
@@ -44,7 +45,8 @@ fun main(args: Array<String>) {
         getInstance(EditCategoryUpdateProcessor::class.java),
         getInstance(CategoryUpdateProcessor::class.java),
         getInstance(OptionsUpdateProcessor::class.java),
-        getInstance(ClearUpdateProcessor::class.java))
+        getInstance(ClearUpdateProcessor::class.java),
+        getInstance(ClearByTypeUpdateProcessor::class.java))
     TelegramBotsApi().registerBot(bot)
     LoggerFactory.getLogger("App").info("Поехали")
 }

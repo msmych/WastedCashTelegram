@@ -4,15 +4,15 @@ import com.google.gson.Gson
 import org.apache.http.client.fluent.Request.*
 import org.apache.http.entity.ContentType.APPLICATION_JSON
 import wasted.expense.Expense
+import wasted.expense.clear.ClearExpenseType
 import java.util.*
 import javax.inject.Singleton
 
 @Singleton
 class RestHttpClient : RestClient {
-
     private val gson = Gson()
-    private val baseUrl = "http://localhost:8080"
 
+    private val baseUrl = "http://localhost:8080"
     override fun existsUser(userId: Int): Boolean {
         return Get("$baseUrl/user/$userId/exists").execute().returnContent().asString() == "true"
     }
@@ -28,7 +28,7 @@ class RestHttpClient : RestClient {
             .map { Currency.getInstance(it) }
     }
 
-    override fun toggleCurrency(userId: Int, currency: String): List<Currency> {
+    override fun toggleUserCurrency(userId: Int, currency: String): List<Currency> {
         return gson.fromJson(
             Patch("$baseUrl/user/$userId/currency/$currency").execute().returnContent().asString(),
             Array<String>::class.java)
@@ -69,5 +69,9 @@ class RestHttpClient : RestClient {
 
     override fun removeExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int) {
         Delete("$baseUrl/expense?groupId=$groupId&telegramMessageId=$telegramMessageId").execute()
+    }
+
+    override fun removeExpenseByType(groupId: Long, type: ClearExpenseType) {
+        Delete("$baseUrl/expense/in/$groupId/type/${type.name}").execute()
     }
 }

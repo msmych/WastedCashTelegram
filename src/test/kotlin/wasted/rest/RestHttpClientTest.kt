@@ -10,6 +10,7 @@ import org.junit.ClassRule
 import org.junit.Test
 import wasted.expense.Expense
 import wasted.expense.Expense.Category.OTHER
+import wasted.expense.clear.ClearExpenseType.ALL
 import java.util.*
 
 internal class RestHttpClientTest {
@@ -57,6 +58,8 @@ internal class RestHttpClientTest {
                 .withQueryParam("groupId", equalTo("1234"))
                 .withQueryParam("telegramMessageId", equalTo("890"))
                 .willReturn(aResponse().withStatus(200)))
+            wireMockClassRule.stubFor(delete(urlEqualTo("/expense/in/1234/type/ALL"))
+                .willReturn(aResponse().withStatus(200)))
         }
     }
 
@@ -79,7 +82,7 @@ internal class RestHttpClientTest {
     @Test
     fun toggleCurrency() {
         assertEquals(listOf("EUR", "RUB").map { Currency.getInstance(it) },
-            restHttpClient.toggleCurrency(1234, "usd"))
+            restHttpClient.toggleUserCurrency(1234, "usd"))
     }
 
     @Test
@@ -100,5 +103,10 @@ internal class RestHttpClientTest {
     @Test
     fun removingExpenseByGroupIdAndTelegramMessageId() {
         restHttpClient.removeExpenseByGroupIdAndTelegramMessageId(1234, 890)
+    }
+
+    @Test
+    fun removingExpenseByType() {
+        restHttpClient.removeExpenseByType(1234, ALL)
     }
 }
