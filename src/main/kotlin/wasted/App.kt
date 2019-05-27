@@ -23,7 +23,7 @@ import wasted.user.ToggleCurrencyUpdateProcessor
 fun main(args: Array<String>) {
     init()
     register(TelegramLongPollingBot::class.java, Bot::class.java)
-    if (args.size > 1 && args[1] == "--prod") configureProd()
+    if (args.size > 1 && args[1] == "--prod") configureProd(args[0])
     else configure()
     val bot = getInstance(Bot::class.java)
     bot.token = args[0]
@@ -55,6 +55,7 @@ fun configure() {
     register(RestClient::class.java, RestClientStub::class.java)
 }
 
-fun configureProd() {
+fun configureProd(apiToken: String) {
     register(RestClient::class.java, RestHttpClient::class.java)
+    (getInstance(RestClient::class.java) as RestHttpClient).apiToken = apiToken
 }
