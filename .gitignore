@@ -2,5 +2,7 @@
 /build/
 out/
 
+logs/
+
 **.iml
 .idea/
