@@ -1,80 +1,74 @@
 package wasted.rest
 
+import com.google.inject.Inject
 import com.google.inject.Singleton
 import wasted.expense.Expense
 import wasted.expense.Expense.Category.OTHER
 import wasted.expense.clear.ClearExpenseType
 import wasted.expense.clear.ClearExpenseType.ALL
+import wasted.stub.InMemoryStorage
 import java.util.*
-import java.util.concurrent.atomic.AtomicLong
-import java.util.stream.Stream
 import kotlin.collections.ArrayList
-import kotlin.streams.toList
 
 @Singleton
 class RestClientStub : RestClient {
 
-    private val expenseCounter = AtomicLong()
-
-    private val expenses = ArrayList<Expense>()
-    private val userCurrencies = HashMap<Int, ArrayList<Currency>>()
-    private val currencies = Stream.of("USD", "EUR", "RUB")
-        .map { Currency.getInstance(it) }
-        .toList()
+    @Inject
+    lateinit var ims: InMemoryStorage
 
     override fun existsUser(userId: Int): Boolean {
-        return userCurrencies.containsKey(userId)
+        return ims.userCurrencies.containsKey(userId)
     }
 
     override fun createUser(userId: Int) {
-        userCurrencies[userId] = ArrayList(currencies)
+        ims.userCurrencies[userId] = ArrayList(ims.currencies)
     }
 
     override fun getUserCurrencies(userId: Int): List<Currency> {
-        return userCurrencies[userId] ?: emptyList()
+        return ims.userCurrencies[userId] ?: emptyList()
     }
 
     override fun toggleUserCurrency(userId: Int, currency: String): List<Currency> {
-        if (userCurrencies[userId]?.contains(Currency.getInstance(currency)) != true)
-            userCurrencies[userId]?.add(Currency.getInstance(currency))
-        else if (userCurrencies[userId]?.size ?: 0 > 1)
-            userCurrencies[userId]?.remove(Currency.getInstance(currency))
-        return userCurrencies[userId] ?: emptyList()
+        if (ims.userCurrencies[userId]?.contains(Currency.getInstance(currency)) != true)
+            ims.userCurrencies[userId]?.add(Currency.getInstance(currency))
+        else if (ims.userCurrencies[userId]?.size ?: 0 > 1)
+            ims.userCurrencies[userId]?.remove(Currency.getInstance(currency))
+        return ims.userCurrencies[userId] ?: emptyList()
     }
 
     override fun getExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int): Expense {
-        return expenses
+        return ims.expenses
             .find { it.groupId == groupId && it.telegramMessageId == telegramMessageId }
             ?: throw IllegalArgumentException()
     }
 
     override fun createExpense(request: CreateExpenseRequest): Expense {
-        if (!userCurrencies.containsKey(request.userId))
-            userCurrencies[request.userId] = ArrayList(currencies)
+        if (!ims.userCurrencies.containsKey(request.userId))
+            ims.userCurrencies[request.userId] = ArrayList(ims.currencies)
         val expense = Expense(
-            expenseCounter.incrementAndGet(),
+            ims.expenseCounter.incrementAndGet(),
             request.userId,
             request.groupId,
             request.telegramMessageId,
             request.amount,
-            userCurrencies[request.userId]?.get(0)?.currencyCode ?: "USD",
+            ims.userCurrencies[request.userId]?.get(0)?.currencyCode ?: "USD",
             OTHER,
             Date())
-        expenses.add(expense)
+        ims.expenses.add(expense)
         return expense
     }
 
     override fun updateExpense(expense: Expense) {
-        expenses[expenses.indexOfFirst { it.id == expense.id }] = expense
+        ims.expenses[ims.expenses.indexOfFirst { it.id == expense.id }] = expense
     }
 
     override fun removeExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int) {
-        expenses.remove(expenses.find { it.groupId == groupId && it.telegramMessageId == telegramMessageId })
+        ims.expenses.remove(ims.expenses.find { it.groupId == groupId && it.telegramMessageId == telegramMessageId })
     }
 
     override fun removeExpenseByType(groupId: Long, type: ClearExpenseType) {
         when (type) {
-            ALL -> expenses.removeAll(expenses.filter { it.groupId == groupId })
+            ALL -> ims.expenses.removeAll(ims.expenses.filter { it.groupId == groupId })
         }
     }
 }
