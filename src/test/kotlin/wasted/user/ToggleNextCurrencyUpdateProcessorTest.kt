@@ -49,7 +49,6 @@ internal class ToggleNextCurrencyUpdateProcessorTest {
     fun processing() {
         toggleCurrencyUpdateProcessor.process(update)
         verify(restClient).toggleUserCurrency(any(), any())
-        verify(restClient).getUserCurrencies(any())
         verify(bot).execute(any<EditMessageReplyMarkup>())
     }
 }
