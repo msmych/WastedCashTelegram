@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
+import wasted.expense.Expense.Category.SHOPPING
 
 internal class TotalUpdateProcessorTest {
 
@@ -27,6 +28,7 @@ internal class TotalUpdateProcessorTest {
         totalUpdateProcessor.totalClient = totalClient
         whenever(update.message).thenReturn(message)
         whenever(message.text).thenReturn("/total")
+        whenever(totalClient.getTotal(any())).thenReturn(listOf(Total(1, 1000, "USD", SHOPPING)))
     }
 
     @Test
