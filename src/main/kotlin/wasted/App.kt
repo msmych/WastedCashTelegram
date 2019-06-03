@@ -3,8 +3,7 @@ package wasted
 import org.slf4j.LoggerFactory
 import org.telegram.telegrambots.ApiContextInitializer.init
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
-import org.telegram.telegrambots.meta.ApiContext.getInstance
-import org.telegram.telegrambots.meta.ApiContext.register
+import org.telegram.telegrambots.meta.ApiContext.*
 import org.telegram.telegrambots.meta.TelegramBotsApi
 import wasted.bot.Bot
 import wasted.bot.HelpUpdateProcessor
@@ -27,9 +26,10 @@ import wasted.user.ToggleCurrencyUpdateProcessor
 fun main(args: Array<String>) {
     init()
     register(TelegramLongPollingBot::class.java, Bot::class.java)
+    if (args.size >= 2 && (args[1] == "--test" || args[1] == "--prod")) registerProd()
+    else registerDev()
     if (args.size >= 3 && args[1] == "--test") configureProd(args[2])
     else if (args.size >= 2 && args[1] == "--prod") configureProd(args[0])
-    else configureDev()
     val bot = getInstance(Bot::class.java)
     bot.token = args[0]
     bot.addUpdateProcessor(
@@ -57,14 +57,17 @@ fun main(args: Array<String>) {
     LoggerFactory.getLogger("App").info("Поехали")
 }
 
-fun configureDev() {
+fun registerDev() {
     register(RestClient::class.java, RestClientStub::class.java)
     register(TotalClient::class.java, TotalClientStub::class.java)
 }
 
-fun configureProd(apiToken: String) {
+fun registerProd() {
     register(RestClient::class.java, RestHttpClient::class.java)
-    (getInstance(RestClient::class.java) as RestHttpClient).apiToken = apiToken
     register(TotalClient::class.java, TotalRestClient::class.java)
+}
+
+fun configureProd(apiToken: String) {
+    (getInstance(RestClient::class.java) as RestHttpClient).apiToken = apiToken
     (getInstance(TotalClient::class.java) as TotalRestClient).apiToken = apiToken
 }
