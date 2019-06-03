@@ -8,6 +8,7 @@ import org.junit.Assert.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.expense.Expense.Category.SHOPPING
@@ -40,5 +41,6 @@ internal class TotalUpdateProcessorTest {
     fun processing() {
         totalUpdateProcessor.process(update)
         verify(totalClient).getTotal(any())
+        verify(bot).execute(any<SendMessage>())
     }
 }

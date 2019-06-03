@@ -1,5 +1,6 @@
 package wasted.stub
 
+import com.google.inject.Singleton
 import wasted.expense.Expense
 import java.util.*
 import java.util.concurrent.atomic.AtomicLong
@@ -7,6 +8,7 @@ import java.util.stream.Stream
 import kotlin.collections.ArrayList
 import kotlin.streams.toList
 
+@Singleton
 class InMemoryStorage {
 
     val expenseCounter = AtomicLong()

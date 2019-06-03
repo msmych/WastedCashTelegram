@@ -16,6 +16,10 @@ import wasted.keypad.OptionsUpdateProcessor
 import wasted.rest.RestClient
 import wasted.rest.RestClientStub
 import wasted.rest.RestHttpClient
+import wasted.total.TotalClient
+import wasted.total.TotalClientStub
+import wasted.total.TotalRestClient
+import wasted.total.TotalUpdateProcessor
 import wasted.user.ConfirmCurrenciesUpdateProcessor
 import wasted.user.CurrenciesUpdateProcessor
 import wasted.user.ToggleCurrencyUpdateProcessor
@@ -47,16 +51,20 @@ fun main(args: Array<String>) {
         getInstance(CategoryUpdateProcessor::class.java),
         getInstance(OptionsUpdateProcessor::class.java),
         getInstance(ClearUpdateProcessor::class.java),
-        getInstance(ClearByTypeUpdateProcessor::class.java))
+        getInstance(ClearByTypeUpdateProcessor::class.java),
+        getInstance(TotalUpdateProcessor::class.java))
     TelegramBotsApi().registerBot(bot)
     LoggerFactory.getLogger("App").info("Поехали")
 }
 
 fun configureDev() {
     register(RestClient::class.java, RestClientStub::class.java)
+    register(TotalClient::class.java, TotalClientStub::class.java)
 }
 
 fun configureProd(apiToken: String) {
     register(RestClient::class.java, RestHttpClient::class.java)
     (getInstance(RestClient::class.java) as RestHttpClient).apiToken = apiToken
+    register(TotalClient::class.java, TotalRestClient::class.java)
+    (getInstance(TotalClient::class.java) as TotalRestClient).apiToken = apiToken
 }
