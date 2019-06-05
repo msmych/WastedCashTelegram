@@ -3,7 +3,8 @@ package wasted
 import org.slf4j.LoggerFactory
 import org.telegram.telegrambots.ApiContextInitializer.init
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
-import org.telegram.telegrambots.meta.ApiContext.*
+import org.telegram.telegrambots.meta.ApiContext.getInstance
+import org.telegram.telegrambots.meta.ApiContext.register
 import org.telegram.telegrambots.meta.TelegramBotsApi
 import wasted.bot.Bot
 import wasted.bot.HelpUpdateProcessor
@@ -12,16 +13,11 @@ import wasted.expense.*
 import wasted.expense.clear.ClearByTypeUpdateProcessor
 import wasted.expense.clear.ClearUpdateProcessor
 import wasted.keypad.OptionsUpdateProcessor
-import wasted.rest.RestClient
-import wasted.rest.RestClientStub
-import wasted.rest.RestHttpClient
+import wasted.stub.TotalClientStub
 import wasted.total.TotalClient
-import wasted.total.TotalClientStub
 import wasted.total.TotalRestClient
 import wasted.total.TotalUpdateProcessor
-import wasted.user.ConfirmCurrenciesUpdateProcessor
-import wasted.user.CurrenciesUpdateProcessor
-import wasted.user.ToggleCurrencyUpdateProcessor
+import wasted.user.*
 
 fun main(args: Array<String>) {
     init()
@@ -58,16 +54,19 @@ fun main(args: Array<String>) {
 }
 
 fun registerDev() {
-    register(RestClient::class.java, RestClientStub::class.java)
+    register(UserClient::class.java, UserRestClient::class.java)
+    register(ExpenseClient::class.java, ExpenseRestClient::class.java)
     register(TotalClient::class.java, TotalClientStub::class.java)
 }
 
 fun registerProd() {
-    register(RestClient::class.java, RestHttpClient::class.java)
+    register(UserClient::class.java, UserRestClient::class.java)
+    register(ExpenseClient::class.java, ExpenseRestClient::class.java)
     register(TotalClient::class.java, TotalRestClient::class.java)
 }
 
 fun configureProd(apiToken: String) {
-    (getInstance(RestClient::class.java) as RestHttpClient).apiToken = apiToken
+    (getInstance(UserClient::class.java) as UserRestClient).apiToken = apiToken
+    (getInstance(ExpenseClient::class.java) as ExpenseRestClient).apiToken = apiToken
     (getInstance(TotalClient::class.java) as TotalRestClient).apiToken = apiToken
 }

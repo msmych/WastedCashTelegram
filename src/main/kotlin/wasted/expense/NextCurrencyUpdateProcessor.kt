@@ -5,14 +5,16 @@ import com.google.inject.Singleton
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
 import wasted.keypad.NumericKeypad
-import wasted.rest.RestClient
+import wasted.user.UserClient
 import java.util.*
 
 @Singleton
 class NextCurrencyUpdateProcessor : UpdateProcessor {
 
     @Inject
-    lateinit var restClient: RestClient
+    lateinit var userClient: UserClient
+    @Inject
+    lateinit var expenseClient: ExpenseClient
     @Inject
     lateinit var numericKeypad: NumericKeypad
 
@@ -21,19 +23,19 @@ class NextCurrencyUpdateProcessor : UpdateProcessor {
         val data = callbackQuery.data ?: return false
         val fromId = update.callbackQuery.from.id
         return data == "next-currency"
-                && restClient.getExpenseByGroupIdAndTelegramMessageId(
+                && expenseClient.getExpenseByGroupIdAndTelegramMessageId(
             callbackQuery.message.chatId,
             callbackQuery.message.messageId)
             .userId == fromId
-                && restClient.getUserCurrencies(fromId).size > 1
+                && userClient.getUserCurrencies(fromId).size > 1
     }
 
     override fun process(update: Update) {
         val fromId = update.callbackQuery.from.id
         val chatId = update.callbackQuery.message.chatId
         val messageId = update.callbackQuery.message.messageId
-        val currencies = restClient.getUserCurrencies(fromId)
-        val lastExpense = restClient.getExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
+        val currencies = userClient.getUserCurrencies(fromId)
+        val lastExpense = expenseClient.getExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
         val currency = currencies[(currencies.indexOf(Currency.getInstance(lastExpense.currency)) + 1) % currencies.size].currencyCode
         val expense = Expense(
             lastExpense.id,
@@ -44,7 +46,7 @@ class NextCurrencyUpdateProcessor : UpdateProcessor {
             currency,
             lastExpense.category,
             lastExpense.date)
-        restClient.updateExpense(expense)
+        expenseClient.updateExpense(expense)
         numericKeypad.update(expense)
     }
 }

@@ -5,14 +5,16 @@ import com.google.inject.Singleton
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
 import wasted.keypad.OptionsKeypad
-import wasted.rest.RestClient
+import wasted.user.UserClient
 import java.util.*
 
 @Singleton
 class NextCurrencyOptionsUpdateProcessor : UpdateProcessor {
 
     @Inject
-    lateinit var restClient: RestClient
+    lateinit var userClient: UserClient
+    @Inject
+    lateinit var expenseClient: ExpenseClient
     @Inject
     lateinit var optionsKeypad: OptionsKeypad
 
@@ -20,7 +22,7 @@ class NextCurrencyOptionsUpdateProcessor : UpdateProcessor {
         val callbackQuery = update.callbackQuery ?: return false
         val data = callbackQuery.data ?: return false
         return data == "next-currency-option"
-                && restClient.getExpenseByGroupIdAndTelegramMessageId(
+                && expenseClient.getExpenseByGroupIdAndTelegramMessageId(
             callbackQuery.message.chatId,
             callbackQuery.message.messageId)
             .userId == callbackQuery.from.id
@@ -30,8 +32,8 @@ class NextCurrencyOptionsUpdateProcessor : UpdateProcessor {
         val fromId = update.callbackQuery.from.id
         val chatId = update.callbackQuery.message.chatId
         val messageId = update.callbackQuery.message.messageId
-        val lastExpense = restClient.getExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
-        val currencies = restClient.getUserCurrencies(fromId)
+        val lastExpense = expenseClient.getExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
+        val currencies = userClient.getUserCurrencies(fromId)
         val currency = currencies[(currencies.indexOf(Currency.getInstance(lastExpense.currency)) + 1) % currencies.size].currencyCode
         val expense = Expense(
             lastExpense.id,
@@ -42,7 +44,7 @@ class NextCurrencyOptionsUpdateProcessor : UpdateProcessor {
             currency,
             lastExpense.category,
             lastExpense.date)
-        restClient.updateExpense(expense)
+        expenseClient.updateExpense(expense)
         optionsKeypad.update(expense)
     }
 }

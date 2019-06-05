@@ -16,12 +16,11 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
 import wasted.expense.Expense.Category.SHOPPING
 import wasted.keypad.OptionsKeypad
-import wasted.rest.RestClient
 import java.util.*
 
 internal class CategoryUpdateProcessorTest {
 
-    private val restClient = mock<RestClient>()
+    private val expenseClient = mock<ExpenseClient>()
     private val optionsKeypad = OptionsKeypad()
     private val bot = mock<TelegramLongPollingBot>()
 
@@ -34,7 +33,7 @@ internal class CategoryUpdateProcessorTest {
 
     @BeforeEach
     fun setUp() {
-        categoryUpdateProcessor.restClient = restClient
+        categoryUpdateProcessor.expenseClient = expenseClient
         categoryUpdateProcessor.optionsKeypad = optionsKeypad
         optionsKeypad.bot = bot
         whenever(update.callbackQuery).thenReturn(callbackQuery)
@@ -42,7 +41,7 @@ internal class CategoryUpdateProcessorTest {
         whenever(callbackQuery.from).thenReturn(user)
         whenever(user.id).thenReturn(2)
         whenever(callbackQuery.message).thenReturn(message)
-        whenever(restClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 2, 3, 4, 1000, "USD", SHOPPING, Date()))
     }
 
@@ -53,7 +52,7 @@ internal class CategoryUpdateProcessorTest {
 
     @Test
     fun notOwnNotApplies() {
-        whenever(restClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 111, 2, 3, 1000, "USD", SHOPPING, Date()))
         assertFalse(categoryUpdateProcessor.appliesTo(update))
     }
@@ -61,7 +60,7 @@ internal class CategoryUpdateProcessorTest {
     @Test
     fun processing() {
         categoryUpdateProcessor.process(update)
-        verify(restClient).updateExpense(any())
+        verify(expenseClient).updateExpense(any())
         verify(bot).execute(any<EditMessageText>())
     }
 }

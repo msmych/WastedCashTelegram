@@ -7,8 +7,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
 import wasted.keypad.NumericKeypad
-import wasted.rest.CreateExpenseRequest
-import wasted.rest.RestClient
 
 @Singleton
 class WastedUpdateProcessor : UpdateProcessor {
@@ -18,7 +16,7 @@ class WastedUpdateProcessor : UpdateProcessor {
     @Inject
     lateinit var numericKeypad: NumericKeypad
     @Inject
-    lateinit var restClient: RestClient
+    lateinit var expenseClient: ExpenseClient
 
     override fun appliesTo(update: Update): Boolean {
         val message = update.message ?: return false
@@ -29,8 +27,11 @@ class WastedUpdateProcessor : UpdateProcessor {
     override fun process(update: Update) {
         val chatId = update.message.chatId
         val messageId = bot.execute(SendMessage(chatId, "Un momento...")).messageId
-        val expense = restClient.createExpense(CreateExpenseRequest(
-            update.message.from.id, chatId, messageId))
+        val expense = expenseClient.createExpense(
+            CreateExpenseRequest(
+                update.message.from.id, chatId, messageId
+            )
+        )
         numericKeypad.update(expense)
     }
 }

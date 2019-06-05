@@ -16,16 +16,18 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
 import wasted.expense.Expense
 import wasted.expense.Expense.Category.SHOPPING
+import wasted.expense.ExpenseClient
 import wasted.expense.NextCurrencyUpdateProcessor
 import wasted.keypad.NumericKeypad
-import wasted.rest.RestClient
+import wasted.user.UserClient
 import java.util.*
 
 internal class NextCurrencyUpdateProcessorTest {
 
     private val bot = mock<TelegramLongPollingBot>()
-    private val restClient = mock<RestClient>()
     private val numericKeypad = NumericKeypad()
+    private val userClient = mock<UserClient>()
+    private val expenseClient = mock<ExpenseClient>()
 
     private val nextCurrencyUpdateProcessor = NextCurrencyUpdateProcessor()
 
@@ -38,16 +40,17 @@ internal class NextCurrencyUpdateProcessorTest {
     fun setUp() {
         numericKeypad.bot = bot
         nextCurrencyUpdateProcessor.numericKeypad = numericKeypad
-        nextCurrencyUpdateProcessor.restClient = restClient
+        nextCurrencyUpdateProcessor.userClient = userClient
+        nextCurrencyUpdateProcessor.expenseClient = expenseClient
         whenever(update.callbackQuery).thenReturn(callbackQuery)
         whenever(callbackQuery.data).thenReturn("next-currency")
         whenever(callbackQuery.from).thenReturn(from)
         whenever(from.id).thenReturn(2)
         whenever(callbackQuery.message).thenReturn(message)
         whenever(message.chatId).thenReturn(1)
-        whenever(restClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 2, 1, 3, 1000, "USD", SHOPPING, Date()))
-        whenever(restClient.getUserCurrencies(any()))
+        whenever(userClient.getUserCurrencies(any()))
             .thenReturn(listOf(Currency.getInstance("USD"), Currency.getInstance("EUR")))
     }
 
@@ -58,20 +61,20 @@ internal class NextCurrencyUpdateProcessorTest {
 
     @Test
     fun notOwnNotApplies() {
-        whenever(restClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 111, 1, 3, 1000, "USD", SHOPPING, Date()))
         assertFalse(nextCurrencyUpdateProcessor.appliesTo(update))
     }
 
     @Test
     fun lastCurrencyNotApplies() {
-        whenever(restClient.getUserCurrencies(any())).thenReturn(listOf(Currency.getInstance("USD")))
+        whenever(userClient.getUserCurrencies(any())).thenReturn(listOf(Currency.getInstance("USD")))
         assertFalse(nextCurrencyUpdateProcessor.appliesTo(update))
     }
 
     @Test
     fun processing() {
-        whenever(restClient.getUserCurrencies(any()))
+        whenever(userClient.getUserCurrencies(any()))
             .thenReturn(listOf(Currency.getInstance("USD")))
         nextCurrencyUpdateProcessor.process(update)
         verify(bot).execute(any<EditMessageText>())

@@ -15,7 +15,6 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
 import wasted.expense.Expense.Category.SHOPPING
 import wasted.keypad.NumericKeypad
-import wasted.rest.RestClient
 import java.util.*
 
 internal class AmountUpdateProcessorTest {
@@ -24,7 +23,7 @@ internal class AmountUpdateProcessorTest {
 
     private val numericKeypad = NumericKeypad()
     private val bot = mock<TelegramLongPollingBot>()
-    private val restClient = mock<RestClient>()
+    private val expenseClient = mock<ExpenseClient>()
 
     private val amountUpdateProcessor = AmountUpdateProcessor()
 
@@ -37,14 +36,14 @@ internal class AmountUpdateProcessorTest {
     fun setUp() {
         numericKeypad.bot = bot
         amountUpdateProcessor.numericKeypad = numericKeypad
-        amountUpdateProcessor.restClient = restClient
+        amountUpdateProcessor.expenseClient = expenseClient
         whenever(update.callbackQuery).thenReturn(callbackQuery)
         whenever(callbackQuery.from).thenReturn(from)
         whenever(from.id).thenReturn(2)
         whenever(callbackQuery.data).thenReturn("12345")
         whenever(callbackQuery.message).thenReturn(message)
         whenever(message.chatId).thenReturn(1)
-        whenever(restClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 2, 1, 2, 1000, "USD", SHOPPING, Date()))
     }
 
@@ -73,7 +72,7 @@ internal class AmountUpdateProcessorTest {
 
     @Test
     fun notOwnExpenseNotApplies() {
-        whenever(restClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 111, 1, 2, 1000, "USD", SHOPPING, Date()))
         assertFalse(amountUpdateProcessor.appliesTo(update))
     }
@@ -81,6 +80,6 @@ internal class AmountUpdateProcessorTest {
     @Test
     fun processing() {
         amountUpdateProcessor.process(update)
-        verify(restClient).updateExpense(any())
+        verify(expenseClient).updateExpense(any())
     }
 }

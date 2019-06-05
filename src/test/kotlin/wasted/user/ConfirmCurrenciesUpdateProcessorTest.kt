@@ -13,11 +13,10 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
-import wasted.rest.RestClient
 
 internal class ConfirmCurrenciesUpdateProcessorTest {
 
-    private val restClient = mock<RestClient>()
+    private val userClient = mock<UserClient>()
     private val bot = mock<TelegramLongPollingBot>()
 
     private val confirmCurrenciesUpdateProcessor = ConfirmCurrenciesUpdateProcessor()
@@ -29,7 +28,7 @@ internal class ConfirmCurrenciesUpdateProcessorTest {
 
     @BeforeEach
     fun setUp() {
-        confirmCurrenciesUpdateProcessor.restClient = restClient
+        confirmCurrenciesUpdateProcessor.userClient = userClient
         confirmCurrenciesUpdateProcessor.bot = bot
         whenever(update.callbackQuery).thenReturn(callbackQuery)
         whenever(callbackQuery.data).thenReturn("confirm-currencies")
@@ -45,7 +44,7 @@ internal class ConfirmCurrenciesUpdateProcessorTest {
     @Test
     fun processing() {
         confirmCurrenciesUpdateProcessor.process(update)
-        verify(restClient).getUserCurrencies(any())
+        verify(userClient).getUserCurrencies(any())
         verify(bot).execute(any<EditMessageText>())
     }
 }

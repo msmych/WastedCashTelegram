@@ -6,7 +6,6 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
 import wasted.keypad.CurrenciesKeypad
 import wasted.keypad.CurrenciesKeypad.Companion.AVAILABLE_CURRENCIES
-import wasted.rest.RestClient
 
 @Singleton
 class ToggleCurrencyUpdateProcessor : UpdateProcessor {
@@ -14,7 +13,7 @@ class ToggleCurrencyUpdateProcessor : UpdateProcessor {
     @Inject
     lateinit var currenciesKeypad: CurrenciesKeypad
     @Inject
-    lateinit var restClient: RestClient
+    lateinit var userClient: UserClient
 
     override fun appliesTo(update: Update): Boolean {
         val callbackQuery = update.callbackQuery ?: return false
@@ -24,7 +23,7 @@ class ToggleCurrencyUpdateProcessor : UpdateProcessor {
 
     override fun process(update: Update) {
         val fromId = update.callbackQuery.from.id
-        val currencies = restClient.toggleUserCurrency(fromId, update.callbackQuery.data)
+        val currencies = userClient.toggleUserCurrency(fromId, update.callbackQuery.data)
         currenciesKeypad.update(
             update.callbackQuery.message.chatId,
             update.callbackQuery.message.messageId,

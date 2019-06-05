@@ -13,11 +13,11 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
-import wasted.rest.RestClient
+import wasted.expense.ExpenseClient
 
 internal class ClearByTypeUpdateProcessorTest {
 
-    private val restClient = mock<RestClient>()
+    private val expenseClient = mock<ExpenseClient>()
     private val bot = mock<TelegramLongPollingBot>()
 
     private val clearAllUpdateProcessor = ClearByTypeUpdateProcessor()
@@ -29,7 +29,7 @@ internal class ClearByTypeUpdateProcessorTest {
 
     @BeforeEach
     fun setUp() {
-        clearAllUpdateProcessor.restClient = restClient
+        clearAllUpdateProcessor.expenseClient = expenseClient
         clearAllUpdateProcessor.bot = bot
         whenever(update.callbackQuery).thenReturn(callbackQuery)
         whenever(callbackQuery.data).thenReturn("clearALL")
@@ -45,7 +45,7 @@ internal class ClearByTypeUpdateProcessorTest {
     @Test
     fun processing() {
         clearAllUpdateProcessor.process(update)
-        verify(restClient).removeExpenseByType(any(), any())
+        verify(expenseClient).removeExpenseByType(any(), any())
         verify(bot).execute(any<EditMessageText>())
     }
 }

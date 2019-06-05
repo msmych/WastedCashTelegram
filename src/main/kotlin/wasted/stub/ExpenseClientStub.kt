@@ -1,40 +1,19 @@
-package wasted.rest
+package wasted.stub
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import wasted.expense.Expense
-import wasted.expense.Expense.Category.OTHER
+import wasted.expense.ExpenseClient
 import wasted.expense.clear.ClearExpenseType
-import wasted.expense.clear.ClearExpenseType.ALL
-import wasted.stub.InMemoryStorage
+import wasted.expense.CreateExpenseRequest
 import java.util.*
 import kotlin.collections.ArrayList
 
 @Singleton
-class RestClientStub : RestClient {
+class ExpenseClientStub : ExpenseClient {
 
     @Inject
     lateinit var ims: InMemoryStorage
-
-    override fun existsUser(userId: Int): Boolean {
-        return ims.userCurrencies.containsKey(userId)
-    }
-
-    override fun createUser(userId: Int) {
-        ims.userCurrencies[userId] = ArrayList(ims.currencies)
-    }
-
-    override fun getUserCurrencies(userId: Int): List<Currency> {
-        return ims.userCurrencies[userId] ?: emptyList()
-    }
-
-    override fun toggleUserCurrency(userId: Int, currency: String): List<Currency> {
-        if (ims.userCurrencies[userId]?.contains(Currency.getInstance(currency)) != true)
-            ims.userCurrencies[userId]?.add(Currency.getInstance(currency))
-        else if (ims.userCurrencies[userId]?.size ?: 0 > 1)
-            ims.userCurrencies[userId]?.remove(Currency.getInstance(currency))
-        return ims.userCurrencies[userId] ?: emptyList()
-    }
 
     override fun getExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int): Expense {
         return ims.expenses
@@ -52,8 +31,9 @@ class RestClientStub : RestClient {
             request.telegramMessageId,
             request.amount,
             ims.userCurrencies[request.userId]?.get(0)?.currencyCode ?: "USD",
-            OTHER,
-            Date())
+            Expense.Category.OTHER,
+            Date()
+        )
         ims.expenses.add(expense)
         return expense
     }
@@ -68,7 +48,7 @@ class RestClientStub : RestClient {
 
     override fun removeExpenseByType(groupId: Long, type: ClearExpenseType) {
         when (type) {
-            ALL -> ims.expenses.removeAll(ims.expenses.filter { it.groupId == groupId })
+            ClearExpenseType.ALL -> ims.expenses.removeAll(ims.expenses.filter { it.groupId == groupId })
         }
     }
 }

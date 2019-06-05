@@ -13,12 +13,12 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
-import wasted.rest.RestClient
+import wasted.expense.Expense.Category.SHOPPING
 import java.util.*
 
 internal class ConfirmExpenseRemovalUpdateProcessorTest {
 
-    private val restClient = mock<RestClient>()
+    private val expenseClient = mock<ExpenseClient>()
     private val bot = mock<TelegramLongPollingBot>()
 
     private val confirmExpenseRemovalUpdateProcessor = ConfirmExpenseRemovalUpdateProcessor()
@@ -30,15 +30,15 @@ internal class ConfirmExpenseRemovalUpdateProcessorTest {
 
     @BeforeEach
     fun setUp() {
-        confirmExpenseRemovalUpdateProcessor.restClient = restClient
+        confirmExpenseRemovalUpdateProcessor.expenseClient = expenseClient
         confirmExpenseRemovalUpdateProcessor.bot = bot
         whenever(update.callbackQuery).thenReturn(callbackQuery)
         whenever(callbackQuery.data).thenReturn("confirm-expense-removal")
         whenever(callbackQuery.message).thenReturn(mock())
         whenever(callbackQuery.from).thenReturn(user)
         whenever(user.id).thenReturn(1)
-        whenever(restClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
-            .thenReturn(Expense(1, 1, 2, 3, 1000, "USD", Expense.Category.SHOPPING, Date()))
+        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+            .thenReturn(Expense(1, 1, 2, 3, 1000, "USD", SHOPPING, Date()))
     }
 
     @Test
@@ -48,15 +48,15 @@ internal class ConfirmExpenseRemovalUpdateProcessorTest {
 
     @Test
     fun notOwnNotApplies() {
-        whenever(restClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
-            .thenReturn(Expense(1, 111, 2, 3, 1000, "USD", Expense.Category.SHOPPING, Date()))
+        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+            .thenReturn(Expense(1, 111, 2, 3, 1000, "USD", SHOPPING, Date()))
         assertFalse(confirmExpenseRemovalUpdateProcessor.appliesTo(update))
     }
 
     @Test
     fun processing() {
         confirmExpenseRemovalUpdateProcessor.process(update)
-        verify(restClient).removeExpenseByGroupIdAndTelegramMessageId(any(), any())
+        verify(expenseClient).removeExpenseByGroupIdAndTelegramMessageId(any(), any())
         verify(bot).execute(any<EditMessageText>())
     }
 }

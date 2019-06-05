@@ -4,13 +4,13 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
-import wasted.rest.RestClient
+import wasted.expense.ExpenseClient
 
 @Singleton
 class OptionsUpdateProcessor : UpdateProcessor {
 
     @Inject
-    lateinit var restClient: RestClient
+    lateinit var expenseClient: ExpenseClient
     @Inject
     lateinit var optionsKeypad: OptionsKeypad
 
@@ -18,14 +18,14 @@ class OptionsUpdateProcessor : UpdateProcessor {
         val callbackQuery = update.callbackQuery ?: return false
         val data = callbackQuery.data ?: return false
         return data == "options"
-                && restClient.getExpenseByGroupIdAndTelegramMessageId(
+                && expenseClient.getExpenseByGroupIdAndTelegramMessageId(
             callbackQuery.message.chatId,
             callbackQuery.message.messageId)
             .userId == callbackQuery.from.id
     }
 
     override fun process(update: Update) {
-        optionsKeypad.update(restClient.getExpenseByGroupIdAndTelegramMessageId(
+        optionsKeypad.update(expenseClient.getExpenseByGroupIdAndTelegramMessageId(
             update.callbackQuery.message.chatId,
             update.callbackQuery.message.messageId))
     }

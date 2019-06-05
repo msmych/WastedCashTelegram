@@ -11,13 +11,12 @@ import wasted.bot.Emoji.X
 import wasted.bot.ikb
 import wasted.bot.update.processor.UpdateProcessor
 import wasted.expense.Expense.Category.*
-import wasted.rest.RestClient
 
 @Singleton
 class EditCategoryUpdateProcessor : UpdateProcessor {
 
     @Inject
-    lateinit var restClient: RestClient
+    lateinit var expenseClient: ExpenseClient
     @Inject
     lateinit var bot: TelegramLongPollingBot
 
@@ -25,7 +24,7 @@ class EditCategoryUpdateProcessor : UpdateProcessor {
         val callbackQuery = update.callbackQuery ?: return false
         val data = callbackQuery.data ?: return false
         return data == "edit-category"
-                && restClient.getExpenseByGroupIdAndTelegramMessageId(
+                && expenseClient.getExpenseByGroupIdAndTelegramMessageId(
             callbackQuery.message.chatId,
             callbackQuery.message.messageId)
             .userId == callbackQuery.from.id

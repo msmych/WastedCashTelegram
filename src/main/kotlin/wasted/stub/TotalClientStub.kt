@@ -1,8 +1,9 @@
-package wasted.total
+package wasted.stub
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import wasted.stub.InMemoryStorage
+import wasted.total.Total
+import wasted.total.TotalClient
 
 @Singleton
 class TotalClientStub : TotalClient {

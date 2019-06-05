@@ -16,12 +16,11 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
 import wasted.expense.Expense.Category.SHOPPING
 import wasted.keypad.OptionsKeypad
-import wasted.rest.RestClient
 import java.util.*
 
 internal class CancelExpenseRemovalUpdateProcessorTest {
 
-    private val restClient = mock<RestClient>()
+    private val expenseClient = mock<ExpenseClient>()
     private val bot = mock<TelegramLongPollingBot>()
     private val optionsKeypad = OptionsKeypad()
 
@@ -34,7 +33,7 @@ internal class CancelExpenseRemovalUpdateProcessorTest {
 
     @BeforeEach
     private fun setUp() {
-        cancelExpenseRemovalUpdateProcessor.restClient = restClient
+        cancelExpenseRemovalUpdateProcessor.expenseClient = expenseClient
         cancelExpenseRemovalUpdateProcessor.optionsKeypad = optionsKeypad
         optionsKeypad.bot = bot
 
@@ -44,7 +43,7 @@ internal class CancelExpenseRemovalUpdateProcessorTest {
         whenever(callbackQuery.message).thenReturn(message)
         whenever(user.id).thenReturn(1)
 
-        whenever(restClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 1, 2, 3, 1000, "USD", SHOPPING, Date()))
     }
 
@@ -55,7 +54,7 @@ internal class CancelExpenseRemovalUpdateProcessorTest {
 
     @Test
     fun notOwnNotApplies() {
-        whenever(restClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 111, 2, 3, 1000, "USD", SHOPPING, Date()))
         assertFalse(cancelExpenseRemovalUpdateProcessor.appliesTo(update))
     }

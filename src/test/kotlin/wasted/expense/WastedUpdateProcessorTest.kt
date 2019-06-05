@@ -14,14 +14,13 @@ import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.expense.Expense.Category.SHOPPING
 import wasted.keypad.NumericKeypad
-import wasted.rest.RestClient
 import java.util.*
 
 internal class WastedUpdateProcessorTest {
 
     private val bot = mock<TelegramLongPollingBot>()
     private val numericKeypad = NumericKeypad()
-    private val restClient = mock<RestClient>()
+    private val expenseClient = mock<ExpenseClient>()
 
     private val expenseUpdateProcessor = WastedUpdateProcessor()
 
@@ -32,7 +31,7 @@ internal class WastedUpdateProcessorTest {
     fun setUp() {
         numericKeypad.bot = bot
         expenseUpdateProcessor.numericKeypad = numericKeypad
-        expenseUpdateProcessor.restClient = restClient
+        expenseUpdateProcessor.expenseClient = expenseClient
         expenseUpdateProcessor.bot = bot
         whenever(update.message).thenReturn(message)
         whenever(message.from).thenReturn(mock())
@@ -52,10 +51,10 @@ internal class WastedUpdateProcessorTest {
 
     @Test
     fun sending() {
-        whenever(restClient.createExpense(any()))
+        whenever(expenseClient.createExpense(any()))
             .thenReturn(Expense(1, 2, 3, 4, 1000, "USD", SHOPPING, Date()))
         whenever(bot.execute(any<SendMessage>())).thenReturn(message)
         expenseUpdateProcessor.process(update)
-        verify(restClient).createExpense(any())
+        verify(expenseClient).createExpense(any())
     }
 }

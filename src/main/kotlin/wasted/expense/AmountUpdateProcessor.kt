@@ -4,12 +4,11 @@ import com.google.inject.Inject
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
 import wasted.keypad.NumericKeypad
-import wasted.rest.RestClient
 
 class AmountUpdateProcessor : UpdateProcessor {
 
     @Inject
-    lateinit var restClient: RestClient
+    lateinit var expenseClient: ExpenseClient
     @Inject
     lateinit var numericKeypad: NumericKeypad
 
@@ -20,7 +19,7 @@ class AmountUpdateProcessor : UpdateProcessor {
         val amount = data.toLongOrNull()
         if (data.length > 10 || amount == null)
             return false
-        val expense = restClient.getExpenseByGroupIdAndTelegramMessageId(
+        val expense = expenseClient.getExpenseByGroupIdAndTelegramMessageId(
             update.callbackQuery.message.chatId,
             update.callbackQuery.message.messageId)
         return expense.userId == fromId && expense.amount != amount
@@ -30,7 +29,7 @@ class AmountUpdateProcessor : UpdateProcessor {
         val chatId = update.callbackQuery.message.chatId
         val messageId = update.callbackQuery.message.messageId
         val amount = update.callbackQuery.data.toLong()
-        val lastExpense = restClient.getExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
+        val lastExpense = expenseClient.getExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
         val expense = Expense(
             lastExpense.id,
             lastExpense.userId,
@@ -40,7 +39,7 @@ class AmountUpdateProcessor : UpdateProcessor {
             lastExpense.currency,
             lastExpense.category,
             lastExpense.date)
-        restClient.updateExpense(expense)
+        expenseClient.updateExpense(expense)
         numericKeypad.update(expense)
     }
 }

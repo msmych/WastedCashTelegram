@@ -1,4 +1,4 @@
-package wasted.rest
+package wasted.expense
 
 class CreateExpenseRequest(val userId: Int,
                            val groupId: Long,

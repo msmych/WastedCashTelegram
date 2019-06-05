@@ -10,13 +10,12 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import wasted.bot.Emoji.ARROW_LEFT
 import wasted.bot.Emoji.X
 import wasted.bot.update.processor.UpdateProcessor
-import wasted.rest.RestClient
 
 @Singleton
 class RemoveExpenseUpdateProcessor : UpdateProcessor {
 
     @Inject
-    lateinit var restClient: RestClient
+    lateinit var expenseClient: ExpenseClient
     @Inject
     lateinit var bot: TelegramLongPollingBot
 
@@ -25,7 +24,7 @@ class RemoveExpenseUpdateProcessor : UpdateProcessor {
         val data = callbackQuery.data ?: return false
         val fromId = callbackQuery.from.id
         return data == "remove-expense"
-                && restClient.getExpenseByGroupIdAndTelegramMessageId(
+                && expenseClient.getExpenseByGroupIdAndTelegramMessageId(
             callbackQuery.message.chatId,
             callbackQuery.message.messageId)
             .userId == fromId

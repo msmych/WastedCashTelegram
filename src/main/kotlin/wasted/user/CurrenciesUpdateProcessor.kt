@@ -4,7 +4,6 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
 import wasted.keypad.CurrenciesKeypad
-import wasted.rest.RestClient
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -12,7 +11,7 @@ import javax.inject.Singleton
 class CurrenciesUpdateProcessor : UpdateProcessor {
 
     @Inject lateinit var bot: TelegramLongPollingBot
-    @Inject lateinit var restClient: RestClient
+    @Inject lateinit var userClient: UserClient
     @Inject lateinit var currenciesKeypad: CurrenciesKeypad
 
     override fun appliesTo(update: Update): Boolean {
@@ -23,8 +22,8 @@ class CurrenciesUpdateProcessor : UpdateProcessor {
 
     override fun process(update: Update) {
         val userId = update.message.from.id
-        if (!restClient.existsUser(userId))
-            restClient.createUser(userId)
-        currenciesKeypad.send(update.message.chatId, restClient.getUserCurrencies(userId))
+        if (!userClient.existsUser(userId))
+            userClient.createUser(userId)
+        currenciesKeypad.send(update.message.chatId, userClient.getUserCurrencies(userId))
     }
 }

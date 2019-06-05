@@ -6,13 +6,12 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
 import wasted.expense.Expense.Category.Companion.fromName
 import wasted.keypad.OptionsKeypad
-import wasted.rest.RestClient
 
 @Singleton
 class CategoryUpdateProcessor : UpdateProcessor {
 
     @Inject
-    lateinit var restClient: RestClient
+    lateinit var expenseClient: ExpenseClient
     @Inject
     lateinit var optionsKeypad: OptionsKeypad
 
@@ -20,7 +19,7 @@ class CategoryUpdateProcessor : UpdateProcessor {
         val callbackQuery = update.callbackQuery ?: return false
         val data = callbackQuery.data ?: return false
         return fromName(data) != null
-                && restClient.getExpenseByGroupIdAndTelegramMessageId(
+                && expenseClient.getExpenseByGroupIdAndTelegramMessageId(
             callbackQuery.message.chatId,
             callbackQuery.message.messageId)
             .userId == callbackQuery.from.id
@@ -29,7 +28,7 @@ class CategoryUpdateProcessor : UpdateProcessor {
     override fun process(update: Update) {
         val chatId = update.callbackQuery.message.chatId
         val messageId = update.callbackQuery.message.messageId
-        val lastExpense = restClient.getExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
+        val lastExpense = expenseClient.getExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
         val expense = Expense(
             lastExpense.id,
             lastExpense.userId,
@@ -39,7 +38,7 @@ class CategoryUpdateProcessor : UpdateProcessor {
             lastExpense.currency,
             Expense.Category.fromName(update.callbackQuery.data) ?: Expense.Category.OTHER,
             lastExpense.date)
-        restClient.updateExpense(expense)
+        expenseClient.updateExpense(expense)
         optionsKeypad.update(expense)
     }
 }

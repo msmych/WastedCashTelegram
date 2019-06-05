@@ -14,12 +14,11 @@ import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
 import wasted.keypad.CurrenciesKeypad
-import wasted.rest.RestClient
 
 internal class ToggleNextCurrencyUpdateProcessorTest {
 
     private val currenciesKeypad = CurrenciesKeypad()
-    private val restClient = mock<RestClient>()
+    private val userClient = mock<UserClient>()
     private val bot = mock<TelegramLongPollingBot>()
 
     private val toggleCurrencyUpdateProcessor = ToggleCurrencyUpdateProcessor()
@@ -32,7 +31,7 @@ internal class ToggleNextCurrencyUpdateProcessorTest {
     @BeforeEach
     fun setUp() {
         toggleCurrencyUpdateProcessor.currenciesKeypad = currenciesKeypad
-        toggleCurrencyUpdateProcessor.restClient = restClient
+        toggleCurrencyUpdateProcessor.userClient = userClient
         currenciesKeypad.bot = bot
         whenever(update.callbackQuery).thenReturn(callbackQuery)
         whenever(callbackQuery.data).thenReturn("CHF")
@@ -48,7 +47,7 @@ internal class ToggleNextCurrencyUpdateProcessorTest {
     @Test
     fun processing() {
         toggleCurrencyUpdateProcessor.process(update)
-        verify(restClient).toggleUserCurrency(any(), any())
+        verify(userClient).toggleUserCurrency(any(), any())
         verify(bot).execute(any<EditMessageReplyMarkup>())
     }
 }

@@ -5,7 +5,6 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.Emoji
 import wasted.bot.update.processor.UpdateProcessor
-import wasted.rest.RestClient
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,7 +12,7 @@ import javax.inject.Singleton
 class ConfirmExpenseRemovalUpdateProcessor : UpdateProcessor {
 
     @Inject
-    lateinit var restClient: RestClient
+    lateinit var expenseClient: ExpenseClient
     @Inject lateinit var bot: TelegramLongPollingBot
 
     override fun appliesTo(update: Update): Boolean {
@@ -21,7 +20,7 @@ class ConfirmExpenseRemovalUpdateProcessor : UpdateProcessor {
         val data = callbackQuery.data ?: return false
         val fromId = callbackQuery.from.id
         return data == "confirm-expense-removal"
-                && restClient.getExpenseByGroupIdAndTelegramMessageId(
+                && expenseClient.getExpenseByGroupIdAndTelegramMessageId(
             callbackQuery.message.chatId,
             callbackQuery.message.messageId)
             .userId == fromId
@@ -30,7 +29,7 @@ class ConfirmExpenseRemovalUpdateProcessor : UpdateProcessor {
     override fun process(update: Update) {
         val chatId = update.callbackQuery.message.chatId
         val messageId = update.callbackQuery.message.messageId
-        restClient.removeExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
+        expenseClient.removeExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
         bot.execute(
             EditMessageText()
                 .setChatId(chatId)

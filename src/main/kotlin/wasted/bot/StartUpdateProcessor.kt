@@ -5,25 +5,25 @@ import com.google.inject.Singleton
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
 import wasted.keypad.CurrenciesKeypad
-import wasted.rest.RestClient
+import wasted.user.UserClient
 
 @Singleton
 class StartUpdateProcessor : UpdateProcessor {
 
     @Inject
-    lateinit var restClient: RestClient
+    lateinit var userClient: UserClient
     @Inject
     lateinit var currenciesKeypad: CurrenciesKeypad
 
     override fun appliesTo(update: Update): Boolean {
         val message = update.message ?: return false
         val text = message.text ?: return false
-        return text == "/start" && !restClient.existsUser(update.message.from.id)
+        return text == "/start" && !userClient.existsUser(update.message.from.id)
     }
 
     override fun process(update: Update) {
         val fromId = update.message.from.id
-        restClient.createUser(fromId)
-        currenciesKeypad.send(update.message.chatId, restClient.getUserCurrencies(fromId))
+        userClient.createUser(fromId)
+        currenciesKeypad.send(update.message.chatId, userClient.getUserCurrencies(fromId))
     }
 }

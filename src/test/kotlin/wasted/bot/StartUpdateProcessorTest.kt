@@ -14,11 +14,11 @@ import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
 import wasted.keypad.CurrenciesKeypad
-import wasted.rest.RestClient
+import wasted.user.UserClient
 
 internal class StartUpdateProcessorTest {
 
-    private val restClient = mock<RestClient>()
+    private val userClient = mock<UserClient>()
     private val currenciesKeypad = CurrenciesKeypad()
     private val bot = mock<TelegramLongPollingBot>()
 
@@ -30,7 +30,7 @@ internal class StartUpdateProcessorTest {
 
     @BeforeEach
     fun setUp() {
-        startUpdateProcessor.restClient = restClient
+        startUpdateProcessor.userClient = userClient
         startUpdateProcessor.currenciesKeypad = currenciesKeypad
         currenciesKeypad.bot = bot
         whenever(update.message).thenReturn(message)
@@ -45,14 +45,14 @@ internal class StartUpdateProcessorTest {
 
     @Test
     fun existingUser() {
-        whenever(restClient.existsUser(any())).thenReturn(true)
+        whenever(userClient.existsUser(any())).thenReturn(true)
         assertFalse(startUpdateProcessor.appliesTo(update))
     }
 
     @Test
     fun processing() {
         startUpdateProcessor.process(update)
-        verify(restClient).createUser(any())
+        verify(userClient).createUser(any())
         verify(bot).execute(any<SendMessage>())
     }
 }

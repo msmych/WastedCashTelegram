@@ -6,13 +6,12 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
-import wasted.rest.RestClient
 
 @Singleton
 class ConfirmCurrenciesUpdateProcessor : UpdateProcessor {
 
     @Inject
-    lateinit var restClient: RestClient
+    lateinit var userClient: UserClient
     @Inject
     lateinit var bot: TelegramLongPollingBot
 
@@ -27,7 +26,7 @@ class ConfirmCurrenciesUpdateProcessor : UpdateProcessor {
             .setChatId(update.callbackQuery.message.chatId)
             .setMessageId(update.callbackQuery.message.messageId)
             .setText("Your currencies: " +
-                    restClient.getUserCurrencies(update.callbackQuery.from.id)
+                    userClient.getUserCurrencies(update.callbackQuery.from.id)
                         .map { it.symbol }
                         .joinToString(", ")))
     }

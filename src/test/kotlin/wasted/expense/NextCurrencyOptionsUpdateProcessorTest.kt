@@ -16,12 +16,13 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
 import wasted.expense.Expense.Category.SHOPPING
 import wasted.keypad.OptionsKeypad
-import wasted.rest.RestClient
+import wasted.user.UserClient
 import java.util.*
 
 internal class NextCurrencyOptionsUpdateProcessorTest {
 
-    private val restClient = mock<RestClient>()
+    private val userClient = mock<UserClient>()
+    private val expenseClient = mock<ExpenseClient>()
     private val optionsKeypad = OptionsKeypad()
     private val bot = mock<TelegramLongPollingBot>()
 
@@ -34,7 +35,8 @@ internal class NextCurrencyOptionsUpdateProcessorTest {
 
     @BeforeEach
     fun setUp() {
-        nextCurrencyOptionsUpdateProcessor.restClient = restClient
+        nextCurrencyOptionsUpdateProcessor.userClient = userClient
+        nextCurrencyOptionsUpdateProcessor.expenseClient = expenseClient
         nextCurrencyOptionsUpdateProcessor.optionsKeypad = optionsKeypad
         optionsKeypad.bot = bot
         whenever(update.callbackQuery).thenReturn(callbackQuery)
@@ -42,9 +44,9 @@ internal class NextCurrencyOptionsUpdateProcessorTest {
         whenever(callbackQuery.from).thenReturn(user)
         whenever(user.id).thenReturn(2)
         whenever(callbackQuery.message).thenReturn(message)
-        whenever(restClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 2, 3, 4, 1000, "USD", SHOPPING, Date()))
-        whenever(restClient.getUserCurrencies(any()))
+        whenever(userClient.getUserCurrencies(any()))
             .thenReturn(listOf(Currency.getInstance("USD"), Currency.getInstance("EUR")))
     }
 
@@ -55,7 +57,7 @@ internal class NextCurrencyOptionsUpdateProcessorTest {
 
     @Test
     fun notOwnNotApplies() {
-        whenever(restClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 111, 3, 4, 1000, "USD", SHOPPING, Date()))
         assertFalse(nextCurrencyOptionsUpdateProcessor.appliesTo(update))
     }
@@ -63,7 +65,7 @@ internal class NextCurrencyOptionsUpdateProcessorTest {
     @Test
     fun processing() {
         nextCurrencyOptionsUpdateProcessor.process(update)
-        verify(restClient).updateExpense(any())
+        verify(expenseClient).updateExpense(any())
         verify(bot).execute(any<EditMessageText>())
     }
 }
