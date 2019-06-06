@@ -13,7 +13,9 @@ import wasted.expense.*
 import wasted.expense.clear.ClearByTypeUpdateProcessor
 import wasted.expense.clear.ClearUpdateProcessor
 import wasted.keypad.OptionsUpdateProcessor
+import wasted.stub.ExpenseClientStub
 import wasted.stub.TotalClientStub
+import wasted.stub.UserClientStub
 import wasted.total.TotalClient
 import wasted.total.TotalRestClient
 import wasted.total.TotalUpdateProcessor
@@ -54,8 +56,8 @@ fun main(args: Array<String>) {
 }
 
 fun registerDev() {
-    register(UserClient::class.java, UserRestClient::class.java)
-    register(ExpenseClient::class.java, ExpenseRestClient::class.java)
+    register(UserClient::class.java, UserClientStub::class.java)
+    register(ExpenseClient::class.java, ExpenseClientStub::class.java)
     register(TotalClient::class.java, TotalClientStub::class.java)
 }
 

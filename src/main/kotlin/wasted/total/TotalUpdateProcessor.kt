@@ -29,14 +29,17 @@ class TotalUpdateProcessor : UpdateProcessor {
                 totalClient.getTotal(update.message.chatId)
                     .groupBy { it.currency }
                     .map { cur ->
-                        formatAmount(cur.value.map { it.amount }.sum(),
+                        val currencySum = cur.value.map { it.amount }.sum()
+                        formatAmount(
+                            currencySum,
                             Currency.getInstance(cur.key)) + "\n" +
                                 cur.value.groupBy { it.category }
                                     .map { cat ->
-                                        cat.key.emoji.code + " " + formatAmount(cat.value.map { it.amount }.sum(),
-                                            Currency.getInstance(cur.key)) }
-                                    .joinToString("\n")}
-                    .joinToString("\n"))
+                                        val categorySum = cat.value.map { it.amount }.sum()
+                                        cat.key.emoji.code.repeat(1 + (10 * categorySum.toDouble() / currencySum.toDouble()).toInt()) + " " +
+                                                formatAmount(categorySum, Currency.getInstance(cur.key))
+                                    }.joinToString("\n")
+                    }.joinToString("\n\n"))
             .setParseMode(MARKDOWN))
     }
 }
