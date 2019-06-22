@@ -6,7 +6,6 @@ enum class Emoji(val code: String) {
     PIZZA("\uD83C\uDF55"),
     BOOKS("\uD83D\uDCDA"),
     GIFT("\uD83C\uDF81"),
-    DOLLAR("\uD83D\uDCB5"),
     SHOPPING_CART("\uD83D\uDED2"),
     AIRPLANE("✈️"),
     PILL("\uD83D\uDC8A"),
@@ -15,10 +14,12 @@ enum class Emoji(val code: String) {
     TELESCOPE("\uD83D\uDD2D"),
     TABLE_TENNIS("\uD83C\uDFD3"),
     LIPSTICK("\uD83D\uDC84"),
+    BAR_CHART("📊"),
 
     WHITE_CHECK_MARK("✅"),
     BALLOT_BOX_WITH_CHECK("☑️"),
     X("❌"),
+    GREY_QUESTION("❔"),
     HEAVY_MULTIPLICATION_X("✖️"),
     ARROW_LEFT("⬅️"),
     ARROW_BACKWARD("◀️"),
@@ -33,9 +34,7 @@ enum class Emoji(val code: String) {
     SEVEN("7️⃣"),
     EIGHT("8️⃣"),
     NINE("9️⃣"),
-    ZERO("0️⃣"),
-
-    BLACK_JOKER("🃏");
+    ZERO("0️⃣");
 
     companion object {
         fun fromCode(code: String): Emoji? {

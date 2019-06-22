@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
     implementation 'com.google.code.gson:gson:2.8.5',
-            'org.telegram:telegrambots:4.2',
+            'org.telegram:telegrambots:4.3.1',
             'org.apache.httpcomponents:fluent-hc:4.5.8',
             'ch.qos.logback:logback-classic:1.2.3',
             'org.jetbrains.kotlin:kotlin-stdlib-jdk8'

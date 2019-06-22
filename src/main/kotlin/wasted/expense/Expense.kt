@@ -18,7 +18,7 @@ data class Expense(val id: Long,
         SHOPPING(Emoji.SHOPPING_CART),
         TRANSPORT(Emoji.STEAM_LOCOMOTIVE),
         HOME(Emoji.HOUSE),
-        FEES(Emoji.DOLLAR),
+        FEES(Emoji.BAR_CHART),
         ENTERTAINMENT(Emoji.GUITAR),
         TRAVEL(Emoji.AIRPLANE),
         HEALTH(Emoji.PILL),
@@ -27,7 +27,7 @@ data class Expense(val id: Long,
         SPORT(Emoji.TABLE_TENNIS),
         HOBBIES(Emoji.TELESCOPE),
         BEAUTY(Emoji.LIPSTICK),
-        OTHER(Emoji.BLACK_JOKER);
+        OTHER(Emoji.GREY_QUESTION);
 
         companion object {
             fun fromName(name: String): Category? {
