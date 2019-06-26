@@ -1,0 +1,7 @@
+Hi
+
+I help understanding how much you spend
+
+Just send me your personal expenses here
+
+You can also add me to a group chat and save shared expenses of all chat members
