@@ -13,11 +13,11 @@ repositories {
 dependencies {
     implementation 'com.google.code.gson:gson:2.8.5',
             'org.telegram:telegrambots:4.3.1',
-            'org.apache.httpcomponents:fluent-hc:4.5.8',
+            'org.apache.httpcomponents:fluent-hc:4.5.9',
             'ch.qos.logback:logback-classic:1.2.3',
             'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
     runtimeOnly 'org.codehaus.groovy:groovy:2.5.7'
-    testImplementation 'com.github.tomakehurst:wiremock:2.23.0',
+    testImplementation 'com.github.tomakehurst:wiremock:2.23.2',
             'org.junit.jupiter:junit-jupiter-api:5.4.2',
             'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
