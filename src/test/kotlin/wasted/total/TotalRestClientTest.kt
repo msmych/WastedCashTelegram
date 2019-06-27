@@ -29,11 +29,21 @@ internal class TotalRestClientTest {
                 .willReturn(aResponse()
                     .withStatus(200)
                     .withBody(gson.toJson(listOf(total)))))
+            wireMockClassRule.stubFor(get(urlPathEqualTo("/total/month"))
+                .withQueryParam("groupId", equalTo("1"))
+                .willReturn(aResponse()
+                    .withStatus(200)
+                    .withBody(gson.toJson(listOf(total)))))
         }
     }
 
     @Test
     fun gettingTotal() {
         assertEquals(listOf(total), totalRestClient.getTotal(1))
+    }
+
+    @Test
+    fun gettingRecentTotal() {
+        assertEquals(listOf(total), totalRestClient.getRecentTotal(1, "month"))
     }
 }

@@ -15,9 +15,7 @@ import wasted.expense.clear.ClearUpdateProcessor
 import wasted.stub.ExpenseClientStub
 import wasted.stub.TotalClientStub
 import wasted.stub.UserClientStub
-import wasted.total.TotalClient
-import wasted.total.TotalRestClient
-import wasted.total.TotalUpdateProcessor
+import wasted.total.*
 import wasted.user.*
 
 fun main(args: Array<String>) {
@@ -49,7 +47,9 @@ fun main(args: Array<String>) {
         getInstance(OptionsUpdateProcessor::class.java),
         getInstance(ClearUpdateProcessor::class.java),
         getInstance(ClearByTypeUpdateProcessor::class.java),
-        getInstance(TotalUpdateProcessor::class.java))
+        getInstance(TotalUpdateProcessor::class.java),
+        getInstance(TotalAllUpdateProcessor::class.java),
+        getInstance(TotalRecentUpdateProcessor::class.java))
     TelegramBotsApi().registerBot(bot)
     LoggerFactory.getLogger("App").info("Поехали")
 }

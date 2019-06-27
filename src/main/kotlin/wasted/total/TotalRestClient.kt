@@ -20,4 +20,11 @@ class TotalRestClient : TotalClient {
             .execute().returnContent().asString(),
             object: TypeToken<List<Total>>(){}.type)
     }
+
+    override fun getRecentTotal(groupId: Long, period: String): List<Total> {
+        return gson.fromJson(Get("$baseUrl/total/$period?groupId=$groupId")
+            .addHeader("api-token", apiToken)
+            .execute().returnContent().asString(),
+            object: TypeToken<List<Total>>(){}.type)
+    }
 }

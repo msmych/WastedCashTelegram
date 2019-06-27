@@ -18,6 +18,7 @@ enum class Emoji(val code: String) {
 
     WHITE_CHECK_MARK("✅"),
     BALLOT_BOX_WITH_CHECK("☑️"),
+    RADIO_BUTTON("\uD83D\uDD18"),
     X("❌"),
     GREY_QUESTION("❔"),
     HEAVY_MULTIPLICATION_X("✖️"),
