@@ -17,6 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.User
 import wasted.expense.Expense
 import wasted.expense.Expense.Category.SHOPPING
 import wasted.expense.ExpenseClient
+import wasted.expense.OptionsUpdateProcessor
 import java.util.*
 
 internal class OptionsUpdateProcessorTest {

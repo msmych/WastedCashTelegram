@@ -1,10 +1,10 @@
-package wasted.keypad
+package wasted.expense
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
-import wasted.expense.ExpenseClient
+import wasted.keypad.OptionsKeypad
 
 @Singleton
 class OptionsUpdateProcessor : UpdateProcessor {
