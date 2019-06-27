@@ -12,7 +12,6 @@ import wasted.bot.StartUpdateProcessor
 import wasted.expense.*
 import wasted.expense.clear.ClearByTypeUpdateProcessor
 import wasted.expense.clear.ClearUpdateProcessor
-import wasted.keypad.OptionsUpdateProcessor
 import wasted.stub.ExpenseClientStub
 import wasted.stub.TotalClientStub
 import wasted.stub.UserClientStub

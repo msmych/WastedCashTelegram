@@ -12,11 +12,13 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.expense.Expense.Category.SHOPPING
+import wasted.keypad.TotalKeypad
 
 internal class TotalUpdateProcessorTest {
 
     private val bot = mock<TelegramLongPollingBot>()
     private val totalClient = mock<TotalClient>()
+    private val totalKeypad = TotalKeypad()
 
     private val totalUpdateProcessor = TotalUpdateProcessor()
 
@@ -27,6 +29,8 @@ internal class TotalUpdateProcessorTest {
     fun setUp() {
         totalUpdateProcessor.bot = bot
         totalUpdateProcessor.totalClient = totalClient
+        totalKeypad.bot = bot
+        totalUpdateProcessor.totalKeypad = totalKeypad
         whenever(update.message).thenReturn(message)
         whenever(message.text).thenReturn("/total")
         whenever(totalClient.getTotal(any())).thenReturn(listOf(Total(1, 1000, "USD", SHOPPING)))
