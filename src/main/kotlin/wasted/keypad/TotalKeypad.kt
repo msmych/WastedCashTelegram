@@ -29,20 +29,16 @@ class TotalKeypad {
 
     private fun getText(total: List<Total>, type: String): String {
         return "${getTitle(type)}\n\n" +
-                total
-                    .groupBy { it.currency }
+                total.groupBy { it.currency }
                     .map { cur ->
-                        val currencySum = cur.value.map { it.amount }.sum()
-                        formatAmount(
-                            currencySum,
-                            Currency.getInstance(cur.key)
-                        ) + "\n" +
-                                cur.value.groupBy { it.category }
-                                    .map { cat ->
-                                        val categorySum = cat.value.map { it.amount }.sum()
-                                        cat.key.emoji.code.repeat(1 + (10 * categorySum.toDouble() / currencySum.toDouble()).toInt()) + " " +
-                                                formatAmount(categorySum, Currency.getInstance(cur.key))
-                                    }.joinToString("\n")
+                        val curSum = cur.value.map { it.amount }.sum()
+                        formatAmount(curSum, Currency.getInstance(cur.key)) + "\n" +
+                                cur.value.sortedByDescending { it.amount }
+                                    .joinToString("\n") {
+                                    formatAmount(it.amount, Currency.getInstance(it.currency)) + " " +
+                                            it.category.emoji.code
+                                                .repeat(1 + (10 * it.amount.toDouble() / curSum.toDouble()).toInt())
+                                }
                     }.joinToString("\n\n")
     }
 

@@ -2,6 +2,7 @@ package wasted.stub
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import wasted.expense.Expense
 import wasted.total.Total
 import wasted.total.TotalClient
 import java.time.ZonedDateTime
@@ -14,13 +15,25 @@ class TotalClientStub : TotalClient {
     lateinit var ims: InMemoryStorage
 
     override fun getTotal(groupId: Long): List<Total> {
-        return ims.expenses
-            .filter { it.groupId == groupId }
-            .map { Total(it.userId, it.amount, it.currency, it.category) }
+        return toTotalList(ims.expenses.filter { it.groupId == groupId })
+    }
+
+    private fun toTotalList(expenses: List<Expense>): List<Total> {
+        return expenses.groupBy { it.currency }
+            .map { cur ->
+                cur.value.groupBy { it.category }
+                    .map { cat -> cat.value
+                        .map {
+                            Total(it.userId, it.amount, cur.key, cat.key)
+                        }.reduce { acc, total ->
+                            Total(total.userId, acc.amount + total.amount, total.currency, total.category)
+                        }
+                    }
+            }.flatten()
     }
 
     override fun getRecentTotal(groupId: Long, period: String): List<Total> {
-        return ims.expenses
+        return toTotalList(ims.expenses
             .filter { it.groupId == groupId }
             .filter { it.date.after(Date.from(when (period) {
                 "month" -> ZonedDateTime.now().withDayOfMonth(1)
@@ -30,6 +43,6 @@ class TotalClientStub : TotalClient {
                 .withMinute(0)
                 .withSecond(0)
                 .toInstant()))
-            }.map { Total(it.userId, it.amount, it.currency, it.category) }
+            })
     }
 }
