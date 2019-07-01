@@ -11,6 +11,9 @@ import wasted.bot.Emoji.RADIO_BUTTON
 import wasted.bot.ikb
 import wasted.expense.formatAmount
 import wasted.total.Total
+import wasted.total.Total.Type
+import wasted.total.Total.Type.ALL
+import wasted.total.Total.Type.MONTH
 import java.time.ZonedDateTime.now
 import java.time.format.TextStyle
 import java.util.*
@@ -21,13 +24,13 @@ class TotalKeypad {
     @Inject
     lateinit var bot: TelegramLongPollingBot
 
-    fun send(chatId: Long, total: List<Total>, type: String = "month") {
+    fun send(chatId: Long, total: List<Total>, type: Type = MONTH) {
         bot.execute(SendMessage(chatId, getText(total, type))
             .setParseMode(MARKDOWN)
             .setReplyMarkup(getInlineKeyboardMarkup(type)))
     }
 
-    private fun getText(total: List<Total>, type: String): String {
+    private fun getText(total: List<Total>, type: Type): String {
         return "${getTitle(type)}\n\n" +
                 total.groupBy { it.currency }
                     .map { cur ->
@@ -42,22 +45,21 @@ class TotalKeypad {
                     }.joinToString("\n\n")
     }
 
-    private fun getTitle(type: String): String {
+    private fun getTitle(type: Type): String {
         return "#total " + when (type) {
-            "month" -> "${now().month.getDisplayName(TextStyle.FULL, Locale.US)} ${now().year}"
-            "all" -> ""
-            else -> throw IllegalArgumentException()
+            MONTH -> "${now().month.getDisplayName(TextStyle.FULL, Locale.US)} ${now().year}"
+            ALL -> ""
         }
     }
 
-    private fun getInlineKeyboardMarkup(type: String): InlineKeyboardMarkup {
+    private fun getInlineKeyboardMarkup(type: Type): InlineKeyboardMarkup {
         return InlineKeyboardMarkup()
             .setKeyboard(listOf(listOf(
-                ikb(if (type == "month") "${RADIO_BUTTON.code} Month" else "Month", "total_month"),
-                ikb(if (type == "all") "${RADIO_BUTTON.code} All" else "All", "total_all"))))
+                ikb(if (type == MONTH) "${RADIO_BUTTON.code} Month" else "Month", "total_month"),
+                ikb(if (type == ALL) "${RADIO_BUTTON.code} All" else "All", "total_all"))))
     }
 
-    fun update(chatId: Long, messageId: Int, total: List<Total>, type: String) {
+    fun update(chatId: Long, messageId: Int, total: List<Total>, type: Type) {
         bot.execute(EditMessageText()
             .setChatId(chatId)
             .setMessageId(messageId)

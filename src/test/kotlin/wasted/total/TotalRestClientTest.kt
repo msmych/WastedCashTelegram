@@ -8,6 +8,7 @@ import org.junit.BeforeClass
 import org.junit.ClassRule
 import org.junit.Test
 import wasted.expense.Expense.Category.SHOPPING
+import wasted.total.Total.Type.MONTH
 
 internal class TotalRestClientTest {
 
@@ -24,12 +25,7 @@ internal class TotalRestClientTest {
         @JvmStatic
         fun setUpStubs() {
             totalRestClient.apiToken = "1234"
-            wireMockClassRule.stubFor(get(urlPathEqualTo("/total"))
-                .withQueryParam("groupId", equalTo("1"))
-                .willReturn(aResponse()
-                    .withStatus(200)
-                    .withBody(gson.toJson(listOf(total)))))
-            wireMockClassRule.stubFor(get(urlPathEqualTo("/total/month"))
+            wireMockClassRule.stubFor(get(urlPathEqualTo("/total/in/1/type/MONTH"))
                 .withQueryParam("groupId", equalTo("1"))
                 .willReturn(aResponse()
                     .withStatus(200)
@@ -39,11 +35,6 @@ internal class TotalRestClientTest {
 
     @Test
     fun gettingTotal() {
-        assertEquals(listOf(total), totalRestClient.getTotal(1))
-    }
-
-    @Test
-    fun gettingRecentTotal() {
-        assertEquals(listOf(total), totalRestClient.getRecentTotal(1, "month"))
+        assertEquals(listOf(total), totalRestClient.getTotal(1, MONTH))
     }
 }

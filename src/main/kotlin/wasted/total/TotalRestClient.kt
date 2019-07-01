@@ -14,15 +14,8 @@ class TotalRestClient : TotalClient {
 
     lateinit var apiToken: String
 
-    override fun getTotal(groupId: Long): List<Total> {
-        return gson.fromJson(Get("$baseUrl/total?groupId=$groupId")
-            .addHeader("api-token", apiToken)
-            .execute().returnContent().asString(),
-            object: TypeToken<List<Total>>(){}.type)
-    }
-
-    override fun getRecentTotal(groupId: Long, period: String): List<Total> {
-        return gson.fromJson(Get("$baseUrl/total/$period?groupId=$groupId")
+    override fun getTotal(groupId: Long, type: Total.Type): List<Total> {
+        return gson.fromJson(Get("$baseUrl/total/in/$groupId/type/$type")
             .addHeader("api-token", apiToken)
             .execute().returnContent().asString(),
             object: TypeToken<List<Total>>(){}.type)

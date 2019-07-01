@@ -8,44 +8,43 @@ import org.junit.Assert.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
+import wasted.expense.Expense.Category.SHOPPING
 import wasted.keypad.TotalKeypad
 
-internal class TotalUpdateProcessorTest {
+internal class TotalMonthUpdateProcessorTest {
 
+    private val bot = mock<TelegramLongPollingBot>()
     private val totalClient = mock<TotalClient>()
     private val totalKeypad = TotalKeypad()
-    private val bot = mock<TelegramLongPollingBot>()
 
-    private val totalUpdateProcessor = TotalUpdateProcessor()
+    private val totalMonthUpdateProcessor = TotalMonthUpdateProcessor()
 
     private val update = mock<Update>()
-    private val callbackQuery = mock<CallbackQuery>()
     private val message = mock<Message>()
 
     @BeforeEach
     fun setUp() {
+        totalMonthUpdateProcessor.bot = bot
+        totalMonthUpdateProcessor.totalClient = totalClient
         totalKeypad.bot = bot
-        totalUpdateProcessor.totalKeypad = totalKeypad
-        totalUpdateProcessor.totalClient = totalClient
-
-        whenever(update.callbackQuery).thenReturn(callbackQuery)
-        whenever(callbackQuery.data).thenReturn("totalMONTH")
-        whenever(callbackQuery.message).thenReturn(message)
+        totalMonthUpdateProcessor.totalKeypad = totalKeypad
+        whenever(update.message).thenReturn(message)
+        whenever(message.text).thenReturn("/total")
+        whenever(totalClient.getTotal(any(), any())).thenReturn(listOf(Total(1, 1000, "USD", SHOPPING)))
     }
 
     @Test
     fun applies() {
-        assertTrue(totalUpdateProcessor.appliesTo(update))
+        assertTrue(totalMonthUpdateProcessor.appliesTo(update))
     }
 
     @Test
     fun processing() {
-        totalUpdateProcessor.process(update)
+        totalMonthUpdateProcessor.process(update)
         verify(totalClient).getTotal(any(), any())
-        verify(bot).execute(any<EditMessageText>())
+        verify(bot).execute(any<SendMessage>())
     }
 }

@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
 import wasted.expense.Expense.Category.SHOPPING
 import wasted.total.Total
+import wasted.total.Total.Type.MONTH
 
 internal class TotalKeypadTest {
 
@@ -32,7 +33,7 @@ internal class TotalKeypadTest {
 
     @Test
     fun updating() {
-        totalKeypad.update(1L, 2, listOf(total), "month")
+        totalKeypad.update(1L, 2, listOf(total), MONTH)
         verify(bot).execute(any<EditMessageText>())
     }
 }
