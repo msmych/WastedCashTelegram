@@ -2,16 +2,15 @@ package wasted.stub
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import wasted.expense.CreateExpenseRequest
 import wasted.expense.Expense
 import wasted.expense.ExpenseClient
 import wasted.expense.clear.ClearExpenseType
-import wasted.expense.CreateExpenseRequest
 import java.util.*
 import kotlin.collections.ArrayList
 
 @Singleton
 class ExpenseClientStub : ExpenseClient {
-
     @Inject
     lateinit var ims: InMemoryStorage
 
@@ -19,6 +18,12 @@ class ExpenseClientStub : ExpenseClient {
         return ims.expenses
             .find { it.groupId == groupId && it.telegramMessageId == telegramMessageId }
             ?: throw IllegalArgumentException()
+    }
+
+    override fun getTelegramMessageIds(groupId: Long): List<Int> {
+        return ims.expenses
+            .filter { it.groupId == groupId && it.telegramMessageId != null }
+            .map { it.telegramMessageId ?: throw IllegalArgumentException() }
     }
 
     override fun createExpense(request: CreateExpenseRequest): Expense {

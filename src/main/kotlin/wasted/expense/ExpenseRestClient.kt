@@ -1,6 +1,7 @@
 package wasted.expense
 
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.google.inject.Singleton
 import org.apache.http.client.fluent.Request.*
 import org.apache.http.entity.ContentType.APPLICATION_JSON
@@ -8,7 +9,6 @@ import wasted.expense.clear.ClearExpenseType
 
 @Singleton
 class ExpenseRestClient : ExpenseClient {
-
     private val gson = Gson()
 
     private val baseUrl = "http://localhost:8080"
@@ -21,6 +21,14 @@ class ExpenseRestClient : ExpenseClient {
                 .addHeader("api-token", apiToken)
                 .execute().returnContent().asString(),
             Expense::class.java)
+    }
+
+    override fun getTelegramMessageIds(groupId: Long): List<Int> {
+        return gson.fromJson(
+            Get("$baseUrl/expense/telegramMessageIds?groupId=$groupId")
+                .addHeader("api-token", apiToken)
+                .execute().returnContent().asString(),
+            object: TypeToken<List<Int>>(){}.type)
     }
 
     override fun createExpense(request: CreateExpenseRequest): Expense {

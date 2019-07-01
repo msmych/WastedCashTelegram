@@ -3,7 +3,7 @@ package wasted.expense
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
 import org.telegram.telegrambots.meta.api.objects.Update
-import wasted.bot.Emoji
+import wasted.bot.Emoji.HEAVY_MULTIPLICATION_X
 import wasted.bot.update.processor.UpdateProcessor
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,6 +34,6 @@ class ConfirmExpenseRemovalUpdateProcessor : UpdateProcessor {
             EditMessageText()
                 .setChatId(chatId)
                 .setMessageId(messageId)
-                .setText("${Emoji.HEAVY_MULTIPLICATION_X.code} Cancelled"))
+                .setText("${HEAVY_MULTIPLICATION_X.code} Removed"))
     }
 }
