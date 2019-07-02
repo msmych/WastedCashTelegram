@@ -55,8 +55,8 @@ class TotalKeypad {
     private fun getInlineKeyboardMarkup(type: Type): InlineKeyboardMarkup {
         return InlineKeyboardMarkup()
             .setKeyboard(listOf(listOf(
-                ikb(if (type == MONTH) "${RADIO_BUTTON.code} Month" else "Month", "total_month"),
-                ikb(if (type == ALL) "${RADIO_BUTTON.code} All" else "All", "total_all"))))
+                ikb(if (type == MONTH) "${RADIO_BUTTON.code} Month" else "Month", "totalMONTH"),
+                ikb(if (type == ALL) "${RADIO_BUTTON.code} All" else "All", "totalALL"))))
     }
 
     fun update(chatId: Long, messageId: Int, total: List<Total>, type: Type) {
