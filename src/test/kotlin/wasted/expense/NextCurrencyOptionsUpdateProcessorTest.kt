@@ -56,9 +56,15 @@ internal class NextCurrencyOptionsUpdateProcessorTest {
     }
 
     @Test
-    fun notOwnNotApplies() {
+    fun not_own_not_applies() {
         whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 111, 3, 4, 1000, "USD", SHOPPING, Date()))
+        assertFalse(nextCurrencyOptionsUpdateProcessor.appliesTo(update))
+    }
+
+    @Test
+    fun last_currency_not_applies() {
+        whenever(userClient.getUserCurrencies(any())).thenReturn(listOf(Currency.getInstance("USD")))
         assertFalse(nextCurrencyOptionsUpdateProcessor.appliesTo(update))
     }
 

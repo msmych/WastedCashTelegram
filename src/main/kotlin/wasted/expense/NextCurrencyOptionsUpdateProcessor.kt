@@ -21,11 +21,13 @@ class NextCurrencyOptionsUpdateProcessor : UpdateProcessor {
     override fun appliesTo(update: Update): Boolean {
         val callbackQuery = update.callbackQuery ?: return false
         val data = callbackQuery.data ?: return false
+        val fromId = callbackQuery.from.id
         return data == "next-currency-option"
                 && expenseClient.getExpenseByGroupIdAndTelegramMessageId(
             callbackQuery.message.chatId,
             callbackQuery.message.messageId)
-            .userId == callbackQuery.from.id
+            .userId == fromId &&
+                userClient.getUserCurrencies(fromId).size > 1
     }
 
     override fun process(update: Update) {

@@ -26,8 +26,8 @@ class NextCurrencyUpdateProcessor : UpdateProcessor {
                 && expenseClient.getExpenseByGroupIdAndTelegramMessageId(
             callbackQuery.message.chatId,
             callbackQuery.message.messageId)
-            .userId == fromId
-                && userClient.getUserCurrencies(fromId).size > 1
+            .userId == fromId &&
+                userClient.getUserCurrencies(fromId).size > 1
     }
 
     override fun process(update: Update) {

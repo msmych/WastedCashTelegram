@@ -17,6 +17,8 @@ internal class OptionsKeypadTest {
 
     private val optionsKeypad = OptionsKeypad()
 
+    private val expense = Expense(1, 1, 2, 3, 1000, "USD", SHOPPING, Date())
+
     @BeforeEach
     fun setUp() {
         optionsKeypad.bot = bot
@@ -24,8 +26,7 @@ internal class OptionsKeypadTest {
 
     @Test
     fun updating() {
-        optionsKeypad.update(
-            Expense(1, 1, 2, 3, 1000, "USD", SHOPPING, Date()))
+        optionsKeypad.update(expense)
         verify(bot).execute(any<EditMessageText>())
     }
 }
