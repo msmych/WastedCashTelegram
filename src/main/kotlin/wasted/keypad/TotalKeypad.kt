@@ -35,12 +35,12 @@ class TotalKeypad {
                 total.groupBy { it.currency }
                     .map { cur ->
                         val curSum = cur.value.map { it.amount }.sum()
-                        formatAmount(curSum, Currency.getInstance(cur.key)) + "\n" +
+                        "${formatAmount(curSum, Currency.getInstance(cur.key))}\n" +
                                 cur.value.sortedByDescending { it.amount }
                                     .joinToString("\n") {
-                                    formatAmount(it.amount, Currency.getInstance(it.currency)) + " " +
+                                    "${formatAmount(it.amount, Currency.getInstance(it.currency))} ${it.category.emoji.code}\n" +
                                             it.category.emoji.code
-                                                .repeat(1 + (10 * it.amount.toDouble() / curSum.toDouble()).toInt())
+                                                .repeat((10 * it.amount.toDouble() / curSum.toDouble()).toInt())
                                 }
                     }.joinToString("\n\n")
     }

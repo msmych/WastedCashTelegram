@@ -25,7 +25,7 @@ class NumericKeypad {
         bot.execute(EditMessageText()
             .setChatId(expense.groupId)
             .setMessageId(expense.telegramMessageId)
-            .setText("Wasted ${formatAmount(expense.amount, currency)} for ${expense.category.emoji.code}")
+            .setText("${formatAmount(expense.amount, currency)} ${expense.category.emoji.code}")
             .setParseMode(MARKDOWN)
             .setReplyMarkup(getMarkup(expense.amount, currency)))
     }
