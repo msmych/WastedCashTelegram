@@ -15,14 +15,14 @@ import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
 import wasted.expense.Expense.Category.SHOPPING
-import wasted.keypad.OptionsKeypad
+import wasted.keypad.CategoriesKeypad
 import java.util.*
 
 internal class ExpenseUpdateProcessorTest {
 
     private val bot = mock<TelegramLongPollingBot>()
     private val expenseClient = mock<ExpenseClient>()
-    private val optionsKeypad = OptionsKeypad()
+    private val categoriesKeypad = CategoriesKeypad()
 
     private val expenseUpdateProcessor = ExpenseUpdateProcessor()
 
@@ -33,9 +33,9 @@ internal class ExpenseUpdateProcessorTest {
     @Before
     fun setUp() {
         expenseUpdateProcessor.bot = bot
-        optionsKeypad.bot = bot
+        categoriesKeypad.bot = bot
         expenseUpdateProcessor.expenseClient = expenseClient
-        expenseUpdateProcessor.optionsKeypad = optionsKeypad
+        expenseUpdateProcessor.categoriesKeypad = categoriesKeypad
 
         whenever(update.message).thenReturn(message)
         whenever(expenseClient.createExpense(any()))
@@ -52,43 +52,43 @@ internal class ExpenseUpdateProcessorTest {
     }
 
     @Test
-    fun wrongNotApplies() {
+    fun wrong_not_applies() {
         whenever(message.text).thenReturn("/wrong")
         assertFalse(expenseUpdateProcessor.appliesTo(update))
     }
 
     @Test
-    fun integerApplies() {
+    fun integer_applies() {
         whenever(message.text).thenReturn("/1000")
         assertTrue(expenseUpdateProcessor.appliesTo(update))
     }
 
     @Test
-    fun finishesWithPeriodNotApplies() {
+    fun finishes_with_period_not_applies() {
         whenever(message.text).thenReturn("/10.")
         assertFalse(expenseUpdateProcessor.appliesTo(update))
     }
 
     @Test
-    fun oneDigitAfterPeriodNotApplies() {
+    fun one_digit_after_period_not_applies() {
         whenever(message.text).thenReturn("/10.0")
         assertFalse(expenseUpdateProcessor.appliesTo(update))
     }
 
     @Test
-    fun threeDigitsAfterPeriodNotApplies() {
+    fun three_digits_after_period_not_applies() {
         whenever(message.text).thenReturn("/10.000")
         assertFalse(expenseUpdateProcessor.appliesTo(update))
     }
 
     @Test
-    fun nineDigitsNotApplies() {
+    fun nine_digits_not_applies() {
         whenever(message.text).thenReturn("/123456789")
         assertFalse(expenseUpdateProcessor.appliesTo(update))
     }
 
     @Test
-    fun eightDigitsAndTwoMoreApplies() {
+    fun eight_digits_and_two_more_applies() {
         whenever(message.text).thenReturn("/12345678.90")
         assertTrue(expenseUpdateProcessor.appliesTo(update))
     }

@@ -14,11 +14,13 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
 import wasted.expense.Expense.Category.SHOPPING
+import wasted.keypad.CategoriesKeypad
 import java.util.*
 
 internal class EditCategoryUpdateProcessorTest {
 
     private val expenseClient = mock<ExpenseClient>()
+    private val categoriesKeypad = CategoriesKeypad()
     private val bot = mock<TelegramLongPollingBot>()
 
     private val editCategoryUpdateProcessor = EditCategoryUpdateProcessor()
@@ -30,7 +32,8 @@ internal class EditCategoryUpdateProcessorTest {
     @BeforeEach
     fun setUp() {
         editCategoryUpdateProcessor.expenseClient = expenseClient
-        editCategoryUpdateProcessor.bot = bot
+        categoriesKeypad.bot = bot
+        editCategoryUpdateProcessor.categoriesKeypad = categoriesKeypad
         whenever(update.callbackQuery).thenReturn(callbackQuery)
         whenever(callbackQuery.data).thenReturn("edit-category")
         whenever(callbackQuery.from).thenReturn(user)
@@ -46,7 +49,7 @@ internal class EditCategoryUpdateProcessorTest {
     }
 
     @Test
-    fun notOwnNotApplies() {
+    fun not_own_not_applies() {
         whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 111, 2, 3, 1000, "USD", SHOPPING, Date()))
         assertFalse(editCategoryUpdateProcessor.appliesTo(update))

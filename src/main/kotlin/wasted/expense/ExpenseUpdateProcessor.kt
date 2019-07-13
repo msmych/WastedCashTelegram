@@ -4,7 +4,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
-import wasted.keypad.OptionsKeypad
+import wasted.keypad.CategoriesKeypad
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,7 +15,8 @@ class ExpenseUpdateProcessor : UpdateProcessor {
 
     @Inject lateinit var bot: TelegramLongPollingBot
     @Inject lateinit var expenseClient: ExpenseClient
-    @Inject lateinit var optionsKeypad: OptionsKeypad
+    @Inject
+    lateinit var categoriesKeypad: CategoriesKeypad
 
     override fun appliesTo(update: Update): Boolean {
         val message = update.message ?: return false
@@ -34,7 +35,7 @@ class ExpenseUpdateProcessor : UpdateProcessor {
                 parseAmount(update.message.text)
             )
         )
-        optionsKeypad.update(expense)
+        categoriesKeypad.update(chatId, messageId, expense)
     }
 
     private fun parseAmount(str: String): Long {
