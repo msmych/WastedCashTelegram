@@ -24,7 +24,7 @@ class TotalMonthUpdateProcessor : UpdateProcessor {
     override fun appliesTo(update: Update): Boolean {
         val message = update.message ?: return false
         val text = message.text ?: return false
-        logger.info("Received message $text")
+        logger.info("Received message $message")
         return text == "/total" || text == "/total@${bot.botUsername}"
     }
 
