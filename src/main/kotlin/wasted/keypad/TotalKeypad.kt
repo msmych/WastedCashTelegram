@@ -49,6 +49,8 @@ class TotalKeypad {
     }
 
     private fun totalItem(cat: Total, curSum: Long): String {
+        if (curSum == 0L)
+            return ""
         var s = "${formatAmount(cat.amount, Currency.getInstance(cat.currency))} ${cat.category.emoji.code}"
         if (10 * cat.amount / curSum > 0)
             s += "\n" + cat.category.emoji.code
