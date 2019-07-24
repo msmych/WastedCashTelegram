@@ -6,7 +6,6 @@ import com.google.gson.Gson
 import org.junit.BeforeClass
 import org.junit.ClassRule
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
 import wasted.expense.Expense.Category.OTHER
 import wasted.expense.clear.ClearExpenseType.ALL
@@ -38,13 +37,6 @@ internal class ExpenseRestClientTest {
                             .withStatus(200)
                             .withBody(gson.toJson(expense))))
             wireMockClassRule.stubFor(
-                get(urlPathEqualTo("/expense/telegramMessageIds"))
-                    .withQueryParam("groupId", equalTo("1234"))
-                    .willReturn(
-                        aResponse()
-                            .withStatus(200)
-                            .withBody(gson.toJson(listOf(1, 2, 3, 4, 5)))))
-            wireMockClassRule.stubFor(
                 post(urlEqualTo("/expense"))
                     .withRequestBody(equalToJson(gson.toJson(createExpenseRequest)))
                     .willReturn(
@@ -72,13 +64,6 @@ internal class ExpenseRestClientTest {
             expense.toString(),
             expenseRestClient.getExpenseByGroupIdAndTelegramMessageId(1234, 890).toString()
         )
-    }
-
-    @Test
-    fun gettingTelegramMessageIds() {
-        assertArrayEquals(
-            arrayOf(1, 2, 3, 4, 5),
-            expenseRestClient.getTelegramMessageIds(1234).toTypedArray())
     }
 
     @Test

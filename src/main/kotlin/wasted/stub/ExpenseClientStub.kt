@@ -6,6 +6,9 @@ import wasted.expense.CreateExpenseRequest
 import wasted.expense.Expense
 import wasted.expense.ExpenseClient
 import wasted.expense.clear.ClearExpenseType
+import wasted.expense.clear.ClearExpenseType.ALL
+import wasted.expense.clear.ClearExpenseType.UP_TO_THIS_MONTH
+import java.time.ZonedDateTime.now
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -18,12 +21,6 @@ class ExpenseClientStub : ExpenseClient {
         return ims.expenses
             .find { it.groupId == groupId && it.telegramMessageId == telegramMessageId }
             ?: throw IllegalArgumentException()
-    }
-
-    override fun getTelegramMessageIds(groupId: Long): List<Int> {
-        return ims.expenses
-            .filter { it.groupId == groupId && it.telegramMessageId != null }
-            .map { it.telegramMessageId ?: throw IllegalArgumentException() }
     }
 
     override fun createExpense(request: CreateExpenseRequest): Expense {
@@ -53,7 +50,16 @@ class ExpenseClientStub : ExpenseClient {
 
     override fun removeExpenseByType(groupId: Long, type: ClearExpenseType) {
         when (type) {
-            ClearExpenseType.ALL -> ims.expenses.removeAll(ims.expenses.filter { it.groupId == groupId })
+            ALL -> ims.expenses.removeAll(ims.expenses.filter { it.groupId == groupId })
+            UP_TO_THIS_MONTH -> ims.expenses.removeAll(ims.expenses
+                .filter { it.groupId == groupId }
+                .filter { it.date.before(Date.from(
+                    now()
+                    .withDayOfMonth(1)
+                    .withHour(0)
+                    .withMinute(0)
+                    .withSecond(0)
+                    .toInstant())) })
         }
     }
 }

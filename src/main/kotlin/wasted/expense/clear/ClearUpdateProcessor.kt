@@ -25,8 +25,10 @@ class ClearUpdateProcessor : UpdateProcessor {
         bot.execute(SendMessage(update.message.chatId, "Clearing types:")
             .setReplyMarkup(InlineKeyboardMarkup()
                 .setKeyboard(ClearExpenseType.values()
-                    .map { listOf(InlineKeyboardButton()
-                        .setText(it.label)
-                        .setCallbackData("clear${it.name}")) })))
+                    .map {
+                        listOf(InlineKeyboardButton()
+                            .setText(it.label)
+                            .setCallbackData("clear${it.name}"))
+                    })))
     }
 }

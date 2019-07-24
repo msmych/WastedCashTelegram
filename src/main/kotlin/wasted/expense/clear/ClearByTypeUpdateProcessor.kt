@@ -21,12 +21,11 @@ class ClearByTypeUpdateProcessor : UpdateProcessor {
     override fun appliesTo(update: Update): Boolean {
         val callbackQuery = update.callbackQuery ?: return false
         val data = callbackQuery.data ?: return false
-        return data == "clearALL"
+        return ClearExpenseType.values().any { data == "clear$it" }
     }
 
     override fun process(update: Update) {
         val chatId = update.callbackQuery.message.chatId
-        val telegramMessageIds = expenseClient.getTelegramMessageIds(chatId)
         expenseClient.removeExpenseByType(
             chatId,
             ClearExpenseType.valueOf(update.callbackQuery.data.substring("clear".length)))
@@ -34,9 +33,5 @@ class ClearByTypeUpdateProcessor : UpdateProcessor {
             .setChatId(chatId)
             .setMessageId(update.callbackQuery.message.messageId)
             .setText("${HEAVY_MULTIPLICATION_X.code} Cleared"))
-        telegramMessageIds.forEach { bot.execute(EditMessageText()
-            .setChatId(chatId)
-            .setMessageId(it)
-            .setText("${HEAVY_MULTIPLICATION_X.code} Removed")) }
     }
 }
