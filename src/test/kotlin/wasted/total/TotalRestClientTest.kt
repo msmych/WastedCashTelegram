@@ -19,7 +19,7 @@ internal class TotalRestClientTest {
         @JvmStatic @get:ClassRule val wireMockClassRule = WireMockClassRule()
         @JvmStatic val gson = Gson()
 
-        @JvmStatic val total = Total(1, 1000, "USD", SHOPPING)
+        @JvmStatic val total = Total(1, 2, 1000, "USD", SHOPPING)
 
         @BeforeClass
         @JvmStatic

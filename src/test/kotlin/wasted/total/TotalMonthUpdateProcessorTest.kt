@@ -33,7 +33,7 @@ internal class TotalMonthUpdateProcessorTest {
         totalMonthUpdateProcessor.totalKeypad = totalKeypad
         whenever(update.message).thenReturn(message)
         whenever(message.text).thenReturn("/total")
-        whenever(totalClient.total(any(), any())).thenReturn(listOf(Total(1, 1000, "USD", SHOPPING)))
+        whenever(totalClient.total(any(), any())).thenReturn(listOf(Total(1, 2, 1000, "USD", SHOPPING)))
     }
 
     @Test

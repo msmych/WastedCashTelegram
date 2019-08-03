@@ -18,7 +18,7 @@ internal class TotalKeypadTest {
 
     private val totalKeypad = TotalKeypad()
 
-    private val total = Total(1, 1000, "USD", SHOPPING)
+    private val total = Total( 1, 2, 1000, "USD", SHOPPING)
 
     @BeforeEach
     fun setUp() {

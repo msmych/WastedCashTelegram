@@ -31,9 +31,9 @@ class TotalClientStub : TotalClient {
                 cur.value.groupBy { it.category }
                     .map { cat -> cat.value
                         .map {
-                            Total(it.userId, it.amount, cur.key, cat.key)
+                            Total(it.groupId, it.userId, it.amount, cur.key, cat.key)
                         }.reduce { acc, total ->
-                            Total(total.userId, acc.amount + total.amount, total.currency, total.category)
+                            Total(total.groupId, total.userId, acc.amount + total.amount, total.currency, total.category)
                         }
                     }
             }.flatten()
