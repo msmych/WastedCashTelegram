@@ -1,5 +1,6 @@
 package wasted
 
+import it.sauronsoftware.cron4j.Scheduler
 import org.slf4j.LoggerFactory
 import org.telegram.telegrambots.ApiContextInitializer.init
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
@@ -16,9 +17,10 @@ import wasted.stub.ExpenseClientStub
 import wasted.stub.TotalClientStub
 import wasted.stub.UserClientStub
 import wasted.total.TotalClient
-import wasted.total.TotalUpdateProcessor
-import wasted.total.TotalRestClient
 import wasted.total.TotalMonthUpdateProcessor
+import wasted.total.TotalRestClient
+import wasted.total.TotalUpdateProcessor
+import wasted.total.report.MonthlyTotalReporter
 import wasted.user.*
 
 fun main(args: Array<String>) {
@@ -53,6 +55,7 @@ fun main(args: Array<String>) {
         getInstance(TotalMonthUpdateProcessor::class.java),
         getInstance(TotalUpdateProcessor::class.java))
     TelegramBotsApi().registerBot(bot)
+    startScheduler()
     LoggerFactory.getLogger("App").info("Поехали")
 }
 
@@ -72,4 +75,10 @@ fun configureProd(apiToken: String) {
     (getInstance(UserClient::class.java) as UserRestClient).apiToken = apiToken
     (getInstance(ExpenseClient::class.java) as ExpenseRestClient).apiToken = apiToken
     (getInstance(TotalClient::class.java) as TotalRestClient).apiToken = apiToken
+}
+
+private fun startScheduler() {
+    val scheduler = Scheduler()
+    scheduler.schedule("* * * * *", getInstance(MonthlyTotalReporter::class.java))
+    scheduler.start()
 }

@@ -14,6 +14,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5',
             'org.telegram:telegrambots:4.3.1',
             'org.apache.httpcomponents:fluent-hc:4.5.9',
+            "it.sauronsoftware.cron4j:cron4j:2.2.5",
             'ch.qos.logback:logback-classic:1.2.3',
             'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
     runtimeOnly 'org.codehaus.groovy:groovy:2.5.7'
