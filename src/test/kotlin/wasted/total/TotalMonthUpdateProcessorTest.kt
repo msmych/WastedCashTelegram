@@ -33,7 +33,7 @@ internal class TotalMonthUpdateProcessorTest {
         totalMonthUpdateProcessor.totalKeypad = totalKeypad
         whenever(update.message).thenReturn(message)
         whenever(message.text).thenReturn("/total")
-        whenever(totalClient.getTotal(any(), any())).thenReturn(listOf(Total(1, 1000, "USD", SHOPPING)))
+        whenever(totalClient.total(any(), any())).thenReturn(listOf(Total(1, 1000, "USD", SHOPPING)))
     }
 
     @Test
@@ -44,7 +44,7 @@ internal class TotalMonthUpdateProcessorTest {
     @Test
     fun processing() {
         totalMonthUpdateProcessor.process(update)
-        verify(totalClient).getTotal(any(), any())
+        verify(totalClient).total(any(), any())
         verify(bot).execute(any<SendMessage>())
     }
 }

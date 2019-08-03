@@ -4,5 +4,6 @@ import wasted.total.Total.Type
 
 interface TotalClient {
 
-    fun getTotal(groupId: Long, type: Type): List<Total>
+    fun total(groupId: Long, type: Type): List<Total>
+    fun totals(type: Type): List<Total>
 }

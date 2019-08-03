@@ -26,7 +26,10 @@ internal class TotalRestClientTest {
         fun setUpStubs() {
             totalRestClient.apiToken = "1234"
             wireMockClassRule.stubFor(get(urlPathEqualTo("/total/in/1/type/MONTH"))
-                .withQueryParam("groupId", equalTo("1"))
+                .willReturn(aResponse()
+                    .withStatus(200)
+                    .withBody(gson.toJson(listOf(total)))))
+            wireMockClassRule.stubFor(get(urlPathEqualTo("/total/type/MONTH"))
                 .willReturn(aResponse()
                     .withStatus(200)
                     .withBody(gson.toJson(listOf(total)))))
@@ -35,6 +38,11 @@ internal class TotalRestClientTest {
 
     @Test
     fun gettingTotal() {
-        assertEquals(listOf(total), totalRestClient.getTotal(1, MONTH))
+        assertEquals(listOf(total), totalRestClient.total(1, MONTH))
+    }
+
+    @Test
+    fun gettingTotals() {
+        assertEquals(listOf(total), totalRestClient.totals(MONTH))
     }
 }

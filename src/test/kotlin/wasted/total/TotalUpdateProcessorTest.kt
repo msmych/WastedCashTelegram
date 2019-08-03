@@ -45,7 +45,7 @@ internal class TotalUpdateProcessorTest {
     @Test
     fun processing() {
         totalUpdateProcessor.process(update)
-        verify(totalClient).getTotal(any(), any())
+        verify(totalClient).total(any(), any())
         verify(bot).execute(any<EditMessageText>())
     }
 }

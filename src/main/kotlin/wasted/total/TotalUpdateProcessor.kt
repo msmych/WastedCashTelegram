@@ -28,7 +28,7 @@ class TotalUpdateProcessor : UpdateProcessor {
         totalKeypad.update(
             chatId,
             update.callbackQuery.message.messageId,
-            totalClient.getTotal(chatId, period),
+            totalClient.total(chatId, period),
             period)
     }
 }

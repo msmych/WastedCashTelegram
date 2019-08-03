@@ -26,6 +26,6 @@ class TotalMonthUpdateProcessor : UpdateProcessor {
 
     override fun process(update: Update) {
         val chatId = update.message.chatId
-        totalKeypad.send(chatId, totalClient.getTotal(chatId, MONTH))
+        totalKeypad.send(chatId, totalClient.total(chatId, MONTH))
     }
 }

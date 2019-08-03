@@ -17,20 +17,12 @@ class TotalClientStub : TotalClient {
     @Inject
     lateinit var ims: InMemoryStorage
 
-    override fun getTotal(groupId: Long, type: Type): List<Total> {
+    override fun total(groupId: Long, type: Type): List<Total> {
         if (type == ALL)
             return toTotalList(ims.expenses.filter { it.groupId == groupId })
         return toTotalList(ims.expenses
             .filter { it.groupId == groupId }
-            .filter { it.date.after(Date.from(when (type) {
-                MONTH -> now().withDayOfMonth(1)
-                else -> throw IllegalArgumentException()
-            }
-                .withHour(0)
-                .withMinute(0)
-                .withSecond(0)
-                .toInstant()))
-            })
+            .filter { it.date.after(date(type)) })
     }
 
     private fun toTotalList(expenses: List<Expense>): List<Total> {
@@ -45,5 +37,25 @@ class TotalClientStub : TotalClient {
                         }
                     }
             }.flatten()
+    }
+
+    private fun date(type: Type): Date? {
+        return Date.from(
+            when (type) {
+                MONTH -> now().withDayOfMonth(1)
+                else -> throw IllegalArgumentException()
+            }
+                .withHour(0)
+                .withMinute(0)
+                .withSecond(0)
+                .toInstant()
+        )
+    }
+
+    override fun totals(type: Type): List<Total> {
+        if (type == ALL) {
+            return toTotalList(ims.expenses)
+        }
+        return toTotalList(ims.expenses.filter { it.date.after(date(type)) })
     }
 }
