@@ -79,6 +79,6 @@ fun configureProd(apiToken: String) {
 
 private fun startScheduler() {
     val scheduler = Scheduler()
-    scheduler.schedule("* * * * *", getInstance(MonthlyTotalReporter::class.java))
+    scheduler.schedule("0 9 1 * *", getInstance(MonthlyTotalReporter::class.java))
     scheduler.start()
 }
