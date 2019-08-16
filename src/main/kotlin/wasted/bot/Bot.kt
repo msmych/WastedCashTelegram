@@ -9,28 +9,24 @@ import wasted.bot.update.processor.UpdateProcessor
 @Singleton
 class Bot : TelegramLongPollingBot() {
 
-    private val updateProcessors = HashSet<UpdateProcessor>()
-    lateinit var token: String
+  lateinit var token: String
+  lateinit var updateProcessors: List<UpdateProcessor>
 
-    override fun getBotUsername(): String {
-        return "WastedCashBot"
-    }
+  override fun getBotUsername(): String {
+    return "WastedCashBot"
+  }
 
-    override fun getBotToken(): String {
-        return token
-    }
+  override fun getBotToken(): String {
+    return token
+  }
 
-    override fun onUpdateReceived(update: Update?) {
-        if (update == null)
-            return
-        updateProcessors
-            .filter{ it.appliesTo(update) }
-            .forEach{ it.process(update) }
-        if (update.callbackQuery != null)
-            execute(AnswerCallbackQuery().setCallbackQueryId(update.callbackQuery.id))
-    }
-
-    fun addUpdateProcessor(vararg updateProcessor: UpdateProcessor) {
-        updateProcessors.addAll(updateProcessor)
-    }
+  override fun onUpdateReceived(update: Update?) {
+    if (update == null)
+      return
+    updateProcessors
+      .filter { it.appliesTo(update) }
+      .forEach { it.process(update) }
+    if (update.callbackQuery != null)
+      execute(AnswerCallbackQuery().setCallbackQueryId(update.callbackQuery.id))
+  }
 }
