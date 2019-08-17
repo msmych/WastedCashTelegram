@@ -39,7 +39,7 @@ internal class EditCategoryUpdateProcessorTest {
         whenever(callbackQuery.from).thenReturn(user)
         whenever(user.id).thenReturn(1)
         whenever(callbackQuery.message).thenReturn(mock())
-        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 1, 2, 3, 1000, "USD", SHOPPING, Date()))
     }
 
@@ -50,7 +50,7 @@ internal class EditCategoryUpdateProcessorTest {
 
     @Test
     fun not_own_not_applies() {
-        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 111, 2, 3, 1000, "USD", SHOPPING, Date()))
         assertFalse(editCategoryUpdateProcessor.appliesTo(update))
     }

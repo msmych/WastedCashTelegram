@@ -61,7 +61,7 @@ internal class UserRestClientTest {
     fun gettingCurrencies() {
         assertEquals(
             listOf("USD", "EUR", "RUB").map { Currency.getInstance(it) },
-            userRestClient.getUserCurrencies(1234)
+            userRestClient.userCurrencies(1234)
         )
     }
 

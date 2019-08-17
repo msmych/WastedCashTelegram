@@ -20,7 +20,7 @@ class ConfirmExpenseRemovalUpdateProcessor : UpdateProcessor {
         val data = callbackQuery.data ?: return false
         val fromId = callbackQuery.from.id
         return data == "confirm-expense-removal"
-                && expenseClient.getExpenseByGroupIdAndTelegramMessageId(
+                && expenseClient.expenseByGroupIdAndTelegramMessageId(
             callbackQuery.message.chatId,
             callbackQuery.message.messageId)
             .userId == fromId

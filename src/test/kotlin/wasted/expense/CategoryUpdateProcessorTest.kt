@@ -41,7 +41,7 @@ internal class CategoryUpdateProcessorTest {
         whenever(callbackQuery.from).thenReturn(user)
         whenever(user.id).thenReturn(2)
         whenever(callbackQuery.message).thenReturn(message)
-        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 2, 3, 4, 1000, "USD", SHOPPING, Date()))
     }
 
@@ -52,7 +52,7 @@ internal class CategoryUpdateProcessorTest {
 
     @Test
     fun notOwnNotApplies() {
-        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 111, 2, 3, 1000, "USD", SHOPPING, Date()))
         assertFalse(categoryUpdateProcessor.appliesTo(update))
     }

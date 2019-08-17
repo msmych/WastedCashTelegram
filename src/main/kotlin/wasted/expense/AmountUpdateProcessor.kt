@@ -19,7 +19,7 @@ class AmountUpdateProcessor : UpdateProcessor {
         val amount = data.toLongOrNull()
         if (data.length > 10 || amount == null)
             return false
-        val expense = expenseClient.getExpenseByGroupIdAndTelegramMessageId(
+        val expense = expenseClient.expenseByGroupIdAndTelegramMessageId(
             update.callbackQuery.message.chatId,
             update.callbackQuery.message.messageId)
         return expense.userId == fromId && expense.amount != amount
@@ -29,7 +29,7 @@ class AmountUpdateProcessor : UpdateProcessor {
         val chatId = update.callbackQuery.message.chatId
         val messageId = update.callbackQuery.message.messageId
         val amount = update.callbackQuery.data.toLong()
-        val lastExpense = expenseClient.getExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
+        val lastExpense = expenseClient.expenseByGroupIdAndTelegramMessageId(chatId, messageId)
         val expense = Expense(
             lastExpense.id,
             lastExpense.userId,

@@ -37,7 +37,7 @@ internal class ConfirmExpenseRemovalUpdateProcessorTest {
         whenever(callbackQuery.message).thenReturn(mock())
         whenever(callbackQuery.from).thenReturn(user)
         whenever(user.id).thenReturn(1)
-        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 1, 2, 3, 1000, "USD", SHOPPING, Date()))
     }
 
@@ -48,7 +48,7 @@ internal class ConfirmExpenseRemovalUpdateProcessorTest {
 
     @Test
     fun notOwnNotApplies() {
-        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 111, 2, 3, 1000, "USD", SHOPPING, Date()))
         assertFalse(confirmExpenseRemovalUpdateProcessor.appliesTo(update))
     }

@@ -18,7 +18,7 @@ class EditCategoryUpdateProcessor : UpdateProcessor {
         val callbackQuery = update.callbackQuery ?: return false
         val data = callbackQuery.data ?: return false
         return data == "edit-category"
-                && expenseClient.getExpenseByGroupIdAndTelegramMessageId(
+                && expenseClient.expenseByGroupIdAndTelegramMessageId(
             callbackQuery.message.chatId,
             callbackQuery.message.messageId)
             .userId == callbackQuery.from.id

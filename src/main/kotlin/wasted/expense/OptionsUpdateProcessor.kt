@@ -18,14 +18,14 @@ class OptionsUpdateProcessor : UpdateProcessor {
         val callbackQuery = update.callbackQuery ?: return false
         val data = callbackQuery.data ?: return false
         return data == "options"
-                && expenseClient.getExpenseByGroupIdAndTelegramMessageId(
+                && expenseClient.expenseByGroupIdAndTelegramMessageId(
             callbackQuery.message.chatId,
             callbackQuery.message.messageId)
             .userId == callbackQuery.from.id
     }
 
     override fun process(update: Update) {
-        optionsKeypad.update(expenseClient.getExpenseByGroupIdAndTelegramMessageId(
+        optionsKeypad.update(expenseClient.expenseByGroupIdAndTelegramMessageId(
             update.callbackQuery.message.chatId,
             update.callbackQuery.message.messageId))
     }

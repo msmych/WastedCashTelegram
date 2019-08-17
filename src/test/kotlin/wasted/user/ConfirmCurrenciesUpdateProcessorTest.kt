@@ -44,7 +44,7 @@ internal class ConfirmCurrenciesUpdateProcessorTest {
     @Test
     fun processing() {
         confirmCurrenciesUpdateProcessor.process(update)
-        verify(userClient).getUserCurrencies(any())
+        verify(userClient).userCurrencies(any())
         verify(bot).execute(any<EditMessageText>())
     }
 }

@@ -44,9 +44,9 @@ internal class NextCurrencyOptionsUpdateProcessorTest {
         whenever(callbackQuery.from).thenReturn(user)
         whenever(user.id).thenReturn(2)
         whenever(callbackQuery.message).thenReturn(message)
-        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 2, 3, 4, 1000, "USD", SHOPPING, Date()))
-        whenever(userClient.getUserCurrencies(any()))
+        whenever(userClient.userCurrencies(any()))
             .thenReturn(listOf(Currency.getInstance("USD"), Currency.getInstance("EUR")))
     }
 
@@ -57,14 +57,14 @@ internal class NextCurrencyOptionsUpdateProcessorTest {
 
     @Test
     fun not_own_not_applies() {
-        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 111, 3, 4, 1000, "USD", SHOPPING, Date()))
         assertFalse(nextCurrencyOptionsUpdateProcessor.appliesTo(update))
     }
 
     @Test
     fun last_currency_not_applies() {
-        whenever(userClient.getUserCurrencies(any())).thenReturn(listOf(Currency.getInstance("USD")))
+        whenever(userClient.userCurrencies(any())).thenReturn(listOf(Currency.getInstance("USD")))
         assertFalse(nextCurrencyOptionsUpdateProcessor.appliesTo(update))
     }
 

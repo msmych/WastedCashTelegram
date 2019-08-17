@@ -27,7 +27,7 @@ class ConfirmCurrenciesUpdateProcessor : UpdateProcessor {
             .setChatId(update.callbackQuery.message.chatId)
             .setMessageId(update.callbackQuery.message.messageId)
             .setText("Your currencies are " +
-                    userClient.getUserCurrencies(update.callbackQuery.from.id)
+                    userClient.userCurrencies(update.callbackQuery.from.id)
                         .joinToString(", ") { "*${it.symbol}*" })
             .setParseMode(MARKDOWN))
     }

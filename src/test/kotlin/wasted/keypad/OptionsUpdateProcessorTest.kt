@@ -43,7 +43,7 @@ internal class OptionsUpdateProcessorTest {
         whenever(callbackQuery.from).thenReturn(user)
         whenever(callbackQuery.message).thenReturn(message)
         whenever(user.id).thenReturn(2)
-        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 2, 3, 4, 1000, "USD", SHOPPING, Date()))
     }
 
@@ -54,7 +54,7 @@ internal class OptionsUpdateProcessorTest {
 
     @Test
     fun notOwnNotApplies() {
-        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 111, 3, 4, 1000, "USD", SHOPPING, Date()))
         assertFalse(optionsUpdateProcessor.appliesTo(update))
     }

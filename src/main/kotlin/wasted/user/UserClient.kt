@@ -6,6 +6,7 @@ interface UserClient {
 
     fun existsUser(userId: Int): Boolean
     fun createUser(userId: Int)
-    fun getUserCurrencies(userId: Int): List<Currency>
+    fun userCurrencies(userId: Int): List<Currency>
+    fun whatsNewSubscribedIds(): List<Int>
     fun toggleUserCurrency(userId: Int, currency: String): List<Currency>
 }

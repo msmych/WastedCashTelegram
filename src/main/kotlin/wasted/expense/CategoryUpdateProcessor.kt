@@ -19,7 +19,7 @@ class CategoryUpdateProcessor : UpdateProcessor {
         val callbackQuery = update.callbackQuery ?: return false
         val data = callbackQuery.data ?: return false
         return fromName(data) != null
-                && expenseClient.getExpenseByGroupIdAndTelegramMessageId(
+                && expenseClient.expenseByGroupIdAndTelegramMessageId(
             callbackQuery.message.chatId,
             callbackQuery.message.messageId)
             .userId == callbackQuery.from.id
@@ -28,7 +28,7 @@ class CategoryUpdateProcessor : UpdateProcessor {
     override fun process(update: Update) {
         val chatId = update.callbackQuery.message.chatId
         val messageId = update.callbackQuery.message.messageId
-        val lastExpense = expenseClient.getExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
+        val lastExpense = expenseClient.expenseByGroupIdAndTelegramMessageId(chatId, messageId)
         val expense = Expense(
             lastExpense.id,
             lastExpense.userId,

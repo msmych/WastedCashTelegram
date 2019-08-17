@@ -43,7 +43,7 @@ internal class AmountUpdateProcessorTest {
         whenever(callbackQuery.data).thenReturn("12345")
         whenever(callbackQuery.message).thenReturn(message)
         whenever(message.chatId).thenReturn(1)
-        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 2, 1, 2, 1000, "USD", SHOPPING, Date()))
     }
 
@@ -72,7 +72,7 @@ internal class AmountUpdateProcessorTest {
 
     @Test
     fun notOwnExpenseNotApplies() {
-        whenever(expenseClient.getExpenseByGroupIdAndTelegramMessageId(any(), any()))
+        whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
             .thenReturn(Expense(1, 111, 1, 2, 1000, "USD", SHOPPING, Date()))
         assertFalse(amountUpdateProcessor.appliesTo(update))
     }

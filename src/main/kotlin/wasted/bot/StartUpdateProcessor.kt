@@ -24,6 +24,6 @@ class StartUpdateProcessor : UpdateProcessor {
     override fun process(update: Update) {
         val fromId = update.message.from.id
         userClient.createUser(fromId)
-        currenciesKeypad.send(update.message.chatId, userClient.getUserCurrencies(fromId))
+        currenciesKeypad.send(update.message.chatId, userClient.userCurrencies(fromId))
     }
 }

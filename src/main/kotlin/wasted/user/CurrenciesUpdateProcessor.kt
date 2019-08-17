@@ -24,6 +24,6 @@ class CurrenciesUpdateProcessor : UpdateProcessor {
         val userId = update.message.from.id
         if (!userClient.existsUser(userId))
             userClient.createUser(userId)
-        currenciesKeypad.send(update.message.chatId, userClient.getUserCurrencies(userId))
+        currenciesKeypad.send(update.message.chatId, userClient.userCurrencies(userId))
     }
 }

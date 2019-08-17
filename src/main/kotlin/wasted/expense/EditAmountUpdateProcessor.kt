@@ -18,14 +18,14 @@ class EditAmountUpdateProcessor : UpdateProcessor {
         val callbackQuery = update.callbackQuery ?: return false
         val data = callbackQuery.data ?: return false
         return data == "edit-amount"
-                && expenseClient.getExpenseByGroupIdAndTelegramMessageId(
+                && expenseClient.expenseByGroupIdAndTelegramMessageId(
             callbackQuery.message.chatId,
             callbackQuery.message.messageId)
             .userId == callbackQuery.from.id
     }
 
     override fun process(update: Update) {
-        numericKeypad.update(expenseClient.getExpenseByGroupIdAndTelegramMessageId(
+        numericKeypad.update(expenseClient.expenseByGroupIdAndTelegramMessageId(
             update.callbackQuery.message.chatId,
             update.callbackQuery.message.messageId))
     }

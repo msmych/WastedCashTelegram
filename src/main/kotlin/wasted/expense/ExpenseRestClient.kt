@@ -14,7 +14,7 @@ class ExpenseRestClient : ExpenseClient {
 
     lateinit var apiToken: String
 
-    override fun getExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int): Expense {
+    override fun expenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int): Expense {
         return gson.fromJson(
             Get("$baseUrl/expense?groupId=$groupId&telegramMessageId=$telegramMessageId")
                 .addHeader("api-token", apiToken)

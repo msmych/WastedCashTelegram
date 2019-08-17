@@ -62,7 +62,7 @@ internal class ExpenseRestClientTest {
     fun gettingExpenseByGroupIdAndTelegramMessageId() {
         assertEquals(
             expense.toString(),
-            expenseRestClient.getExpenseByGroupIdAndTelegramMessageId(1234, 890).toString()
+            expenseRestClient.expenseByGroupIdAndTelegramMessageId(1234, 890).toString()
         )
     }
 

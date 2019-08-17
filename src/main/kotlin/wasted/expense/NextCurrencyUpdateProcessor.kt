@@ -11,42 +11,45 @@ import java.util.*
 @Singleton
 class NextCurrencyUpdateProcessor : UpdateProcessor {
 
-    @Inject
-    lateinit var userClient: UserClient
-    @Inject
-    lateinit var expenseClient: ExpenseClient
-    @Inject
-    lateinit var numericKeypad: NumericKeypad
+  @Inject
+  lateinit var userClient: UserClient
+  @Inject
+  lateinit var expenseClient: ExpenseClient
+  @Inject
+  lateinit var numericKeypad: NumericKeypad
 
-    override fun appliesTo(update: Update): Boolean {
-        val callbackQuery = update.callbackQuery ?: return false
-        val data = callbackQuery.data ?: return false
-        val fromId = update.callbackQuery.from.id
-        return data == "next-currency"
-                && expenseClient.getExpenseByGroupIdAndTelegramMessageId(
-            callbackQuery.message.chatId,
-            callbackQuery.message.messageId)
-            .userId == fromId &&
-                userClient.getUserCurrencies(fromId).size > 1
-    }
+  override fun appliesTo(update: Update): Boolean {
+    val callbackQuery = update.callbackQuery ?: return false
+    val data = callbackQuery.data ?: return false
+    val fromId = update.callbackQuery.from.id
+    return data == "next-currency"
+      && expenseClient.expenseByGroupIdAndTelegramMessageId(
+      callbackQuery.message.chatId,
+      callbackQuery.message.messageId
+    )
+      .userId == fromId &&
+      userClient.userCurrencies(fromId).size > 1
+  }
 
-    override fun process(update: Update) {
-        val fromId = update.callbackQuery.from.id
-        val chatId = update.callbackQuery.message.chatId
-        val messageId = update.callbackQuery.message.messageId
-        val currencies = userClient.getUserCurrencies(fromId)
-        val lastExpense = expenseClient.getExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
-        val currency = currencies[(currencies.indexOf(Currency.getInstance(lastExpense.currency)) + 1) % currencies.size].currencyCode
-        val expense = Expense(
-            lastExpense.id,
-            lastExpense.userId,
-            lastExpense.groupId,
-            lastExpense.telegramMessageId,
-            lastExpense.amount,
-            currency,
-            lastExpense.category,
-            lastExpense.date)
-        expenseClient.updateExpense(expense)
-        numericKeypad.update(expense)
-    }
+  override fun process(update: Update) {
+    val fromId = update.callbackQuery.from.id
+    val chatId = update.callbackQuery.message.chatId
+    val messageId = update.callbackQuery.message.messageId
+    val currencies = userClient.userCurrencies(fromId)
+    val lastExpense = expenseClient.expenseByGroupIdAndTelegramMessageId(chatId, messageId)
+    val currency =
+      currencies[(currencies.indexOf(Currency.getInstance(lastExpense.currency)) + 1) % currencies.size].currencyCode
+    val expense = Expense(
+      lastExpense.id,
+      lastExpense.userId,
+      lastExpense.groupId,
+      lastExpense.telegramMessageId,
+      lastExpense.amount,
+      currency,
+      lastExpense.category,
+      lastExpense.date
+    )
+    expenseClient.updateExpense(expense)
+    numericKeypad.update(expense)
+  }
 }
