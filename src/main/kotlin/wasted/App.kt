@@ -35,16 +35,16 @@ private fun configure(args: Array<String>) {
   else if (args.size >= 2 && args[1] == "--prod") configureProd(args[0])
 }
 
-fun registerDev() {
-  register(UserClient::class.java, UserClientStub::class.java)
-  register(ExpenseClient::class.java, ExpenseClientStub::class.java)
-  register(TotalClient::class.java, TotalClientStub::class.java)
-}
-
 fun registerProd() {
   register(UserClient::class.java, UserRestClient::class.java)
   register(ExpenseClient::class.java, ExpenseRestClient::class.java)
   register(TotalClient::class.java, TotalRestClient::class.java)
+}
+
+fun registerDev() {
+  register(UserClient::class.java, UserClientStub::class.java)
+  register(ExpenseClient::class.java, ExpenseClientStub::class.java)
+  register(TotalClient::class.java, TotalClientStub::class.java)
 }
 
 fun configureProd(apiToken: String) {
