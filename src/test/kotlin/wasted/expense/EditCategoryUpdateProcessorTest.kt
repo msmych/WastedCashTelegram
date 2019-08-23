@@ -15,7 +15,7 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
 import wasted.expense.Expense.Category.SHOPPING
 import wasted.keypad.CategoriesKeypad
-import java.util.*
+import java.time.Instant.now
 
 internal class EditCategoryUpdateProcessorTest {
 
@@ -40,7 +40,7 @@ internal class EditCategoryUpdateProcessorTest {
         whenever(user.id).thenReturn(1)
         whenever(callbackQuery.message).thenReturn(mock())
         whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
-            .thenReturn(Expense(1, 1, 2, 3, 1000, "USD", SHOPPING, Date()))
+            .thenReturn(Expense(1, 1, 2, 3, 1000, "USD", SHOPPING, now()))
     }
 
     @Test
@@ -51,7 +51,7 @@ internal class EditCategoryUpdateProcessorTest {
     @Test
     fun not_own_not_applies() {
         whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
-            .thenReturn(Expense(1, 111, 2, 3, 1000, "USD", SHOPPING, Date()))
+            .thenReturn(Expense(1, 111, 2, 3, 1000, "USD", SHOPPING, now()))
         assertFalse(editCategoryUpdateProcessor.appliesTo(update))
     }
 

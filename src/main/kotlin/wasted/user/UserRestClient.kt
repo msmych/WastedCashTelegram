@@ -36,6 +36,12 @@ class UserRestClient : UserClient {
       .map { Currency.getInstance(it) }
   }
 
+  override fun userWhatsNew(userId: Int): Boolean {
+    return Get("$baseUrl/user/$userId/whats-new")
+      .addHeader("api-token", apiToken)
+      .execute().returnContent().asString() == "true"
+  }
+
   override fun whatsNewSubscribedIds(): List<Int> {
     return gson.fromJson(
       Get("$baseUrl/users/whats-new/ids")

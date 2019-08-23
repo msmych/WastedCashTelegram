@@ -9,6 +9,7 @@ import org.junit.ClassRule
 import org.junit.Test
 import wasted.expense.Expense
 import wasted.expense.Expense.Category.OTHER
+import java.time.Instant.now
 import java.util.*
 
 internal class UserRestClientTest {
@@ -22,7 +23,7 @@ internal class UserRestClientTest {
     val wireMockClassRule = WireMockClassRule()
 
     @JvmStatic
-    val expense = Expense(1, 1234, 1234, 890, 1000, "USD", OTHER, Date())
+    val expense = Expense(1, 1234, 1234, 890, 1000, "USD", OTHER, now())
 
     @BeforeClass
     @JvmStatic
@@ -42,6 +43,13 @@ internal class UserRestClientTest {
             aResponse()
               .withStatus(200)
               .withBody(listOf("USD", "EUR", "RUB").toString())
+          )
+      )
+      wireMockClassRule.stubFor(
+        get(urlEqualTo("/user/1234/whats-new"))
+          .willReturn(
+            aResponse()
+              .withBody("true")
           )
       )
       wireMockClassRule.stubFor(
@@ -75,6 +83,11 @@ internal class UserRestClientTest {
       listOf("USD", "EUR", "RUB").map { Currency.getInstance(it) },
       userRestClient.userCurrencies(1234)
     )
+  }
+
+  @Test
+  fun gettingWhatsNew() {
+    assertTrue(userRestClient.userWhatsNew(1234))
   }
 
   @Test

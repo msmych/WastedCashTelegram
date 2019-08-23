@@ -25,6 +25,10 @@ class UserClientStub : UserClient {
     return ims.users.find { it.id == userId }?.currencies ?: emptyList()
   }
 
+  override fun userWhatsNew(userId: Int): Boolean {
+    return ims.users.find { it.id == userId }?.whatsNew ?: false
+  }
+
   override fun whatsNewSubscribedIds(): List<Int> {
     return ims.users.filter { it.whatsNew }.map { it.id }
   }

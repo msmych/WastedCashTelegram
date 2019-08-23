@@ -18,7 +18,7 @@ import wasted.expense.Expense
 import wasted.expense.Expense.Category.SHOPPING
 import wasted.expense.ExpenseClient
 import wasted.expense.OptionsUpdateProcessor
-import java.util.*
+import java.time.Instant.now
 
 internal class OptionsUpdateProcessorTest {
 
@@ -44,7 +44,7 @@ internal class OptionsUpdateProcessorTest {
         whenever(callbackQuery.message).thenReturn(message)
         whenever(user.id).thenReturn(2)
         whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
-            .thenReturn(Expense(1, 2, 3, 4, 1000, "USD", SHOPPING, Date()))
+            .thenReturn(Expense(1, 2, 3, 4, 1000, "USD", SHOPPING, now()))
     }
 
     @Test
@@ -55,7 +55,7 @@ internal class OptionsUpdateProcessorTest {
     @Test
     fun notOwnNotApplies() {
         whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
-            .thenReturn(Expense(1, 111, 3, 4, 1000, "USD", SHOPPING, Date()))
+            .thenReturn(Expense(1, 111, 3, 4, 1000, "USD", SHOPPING, now()))
         assertFalse(optionsUpdateProcessor.appliesTo(update))
     }
 

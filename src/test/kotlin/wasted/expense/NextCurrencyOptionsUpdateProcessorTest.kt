@@ -17,6 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.User
 import wasted.expense.Expense.Category.SHOPPING
 import wasted.keypad.OptionsKeypad
 import wasted.user.UserClient
+import java.time.Instant.now
 import java.util.*
 
 internal class NextCurrencyOptionsUpdateProcessorTest {
@@ -45,7 +46,7 @@ internal class NextCurrencyOptionsUpdateProcessorTest {
         whenever(user.id).thenReturn(2)
         whenever(callbackQuery.message).thenReturn(message)
         whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
-            .thenReturn(Expense(1, 2, 3, 4, 1000, "USD", SHOPPING, Date()))
+            .thenReturn(Expense(1, 2, 3, 4, 1000, "USD", SHOPPING, now()))
         whenever(userClient.userCurrencies(any()))
             .thenReturn(listOf(Currency.getInstance("USD"), Currency.getInstance("EUR")))
     }
@@ -58,7 +59,7 @@ internal class NextCurrencyOptionsUpdateProcessorTest {
     @Test
     fun not_own_not_applies() {
         whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
-            .thenReturn(Expense(1, 111, 3, 4, 1000, "USD", SHOPPING, Date()))
+            .thenReturn(Expense(1, 111, 3, 4, 1000, "USD", SHOPPING, now()))
         assertFalse(nextCurrencyOptionsUpdateProcessor.appliesTo(update))
     }
 

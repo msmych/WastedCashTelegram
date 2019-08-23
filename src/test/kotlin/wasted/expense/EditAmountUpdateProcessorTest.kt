@@ -16,7 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
 import wasted.expense.Expense.Category.SHOPPING
 import wasted.keypad.NumericKeypad
-import java.util.*
+import java.time.Instant.now
 
 internal class EditAmountUpdateProcessorTest {
 
@@ -42,7 +42,7 @@ internal class EditAmountUpdateProcessorTest {
         whenever(user.id).thenReturn(2)
         whenever(callbackQuery.data).thenReturn("edit-amount")
         whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
-            .thenReturn(Expense(1, 2, 3, 4, 1000, "USD", SHOPPING, Date()))
+            .thenReturn(Expense(1, 2, 3, 4, 1000, "USD", SHOPPING, now()))
     }
 
     @Test
@@ -53,7 +53,7 @@ internal class EditAmountUpdateProcessorTest {
     @Test
     fun notOwnNotApplies() {
         whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
-            .thenReturn(Expense(1, 111, 3, 4, 1000, "USD", SHOPPING, Date()))
+            .thenReturn(Expense(1, 111, 3, 4, 1000, "USD", SHOPPING, now()))
         assertFalse(editAmountUpdateProcessor.appliesTo(update))
     }
 

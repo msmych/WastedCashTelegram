@@ -8,8 +8,8 @@ import wasted.total.Total.Type
 import wasted.total.Total.Type.ALL
 import wasted.total.Total.Type.MONTH
 import wasted.total.TotalClient
+import java.time.Instant
 import java.time.ZonedDateTime.now
-import java.util.*
 
 @Singleton
 class TotalClientStub : TotalClient {
@@ -22,7 +22,7 @@ class TotalClientStub : TotalClient {
             return toTotalList(ims.expenses.filter { it.groupId == groupId })
         return toTotalList(ims.expenses
             .filter { it.groupId == groupId }
-            .filter { it.date.after(date(type)) })
+            .filter { it.date.isAfter(date(type)) })
     }
 
     private fun toTotalList(expenses: List<Expense>): List<Total> {
@@ -39,23 +39,22 @@ class TotalClientStub : TotalClient {
             }.flatten()
     }
 
-    private fun date(type: Type): Date? {
-        return Date.from(
+    private fun date(type: Type): Instant? {
+        return (
             when (type) {
                 MONTH -> now().withDayOfMonth(1)
                 else -> throw IllegalArgumentException()
-            }
+            })
                 .withHour(0)
                 .withMinute(0)
                 .withSecond(0)
                 .toInstant()
-        )
     }
 
     override fun totals(type: Type): List<Total> {
         if (type == ALL) {
             return toTotalList(ims.expenses)
         }
-        return toTotalList(ims.expenses.filter { it.date.after(date(type)) })
+        return toTotalList(ims.expenses.filter { it.date.isAfter(date(type)) })
     }
 }

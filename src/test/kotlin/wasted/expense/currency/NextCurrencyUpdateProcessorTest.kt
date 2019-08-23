@@ -20,6 +20,7 @@ import wasted.expense.ExpenseClient
 import wasted.expense.NextCurrencyUpdateProcessor
 import wasted.keypad.NumericKeypad
 import wasted.user.UserClient
+import java.time.Instant.now
 import java.util.*
 
 internal class NextCurrencyUpdateProcessorTest {
@@ -49,7 +50,7 @@ internal class NextCurrencyUpdateProcessorTest {
         whenever(callbackQuery.message).thenReturn(message)
         whenever(message.chatId).thenReturn(1)
         whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
-            .thenReturn(Expense(1, 2, 1, 3, 1000, "USD", SHOPPING, Date()))
+            .thenReturn(Expense(1, 2, 1, 3, 1000, "USD", SHOPPING, now()))
         whenever(userClient.userCurrencies(any()))
             .thenReturn(listOf(Currency.getInstance("USD"), Currency.getInstance("EUR")))
     }
@@ -62,7 +63,7 @@ internal class NextCurrencyUpdateProcessorTest {
     @Test
     fun notOwnNotApplies() {
         whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
-            .thenReturn(Expense(1, 111, 1, 3, 1000, "USD", SHOPPING, Date()))
+            .thenReturn(Expense(1, 111, 1, 3, 1000, "USD", SHOPPING, now()))
         assertFalse(nextCurrencyUpdateProcessor.appliesTo(update))
     }
 

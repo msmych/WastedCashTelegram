@@ -9,7 +9,7 @@ import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import wasted.expense.Expense.Category.OTHER
 import wasted.expense.clear.ClearExpenseType.ALL
-import java.util.*
+import java.time.Instant.now
 
 internal class ExpenseRestClientTest {
 
@@ -21,7 +21,7 @@ internal class ExpenseRestClientTest {
         val wireMockClassRule = WireMockClassRule()
         @JvmStatic val gson = Gson()
 
-        @JvmStatic val expense = Expense(1, 1234, 1234, 890, 1000, "USD", OTHER, Date())
+        @JvmStatic val expense = Expense(1, 1234, 1234, 890, 1000, "USD", OTHER, now())
         @JvmStatic val createExpenseRequest = CreateExpenseRequest(1234, 1234, 890)
 
         @BeforeClass

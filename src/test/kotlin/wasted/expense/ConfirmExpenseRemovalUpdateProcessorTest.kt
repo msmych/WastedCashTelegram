@@ -14,7 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
 import wasted.expense.Expense.Category.SHOPPING
-import java.util.*
+import java.time.Instant.now
 
 internal class ConfirmExpenseRemovalUpdateProcessorTest {
 
@@ -38,7 +38,7 @@ internal class ConfirmExpenseRemovalUpdateProcessorTest {
         whenever(callbackQuery.from).thenReturn(user)
         whenever(user.id).thenReturn(1)
         whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
-            .thenReturn(Expense(1, 1, 2, 3, 1000, "USD", SHOPPING, Date()))
+            .thenReturn(Expense(1, 1, 2, 3, 1000, "USD", SHOPPING, now()))
     }
 
     @Test
@@ -49,7 +49,7 @@ internal class ConfirmExpenseRemovalUpdateProcessorTest {
     @Test
     fun notOwnNotApplies() {
         whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
-            .thenReturn(Expense(1, 111, 2, 3, 1000, "USD", SHOPPING, Date()))
+            .thenReturn(Expense(1, 111, 2, 3, 1000, "USD", SHOPPING, now()))
         assertFalse(confirmExpenseRemovalUpdateProcessor.appliesTo(update))
     }
 

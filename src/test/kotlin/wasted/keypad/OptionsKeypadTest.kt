@@ -9,7 +9,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
 import wasted.expense.Expense
 import wasted.expense.Expense.Category.SHOPPING
-import java.util.*
+import java.time.Instant.now
 
 internal class OptionsKeypadTest {
 
@@ -17,7 +17,7 @@ internal class OptionsKeypadTest {
 
     private val optionsKeypad = OptionsKeypad()
 
-    private val expense = Expense(1, 1, 2, 3, 1000, "USD", SHOPPING, Date())
+    private val expense = Expense(1, 1, 2, 3, 1000, "USD", SHOPPING, now())
 
     @BeforeEach
     fun setUp() {

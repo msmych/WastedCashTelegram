@@ -16,7 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
 import wasted.expense.Expense.Category.SHOPPING
 import wasted.keypad.CategoriesKeypad
-import java.util.*
+import java.time.Instant.now
 
 internal class ExpenseUpdateProcessorTest {
 
@@ -39,7 +39,7 @@ internal class ExpenseUpdateProcessorTest {
 
         whenever(update.message).thenReturn(message)
         whenever(expenseClient.createExpense(any()))
-            .thenReturn(Expense(1, 1, 1, 2, 1000, "USD", SHOPPING, Date()))
+            .thenReturn(Expense(1, 1, 1, 2, 1000, "USD", SHOPPING, now()))
         whenever(message.text).thenReturn("/10.00")
         whenever(message.chatId).thenReturn(1)
         whenever(message.from).thenReturn(user)

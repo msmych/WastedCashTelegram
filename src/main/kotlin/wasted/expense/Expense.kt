@@ -1,7 +1,7 @@
 package wasted.expense
 
 import wasted.bot.Emoji
-import java.util.*
+import java.time.Instant
 
 data class Expense(
   val id: Long,
@@ -11,7 +11,7 @@ data class Expense(
   val amount: Long,
   val currency: String,
   val category: Category,
-  val date: Date
+  val date: Instant
 ) {
 
   enum class Category(val emoji: Emoji) {

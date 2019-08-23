@@ -9,7 +9,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
 import wasted.expense.Expense
 import wasted.expense.Expense.Category.SHOPPING
-import java.util.*
+import java.time.Instant.now
 
 internal class NumericKeypadTest {
 
@@ -25,7 +25,7 @@ internal class NumericKeypadTest {
     @Test
     fun updating() {
         numericKeypad.update(
-            Expense(1, 1, 1, 2, 1000, "USD", SHOPPING, Date()))
+            Expense(1, 1, 1, 2, 1000, "USD", SHOPPING, now()))
         verify(bot).execute(any<EditMessageText>())
     }
 }
