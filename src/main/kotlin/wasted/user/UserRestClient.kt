@@ -37,7 +37,12 @@ class UserRestClient : UserClient {
   }
 
   override fun whatsNewSubscribedIds(): List<Int> {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    return gson.fromJson(
+      Get("$baseUrl/users/whats-new/ids")
+        .addHeader("api-token", apiToken)
+        .execute().returnContent().asString(),
+      Array<Int>::class.java
+    ).toList()
   }
 
   override fun toggleUserCurrency(userId: Int, currency: String): List<Currency> {

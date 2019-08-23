@@ -18,21 +18,22 @@ import wasted.total.TotalRestClient
 import wasted.total.report.MonthlyTotalReporter
 import wasted.user.UserClient
 import wasted.user.UserRestClient
+import wasted.user.WhatsNewNotifier
 
 fun main(args: Array<String>) {
   init()
   configure(args)
-  startBot(args[0])
+  startBot(args)
   startScheduler()
   LoggerFactory.getLogger("App").info("Поехали")
 }
 
 private fun configure(args: Array<String>) {
   register(TelegramLongPollingBot::class.java, Bot::class.java)
-  if (args.size >= 2 && (args[1] == "--test" || args[1] == "--prod")) registerProd()
+  if (args.any { it == "--test" || it == "--prod" }) registerProd()
   else registerDev()
-  if (args.size >= 3 && args[1] == "--test") configureProd(args[2])
-  else if (args.size >= 2 && args[1] == "--prod") configureProd(args[0])
+  if (args.any { it == "--test" }) configureProd(args[2])
+  else if (args.any { it == "--prod" }) configureProd(args[0])
 }
 
 fun registerProd() {
@@ -53,11 +54,12 @@ fun configureProd(apiToken: String) {
   (getInstance(TotalClient::class.java) as TotalRestClient).apiToken = apiToken
 }
 
-private fun startBot(token: String) {
+private fun startBot(args: Array<String>) {
   val bot = getInstance(Bot::class.java)
-  bot.token = token
+  bot.token = args[0]
   bot.updateProcessors = updateProcessors
   TelegramBotsApi().registerBot(bot)
+  if (args.any { it == "--whats-new" }) getInstance(WhatsNewNotifier::class.java).send()
 }
 
 private fun startScheduler() {
