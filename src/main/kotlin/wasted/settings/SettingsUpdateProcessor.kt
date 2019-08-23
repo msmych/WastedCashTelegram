@@ -1,12 +1,9 @@
 package wasted.settings
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
-import wasted.bot.Emoji.WHITE_CHECK_MARK
 import wasted.bot.update.processor.UpdateProcessor
+import wasted.keypad.SettingsKeypad
 import wasted.user.UserClient
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -18,6 +15,8 @@ class SettingsUpdateProcessor : UpdateProcessor {
   lateinit var userClient: UserClient
   @Inject
   lateinit var bot: TelegramLongPollingBot
+  @Inject
+  lateinit var settingsKeypad: SettingsKeypad
 
   override fun appliesTo(update: Update): Boolean {
     val message = update.message ?: return false
@@ -27,10 +26,6 @@ class SettingsUpdateProcessor : UpdateProcessor {
   }
 
   override fun process(update: Update) {
-    bot.execute(SendMessage(update.message.chatId, "Wasted settings")
-      .setReplyMarkup(InlineKeyboardMarkup()
-        .setKeyboard(listOf(listOf((
-          InlineKeyboardButton(if (userClient.userWhatsNew(update.message.from.id)) "$WHITE_CHECK_MARK What's new" else "What's new")
-            .setCallbackData("what's new")))))))
+    settingsKeypad.send(update.message.chatId, userClient.userWhatsNew(update.message.from.id))
   }
 }
