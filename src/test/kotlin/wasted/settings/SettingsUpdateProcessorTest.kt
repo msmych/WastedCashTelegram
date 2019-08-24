@@ -30,7 +30,6 @@ internal class SettingsUpdateProcessorTest {
 
   @Before
   fun setUp() {
-    settingsUpdateProcessor.bot = bot
     settingsUpdateProcessor.userClient = userClient
     settingsKeypad.bot = bot
     settingsUpdateProcessor.settingsKeypad = settingsKeypad

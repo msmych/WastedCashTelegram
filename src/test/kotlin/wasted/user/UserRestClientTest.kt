@@ -64,21 +64,25 @@ internal class UserRestClientTest {
               .withBody(listOf("EUR", "RUB").toString())
           )
       )
+      wireMockClassRule.stubFor(
+        patch(urlEqualTo("/user/1234/whats-new"))
+          .willReturn(aResponse().withBody("true"))
+      )
     }
   }
 
   @Test
-  fun existingUser() {
+  fun existing_user() {
     assertTrue(userRestClient.existsUser(1234))
   }
 
   @Test
-  fun creatingUser() {
+  fun creating_user() {
     userRestClient.createUser(1234)
   }
 
   @Test
-  fun gettingCurrencies() {
+  fun getting_currencies() {
     assertEquals(
       listOf("USD", "EUR", "RUB").map { Currency.getInstance(it) },
       userRestClient.userCurrencies(1234)
@@ -86,20 +90,25 @@ internal class UserRestClientTest {
   }
 
   @Test
-  fun gettingWhatsNew() {
+  fun getting_whats_new() {
     assertTrue(userRestClient.userWhatsNew(1234))
   }
 
   @Test
-  fun gettingUsersWhatsNewIds() {
+  fun getting_users_whats_new_ids() {
     assertEquals(listOf(1, 2, 3), userRestClient.whatsNewSubscribedIds())
   }
 
   @Test
-  fun toggleCurrency() {
+  fun toggling_currency() {
     assertEquals(
       listOf("EUR", "RUB").map { Currency.getInstance(it) },
       userRestClient.toggleUserCurrency(1234, "usd")
     )
+  }
+
+  @Test
+  fun toggling_whats_new() {
+    assertTrue(userRestClient.toggleUserWhatsNew(1234))
   }
 }

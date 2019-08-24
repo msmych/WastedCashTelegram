@@ -42,4 +42,12 @@ class UserClientStub : UserClient {
     }
     return ims.users.find { it.id == userId }?.currencies ?: emptyList()
   }
+
+  override fun toggleUserWhatsNew(userId: Int): Boolean {
+    if (ims.users.none { it.id == userId })
+      ims.users.add(User(userId, ArrayList(ims.currencies), false))
+    val user = ims.users.find { it.id == userId } ?: return false
+    ims.users[ims.users.indexOfFirst { it.id == userId }] = User(user.id, user.currencies, !user.whatsNew)
+    return !user.whatsNew
+  }
 }

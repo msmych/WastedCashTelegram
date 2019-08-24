@@ -7,6 +7,7 @@ import org.junit.Before
 import org.junit.Test
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup
 
 internal class SettingsKeypadTest {
 
@@ -23,5 +24,11 @@ internal class SettingsKeypadTest {
   fun sending() {
     settingsKeypad.send(1, true)
     verify(bot).execute(any<SendMessage>())
+  }
+
+  @Test
+  fun updating() {
+    settingsKeypad.update(1, 2, false)
+    verify(bot).execute(any<EditMessageReplyMarkup>())
   }
 }

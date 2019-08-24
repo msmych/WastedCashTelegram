@@ -60,4 +60,10 @@ class UserRestClient : UserClient {
     )
       .map { Currency.getInstance(it) }
   }
+
+  override fun toggleUserWhatsNew(userId: Int): Boolean {
+    return Patch("$baseUrl/user/$userId/whats-new")
+      .addHeader("api-token", apiToken)
+      .execute().returnContent().asString() == "true"
+  }
 }

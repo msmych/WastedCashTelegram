@@ -23,3 +23,8 @@ java -jar <jar> <telegram token> --test <api token>
 ```
 java -jar <jar> <telegram token>
 ```
+
+**Optional parameters**
+```
+--whats-new
+```

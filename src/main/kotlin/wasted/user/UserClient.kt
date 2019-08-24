@@ -10,4 +10,5 @@ interface UserClient {
   fun userWhatsNew(userId: Int): Boolean
   fun whatsNewSubscribedIds(): List<Int>
   fun toggleUserCurrency(userId: Int, currency: String): List<Currency>
+  fun toggleUserWhatsNew(userId: Int): Boolean
 }
