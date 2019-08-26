@@ -1,5 +1,5 @@
 plugins {
-  id 'org.jetbrains.kotlin.jvm' version '1.3.41'
+  id 'org.jetbrains.kotlin.jvm' version '1.3.50'
   id "com.github.johnrengelman.shadow" version "5.0.0"
 }
 
@@ -12,13 +12,13 @@ repositories {
 
 dependencies {
   implementation 'com.google.code.gson:gson:2.8.5',
-    'org.telegram:telegrambots:4.3.1',
+    'org.telegram:telegrambots:4.4.0.1',
     'org.apache.httpcomponents:fluent-hc:4.5.9',
     "it.sauronsoftware.cron4j:cron4j:2.2.5",
     'ch.qos.logback:logback-classic:1.2.3',
     'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
   runtimeOnly 'org.codehaus.groovy:groovy:2.5.7'
-  testImplementation 'com.github.tomakehurst:wiremock:2.23.2',
+  testImplementation 'com.github.tomakehurst:wiremock:2.24.1',
     'org.junit.jupiter:junit-jupiter-api:5.4.2',
     'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
