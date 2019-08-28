@@ -4,7 +4,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Config {
+class BotConfig {
+
+  val apiBaseUrl = "http://localhost:8080"
 
   @Inject
   lateinit var apiToken: String

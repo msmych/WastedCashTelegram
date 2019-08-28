@@ -4,13 +4,15 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
-import com.google.inject.Singleton
 import org.apache.http.client.fluent.Request.*
 import org.apache.http.entity.ContentType.APPLICATION_JSON
+import wasted.bot.BotConfig
 import wasted.expense.clear.ClearExpenseType
 import java.lang.reflect.Type
 import java.time.Instant
 import java.time.Instant.now
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
 class ExpenseRestClient : ExpenseClient {
@@ -21,14 +23,13 @@ class ExpenseRestClient : ExpenseClient {
     }
   }).create()
 
-  private val baseUrl = "http://localhost:8080"
-
-  lateinit var apiToken: String
+  @Inject
+  lateinit var botConfig: BotConfig
 
   override fun expenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int): Expense {
     return gson.fromJson(
-      Get("$baseUrl/expense?groupId=$groupId&telegramMessageId=$telegramMessageId")
-        .addHeader("api-token", apiToken)
+      Get("${botConfig.apiBaseUrl}/expense?groupId=$groupId&telegramMessageId=$telegramMessageId")
+        .addHeader("api-token", botConfig.apiToken)
         .execute().returnContent().asString(),
       Expense::class.java
     )
@@ -36,8 +37,8 @@ class ExpenseRestClient : ExpenseClient {
 
   override fun createExpense(request: CreateExpenseRequest): Expense {
     return gson.fromJson(
-      Post("$baseUrl/expense")
-        .addHeader("api-token", apiToken)
+      Post("${botConfig.apiBaseUrl}/expense")
+        .addHeader("api-token", botConfig.apiToken)
         .bodyString(gson.toJson(request), APPLICATION_JSON)
         .execute().returnContent().asString(),
       Expense::class.java
@@ -45,8 +46,8 @@ class ExpenseRestClient : ExpenseClient {
   }
 
   override fun updateExpense(expense: Expense) {
-    Put("$baseUrl/expense")
-      .addHeader("api-token", apiToken)
+    Put("${botConfig.apiBaseUrl}/expense")
+      .addHeader("api-token", botConfig.apiToken)
       .bodyString(
         gson.toJson(
           UpdateExpenseRequest(
@@ -69,14 +70,14 @@ class ExpenseRestClient : ExpenseClient {
   )
 
   override fun removeExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int) {
-    Delete("$baseUrl/expense?groupId=$groupId&telegramMessageId=$telegramMessageId")
-      .addHeader("api-token", apiToken)
+    Delete("${botConfig.apiBaseUrl}/expense?groupId=$groupId&telegramMessageId=$telegramMessageId")
+      .addHeader("api-token", botConfig.apiToken)
       .execute()
   }
 
   override fun removeExpenseByType(groupId: Long, type: ClearExpenseType) {
-    Delete("$baseUrl/expense/in/$groupId/type/${type.name}")
-      .addHeader("api-token", apiToken)
+    Delete("${botConfig.apiBaseUrl}/expense/in/$groupId/type/${type.name}")
+      .addHeader("api-token", botConfig.apiToken)
       .execute()
   }
 }

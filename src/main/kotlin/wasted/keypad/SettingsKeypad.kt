@@ -5,7 +5,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
-import wasted.bot.Config
+import wasted.bot.BotConfig
 import wasted.bot.Emoji.WHITE_CHECK_MARK
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -16,7 +16,7 @@ class SettingsKeypad {
   @Inject
   lateinit var bot: TelegramLongPollingBot
   @Inject
-  lateinit var config: Config
+  lateinit var botConfig: BotConfig
 
   fun send(chatId: Long, whatsNew: Boolean) {
     bot.execute(
@@ -30,12 +30,12 @@ class SettingsKeypad {
       .setKeyboard(
         listOf(
           listOf(
-            InlineKeyboardButton(if (whatsNew) "${WHITE_CHECK_MARK.code} What's new" else "What's new")
-              .setCallbackData("what's new")
+            InlineKeyboardButton("Go web")
+              .setUrl("http://wasted.cash/?userId=$userId&apiToken=${botConfig.apiToken}")
           ),
           listOf(
-            InlineKeyboardButton("Go web")
-              .setUrl("http://wasted.cash/?userId=$userId&apiToken=${config.apiToken}")
+            InlineKeyboardButton(if (whatsNew) "${WHITE_CHECK_MARK.code} What's new" else "What's new")
+              .setCallbackData("what's new")
           )
         )
       )

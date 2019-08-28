@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.ApiContext.getInstance
 import org.telegram.telegrambots.meta.ApiContext.register
 import org.telegram.telegrambots.meta.TelegramBotsApi
 import wasted.bot.Bot
-import wasted.bot.Config
+import wasted.bot.BotConfig
 import wasted.expense.ExpenseClient
 import wasted.expense.ExpenseRestClient
 import wasted.stub.ExpenseClientStub
@@ -33,8 +33,8 @@ private fun configure(args: Array<String>) {
   register(TelegramLongPollingBot::class.java, Bot::class.java)
   if (args.any { it == "--test" || it == "--prod" }) registerProd()
   else registerDev()
-  if (args.any { it == "--test" }) setApiToken(args[2])
-  else if (args.any { it == "--prod" }) setApiToken(args[0])
+  if (args.any { it == "--test" }) getInstance(BotConfig::class.java).apiToken = args[2]
+  else if (args.any { it == "--prod" }) getInstance(BotConfig::class.java).apiToken = args[0]
 }
 
 fun registerProd() {
@@ -47,13 +47,6 @@ fun registerDev() {
   register(UserClient::class.java, UserClientStub::class.java)
   register(ExpenseClient::class.java, ExpenseClientStub::class.java)
   register(TotalClient::class.java, TotalClientStub::class.java)
-}
-
-fun setApiToken(apiToken: String) {
-  (getInstance(UserClient::class.java) as UserRestClient).apiToken = apiToken
-  (getInstance(ExpenseClient::class.java) as ExpenseRestClient).apiToken = apiToken
-  (getInstance(TotalClient::class.java) as TotalRestClient).apiToken = apiToken
-  (getInstance(Config::class.java)).apiToken = apiToken
 }
 
 private fun startBot(args: Array<String>) {

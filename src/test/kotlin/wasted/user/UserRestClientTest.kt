@@ -7,6 +7,7 @@ import org.junit.Assert.assertTrue
 import org.junit.BeforeClass
 import org.junit.ClassRule
 import org.junit.Test
+import wasted.bot.BotConfig
 import wasted.expense.Expense
 import wasted.expense.Expense.Category.OTHER
 import java.time.Instant.now
@@ -28,7 +29,9 @@ internal class UserRestClientTest {
     @BeforeClass
     @JvmStatic
     fun setUp() {
-      userRestClient.apiToken = "1234"
+      val botConfig = BotConfig()
+      botConfig.apiToken = "1234"
+      userRestClient.botConfig = botConfig
       wireMockClassRule.stubFor(
         get(urlEqualTo("/user/1234/exists"))
           .willReturn(aResponse().withStatus(200).withBody("true"))
