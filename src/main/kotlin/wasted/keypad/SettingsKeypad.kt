@@ -29,10 +29,10 @@ class SettingsKeypad {
     return InlineKeyboardMarkup()
       .setKeyboard(
         listOf(
-          listOf(
-            InlineKeyboardButton("Go web")
-              .setUrl("https://wasted.cash/?userId=$userId&apiToken=${botConfig.apiToken}")
-          ),
+//          listOf(
+//            InlineKeyboardButton("Go web")
+//              .setUrl("${botConfig.apiBaseUrl}/?userId=$userId&apiToken=${botConfig.apiToken}")
+//          ),
           listOf(
             InlineKeyboardButton(if (whatsNew) "${WHITE_CHECK_MARK.code} What's new" else "What's new")
               .setCallbackData("what's new")
