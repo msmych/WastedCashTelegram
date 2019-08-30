@@ -6,7 +6,7 @@ import javax.inject.Singleton
 @Singleton
 class BotConfig {
 
-  val apiBaseUrl = "https://localhost"
+  val apiBaseUrl = "https://wasted.cash"
 
   @Inject
   lateinit var apiToken: String
