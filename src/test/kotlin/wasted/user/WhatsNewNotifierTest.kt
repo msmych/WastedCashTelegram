@@ -20,12 +20,12 @@ internal class WhatsNewNotifierTest {
     whatsNewNotifier.userClient = userClient
     whatsNewNotifier.bot = bot
 
-    whenever(userClient.whatsNewSubscribedIds()).thenReturn(ids)
+    whenever(userClient.whatsNewSubscribedIds(1234)).thenReturn(ids)
   }
 
   @Test
   fun sending() {
-    whatsNewNotifier.send()
+    whatsNewNotifier.send(1234)
     verify(bot, times(ids.size)).execute(any<SendMessage>())
   }
 }

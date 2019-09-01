@@ -67,7 +67,16 @@ private fun startBot(args: Array<String>) {
   bot.token = args[0]
   bot.updateProcessors = updateProcessors
   TelegramBotsApi().registerBot(bot)
-  if (args.any { it == "--whats-new" }) getInstance(WhatsNewNotifier::class.java).send()
+  maybeSendWhatsNew(args)
+}
+
+private fun maybeSendWhatsNew(args: Array<String>) {
+  if (argPresent(args, "--whats-new"))
+    getInstance(WhatsNewNotifier::class.java)
+      .send(
+        findArgEq(args, "--admin-id")?.toInt()
+          ?: throw IllegalArgumentException("--admin-id is not present")
+      )
 }
 
 private fun startScheduler() {

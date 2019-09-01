@@ -29,7 +29,7 @@ class UserClientStub : UserClient {
     return ims.users.find { it.id == userId }?.whatsNew ?: false
   }
 
-  override fun whatsNewSubscribedIds(): List<Int> {
+  override fun whatsNewSubscribedIds(userId: Int): List<Int> {
     return ims.users.filter { it.whatsNew }.map { it.id }
   }
 

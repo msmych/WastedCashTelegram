@@ -34,6 +34,11 @@ class RestClient {
     )
   }
 
+  fun postForString(url: String, userId: Int): String {
+    return Post("${botConfig.apiBaseUrl}$url")
+      .executeToString(userId)
+  }
+
   fun put(url: String, userId: Int, body: Any, gson: Gson = Gson()) {
     Put("${botConfig.apiBaseUrl}$url")
       .bodyString(gson.toJson(body), APPLICATION_JSON)

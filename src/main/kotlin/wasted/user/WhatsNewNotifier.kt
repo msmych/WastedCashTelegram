@@ -13,11 +13,11 @@ class WhatsNewNotifier {
   @Inject
   lateinit var bot: TelegramLongPollingBot
 
-  fun send() {
+  fun send(userId: Int) {
     val text = WhatsNewNotifier::class.java.classLoader
       .getResource("messages/whats-new/${manifestValue("App-Version")}.md")
       ?.readText() ?: ""
-    userClient.whatsNewSubscribedIds()
+    userClient.whatsNewSubscribedIds(userId)
       .map {
         SendMessage(it.toLong(), text)
           .setParseMode(MARKDOWN)

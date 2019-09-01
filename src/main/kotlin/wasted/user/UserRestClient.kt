@@ -2,7 +2,7 @@ package wasted.user
 
 import com.google.gson.Gson
 import com.google.inject.Singleton
-import org.apache.http.client.fluent.Request.*
+import org.apache.http.client.fluent.Request.Patch
 import wasted.bot.BotConfig
 import wasted.rest.RestClient
 import java.util.*
@@ -23,34 +23,20 @@ class UserRestClient : UserClient {
   }
 
   override fun createUser(userId: Int) {
-    Post("${botConfig.apiBaseUrl}/user/$userId")
-      .addHeader("api-token", botConfig.apiToken)
-      .execute()
+    restClient.postForString("/user/$userId", userId)
   }
 
   override fun userCurrencies(userId: Int): List<Currency> {
-    return gson.fromJson(
-      Get("${botConfig.apiBaseUrl}/user/$userId/currencies")
-        .addHeader("api-token", botConfig.apiToken)
-        .execute().returnContent().asString(),
-      Array<String>::class.java
-    )
+    return restClient.getForObject("/user/$userId/currencies", userId, Array<String>::class.java)
       .map { Currency.getInstance(it) }
   }
 
   override fun userWhatsNew(userId: Int): Boolean {
-    return Get("${botConfig.apiBaseUrl}/user/$userId/whats-new")
-      .addHeader("api-token", botConfig.apiToken)
-      .execute().returnContent().asString() == "true"
+    return restClient.getForObject("/user/$userId/whats-new", userId, Boolean::class.java)
   }
 
-  override fun whatsNewSubscribedIds(): List<Int> {
-    return gson.fromJson(
-      Get("${botConfig.apiBaseUrl}/users/whats-new/ids")
-        .addHeader("api-token", botConfig.apiToken)
-        .execute().returnContent().asString(),
-      Array<Int>::class.java
-    ).toList()
+  override fun whatsNewSubscribedIds(userId: Int): List<Int> {
+    return restClient.getForObject("/users/whats-new/ids", userId, Array<Int>::class.java).toList()
   }
 
   override fun toggleUserCurrency(userId: Int, currency: String): List<Currency> {

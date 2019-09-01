@@ -104,7 +104,7 @@ internal class UserRestClientTest {
 
   @Test
   fun getting_users_whats_new_ids() {
-    assertEquals(listOf(1, 2, 3), userRestClient.whatsNewSubscribedIds())
+    assertEquals(listOf(1, 2, 3), userRestClient.whatsNewSubscribedIds(1234))
   }
 
   @Test
