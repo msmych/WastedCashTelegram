@@ -17,7 +17,7 @@ class TotalClientStub : TotalClient {
     @Inject
     lateinit var ims: InMemoryStorage
 
-    override fun total(groupId: Long, type: Type): List<Total> {
+    override fun total(groupId: Long, type: Type, userId: Int): List<Total> {
         if (type == ALL)
             return toTotalList(ims.expenses.filter { it.groupId == groupId })
         return toTotalList(ims.expenses
@@ -51,7 +51,7 @@ class TotalClientStub : TotalClient {
                 .toInstant()
     }
 
-    override fun totals(type: Type): List<Total> {
+    override fun totals(type: Type, userId: Int): List<Total> {
         if (type == ALL) {
             return toTotalList(ims.expenses)
         }

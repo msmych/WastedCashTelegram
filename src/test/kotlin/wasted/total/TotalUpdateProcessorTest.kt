@@ -16,36 +16,36 @@ import wasted.keypad.TotalKeypad
 
 internal class TotalUpdateProcessorTest {
 
-    private val totalClient = mock<TotalClient>()
-    private val totalKeypad = TotalKeypad()
-    private val bot = mock<TelegramLongPollingBot>()
+  private val totalClient = mock<TotalClient>()
+  private val totalKeypad = TotalKeypad()
+  private val bot = mock<TelegramLongPollingBot>()
 
-    private val totalUpdateProcessor = TotalUpdateProcessor()
+  private val totalUpdateProcessor = TotalUpdateProcessor()
 
-    private val update = mock<Update>()
-    private val callbackQuery = mock<CallbackQuery>()
-    private val message = mock<Message>()
+  private val update = mock<Update>()
+  private val callbackQuery = mock<CallbackQuery>()
+  private val message = mock<Message>()
 
-    @BeforeEach
-    fun setUp() {
-        totalKeypad.bot = bot
-        totalUpdateProcessor.totalKeypad = totalKeypad
-        totalUpdateProcessor.totalClient = totalClient
+  @BeforeEach
+  fun setUp() {
+    totalKeypad.bot = bot
+    totalUpdateProcessor.totalKeypad = totalKeypad
+    totalUpdateProcessor.totalClient = totalClient
 
-        whenever(update.callbackQuery).thenReturn(callbackQuery)
-        whenever(callbackQuery.data).thenReturn("totalMONTH")
-        whenever(callbackQuery.message).thenReturn(message)
-    }
+    whenever(update.callbackQuery).thenReturn(callbackQuery)
+    whenever(callbackQuery.data).thenReturn("totalMONTH")
+    whenever(callbackQuery.message).thenReturn(message)
+  }
 
-    @Test
-    fun applies() {
-        assertTrue(totalUpdateProcessor.appliesTo(update))
-    }
+  @Test
+  fun applies() {
+    assertTrue(totalUpdateProcessor.appliesTo(update))
+  }
 
-    @Test
-    fun processing() {
-        totalUpdateProcessor.process(update)
-        verify(totalClient).total(any(), any())
-        verify(bot).execute(any<EditMessageText>())
-    }
+  @Test
+  fun processing() {
+    totalUpdateProcessor.process(update)
+    verify(totalClient).total(any(), any(), any())
+    verify(bot).execute(any<EditMessageText>())
+  }
 }

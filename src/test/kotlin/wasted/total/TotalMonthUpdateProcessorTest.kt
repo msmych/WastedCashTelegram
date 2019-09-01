@@ -16,35 +16,35 @@ import wasted.keypad.TotalKeypad
 
 internal class TotalMonthUpdateProcessorTest {
 
-    private val bot = mock<TelegramLongPollingBot>()
-    private val totalClient = mock<TotalClient>()
-    private val totalKeypad = TotalKeypad()
+  private val bot = mock<TelegramLongPollingBot>()
+  private val totalClient = mock<TotalClient>()
+  private val totalKeypad = TotalKeypad()
 
-    private val totalMonthUpdateProcessor = TotalMonthUpdateProcessor()
+  private val totalMonthUpdateProcessor = TotalMonthUpdateProcessor()
 
-    private val update = mock<Update>()
-    private val message = mock<Message>()
+  private val update = mock<Update>()
+  private val message = mock<Message>()
 
-    @BeforeEach
-    fun setUp() {
-        totalMonthUpdateProcessor.bot = bot
-        totalMonthUpdateProcessor.totalClient = totalClient
-        totalKeypad.bot = bot
-        totalMonthUpdateProcessor.totalKeypad = totalKeypad
-        whenever(update.message).thenReturn(message)
-        whenever(message.text).thenReturn("/total")
-        whenever(totalClient.total(any(), any())).thenReturn(listOf(Total(1, 2, 1000, "USD", SHOPPING)))
-    }
+  @BeforeEach
+  fun setUp() {
+    totalMonthUpdateProcessor.bot = bot
+    totalMonthUpdateProcessor.totalClient = totalClient
+    totalKeypad.bot = bot
+    totalMonthUpdateProcessor.totalKeypad = totalKeypad
+    whenever(update.message).thenReturn(message)
+    whenever(message.text).thenReturn("/total")
+    whenever(totalClient.total(any(), any(), any())).thenReturn(listOf(Total(1, 2, 1000, "USD", SHOPPING)))
+  }
 
-    @Test
-    fun applies() {
-        assertTrue(totalMonthUpdateProcessor.appliesTo(update))
-    }
+  @Test
+  fun applies() {
+    assertTrue(totalMonthUpdateProcessor.appliesTo(update))
+  }
 
-    @Test
-    fun processing() {
-        totalMonthUpdateProcessor.process(update)
-        verify(totalClient).total(any(), any())
-        verify(bot).execute(any<SendMessage>())
-    }
+  @Test
+  fun processing() {
+    totalMonthUpdateProcessor.process(update)
+    verify(totalClient).total(any(), any(), any())
+    verify(bot).execute(any<SendMessage>())
+  }
 }

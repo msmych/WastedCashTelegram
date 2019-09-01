@@ -26,7 +26,7 @@ fun main(args: Array<String>) {
   init()
   configure(args)
   startBot(args)
-  startScheduler()
+  startScheduler(args)
   LoggerFactory.getLogger("App").info("Поехали")
 }
 
@@ -79,8 +79,11 @@ private fun maybeSendWhatsNew(args: Array<String>) {
       )
 }
 
-private fun startScheduler() {
+private fun startScheduler(args: Array<String>) {
   val scheduler = Scheduler()
-  scheduler.schedule("0 9 1 * *", getInstance(MonthlyTotalReporter::class.java))
+  val reporter = getInstance(MonthlyTotalReporter::class.java)
+  reporter.userId = findArgEq(args, "--admin-id")
+    ?: throw IllegalArgumentException("--admin-id is not present")
+  scheduler.schedule("0 9 1 * *", reporter)
   scheduler.start()
 }

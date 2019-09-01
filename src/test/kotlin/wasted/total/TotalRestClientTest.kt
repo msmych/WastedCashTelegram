@@ -9,12 +9,14 @@ import org.junit.ClassRule
 import org.junit.Test
 import wasted.bot.BotConfig
 import wasted.expense.Expense.Category.SHOPPING
+import wasted.rest.RestClient
 import wasted.total.Total.Type.MONTH
 
 internal class TotalRestClientTest {
 
   companion object {
 
+    private val restClient = RestClient()
     private val totalRestClient = TotalRestClient()
 
     @JvmStatic
@@ -30,8 +32,10 @@ internal class TotalRestClientTest {
     @JvmStatic
     fun setUpStubs() {
       val botConfig = BotConfig()
+      botConfig.apiBaseUrl = "http://localhost:8080"
       botConfig.apiToken = "1234"
-      totalRestClient.botConfig = botConfig
+      restClient.botConfig = botConfig
+      totalRestClient.restClient = restClient
       wireMockClassRule.stubFor(
         get(urlPathEqualTo("/total/in/1/type/MONTH"))
           .willReturn(
@@ -53,11 +57,11 @@ internal class TotalRestClientTest {
 
   @Test
   fun gettingTotal() {
-    assertEquals(listOf(total), totalRestClient.total(1, MONTH))
+    assertEquals(listOf(total), totalRestClient.total(1, MONTH, 1234))
   }
 
   @Test
   fun gettingTotals() {
-    assertEquals(listOf(total), totalRestClient.totals(MONTH))
+    assertEquals(listOf(total), totalRestClient.totals(MONTH, 1234))
   }
 }

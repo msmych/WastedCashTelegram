@@ -1,8 +1,6 @@
 package wasted.user
 
-import com.google.gson.Gson
 import com.google.inject.Singleton
-import wasted.bot.BotConfig
 import wasted.rest.RestClient
 import java.util.*
 import javax.inject.Inject
@@ -10,10 +8,6 @@ import javax.inject.Inject
 @Singleton
 class UserRestClient : UserClient {
 
-  private val gson = Gson()
-
-  @Inject
-  lateinit var botConfig: BotConfig
   @Inject
   lateinit var restClient: RestClient
 

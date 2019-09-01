@@ -11,24 +11,26 @@ import wasted.total.Total.Type.values
 @Singleton
 class TotalUpdateProcessor : UpdateProcessor {
 
-    @Inject
-    lateinit var totalClient: TotalClient
-    @Inject
-    lateinit var totalKeypad: TotalKeypad
+  @Inject
+  lateinit var totalClient: TotalClient
+  @Inject
+  lateinit var totalKeypad: TotalKeypad
 
-    override fun appliesTo(update: Update): Boolean {
-        val callbackQuery = update.callbackQuery ?: return false
-        val data = callbackQuery.data ?: return false
-        return values().any { data == "total$it" }
-    }
+  override fun appliesTo(update: Update): Boolean {
+    val callbackQuery = update.callbackQuery ?: return false
+    val data = callbackQuery.data ?: return false
+    return values().any { data == "total$it" }
+  }
 
-    override fun process(update: Update) {
-        val chatId = update.callbackQuery.message.chatId
-        val period = Type.valueOf(update.callbackQuery.data.substring("total".length))
-        totalKeypad.update(
-            chatId,
-            update.callbackQuery.message.messageId,
-            totalClient.total(chatId, period),
-            period)
-    }
+  override fun process(update: Update) {
+    val chatId = update.callbackQuery.message.chatId
+    val userId = update.callbackQuery.from.id
+    val period = Type.valueOf(update.callbackQuery.data.substring("total".length))
+    totalKeypad.update(
+      chatId,
+      update.callbackQuery.message.messageId,
+      totalClient.total(chatId, period, userId),
+      period
+    )
+  }
 }

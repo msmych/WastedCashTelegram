@@ -34,7 +34,6 @@ internal class UserRestClientTest {
       val botConfig = BotConfig()
       botConfig.apiBaseUrl = "http://localhost:8080"
       botConfig.apiToken = "1234"
-      userRestClient.botConfig = botConfig
       restClient.botConfig = botConfig
       userRestClient.restClient = restClient
       wireMockClassRule.stubFor(

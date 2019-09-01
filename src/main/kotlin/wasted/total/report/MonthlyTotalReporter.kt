@@ -9,14 +9,16 @@ import javax.inject.Singleton
 @Singleton
 class MonthlyTotalReporter : Runnable {
 
-    @Inject
-    lateinit var totalClient: TotalClient
-    @Inject
-    lateinit var totalKeypad: TotalKeypad
+  @Inject
+  lateinit var userId: String
+  @Inject
+  lateinit var totalClient: TotalClient
+  @Inject
+  lateinit var totalKeypad: TotalKeypad
 
-    override fun run() {
-        totalClient.totals(MONTH)
-            .groupBy { it.groupId }
-            .forEach { totalKeypad.send(it.key, it.value, MONTH) }
-    }
+  override fun run() {
+    totalClient.totals(MONTH, userId.toInt())
+      .groupBy { it.groupId }
+      .forEach { totalKeypad.send(it.key, it.value, MONTH) }
+  }
 }

@@ -7,6 +7,7 @@ import org.apache.http.client.fluent.Request.*
 import org.apache.http.client.fluent.Response
 import org.apache.http.entity.ContentType.APPLICATION_JSON
 import wasted.bot.BotConfig
+import java.lang.reflect.Type
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,23 +21,27 @@ class RestClient {
     return gson.fromJson(getForString(url, userId), type)
   }
 
+  fun <T> getForObject(url: String, userId: Int, type: Type, gson: Gson = Gson()): T {
+    return gson.fromJson(getForString(url, userId), type)
+  }
+
   fun getForString(url: String, userId: Int): String {
     return Get("${botConfig.apiBaseUrl}$url")
-      .executeToString(userId)
+      .executeForString(userId)
   }
 
   fun <T> postForObject(url: String, userId: Int, body: Any, type: Class<T>, gson: Gson = Gson()): T {
     return gson.fromJson(
       Post("${botConfig.apiBaseUrl}$url")
         .bodyString(gson.toJson(body), APPLICATION_JSON)
-        .executeToString(userId),
+        .executeForString(userId),
       type
     )
   }
 
   fun postForString(url: String, userId: Int): String {
     return Post("${botConfig.apiBaseUrl}$url")
-      .executeToString(userId)
+      .executeForString(userId)
   }
 
   fun put(url: String, userId: Int, body: Any, gson: Gson = Gson()) {
@@ -53,12 +58,12 @@ class RestClient {
   fun <T> patchForObject(url: String, userId: Int, type: Class<T>, gson: Gson = Gson()): T {
     return gson.fromJson(
       Patch("${botConfig.apiBaseUrl}$url")
-        .executeToString(userId),
+        .executeForString(userId),
       type
     )
   }
 
-  private fun Request.executeToString(userId: Int): String {
+  private fun Request.executeForString(userId: Int): String {
     return this.executeWithHeaders(userId).returnContent().asString()
   }
 
