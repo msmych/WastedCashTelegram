@@ -46,7 +46,16 @@ class RestClient {
   }
 
   fun delete(url: String, userId: Int) {
+    Delete("${botConfig.apiBaseUrl}$url")
+      .executeWithHeaders(userId)
+  }
 
+  fun <T> patchForObject(url: String, userId: Int, type: Class<T>, gson: Gson = Gson()): T {
+    return gson.fromJson(
+      Patch("${botConfig.apiBaseUrl}$url")
+        .executeToString(userId),
+      type
+    )
   }
 
   private fun Request.executeToString(userId: Int): String {

@@ -2,7 +2,6 @@ package wasted.user
 
 import com.google.gson.Gson
 import com.google.inject.Singleton
-import org.apache.http.client.fluent.Request.Patch
 import wasted.bot.BotConfig
 import wasted.rest.RestClient
 import java.util.*
@@ -40,18 +39,11 @@ class UserRestClient : UserClient {
   }
 
   override fun toggleUserCurrency(userId: Int, currency: String): List<Currency> {
-    return gson.fromJson(
-      Patch("${botConfig.apiBaseUrl}/user/$userId/currency/$currency")
-        .addHeader("api-token", botConfig.apiToken)
-        .execute().returnContent().asString(),
-      Array<String>::class.java
-    )
+    return restClient.patchForObject("/user/$userId/currency/$currency", userId, Array<String>::class.java)
       .map { Currency.getInstance(it) }
   }
 
   override fun toggleUserWhatsNew(userId: Int): Boolean {
-    return Patch("${botConfig.apiBaseUrl}/user/$userId/whats-new")
-      .addHeader("api-token", botConfig.apiToken)
-      .execute().returnContent().asString() == "true"
+    return restClient.patchForObject("/user/$userId/whats-new", userId, Boolean::class.java)
   }
 }
