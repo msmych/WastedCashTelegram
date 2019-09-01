@@ -33,8 +33,8 @@ private fun configure(args: Array<String>) {
   register(TelegramLongPollingBot::class.java, Bot::class.java)
   if (args.any { it == "--test" || it == "--prod" }) registerProd()
   else registerDev()
-  if (args.any { it == "--test" }) getInstance(BotConfig::class.java).apiToken = args[2]
-  else if (args.any { it == "--prod" }) getInstance(BotConfig::class.java).apiToken = args[0]
+  if (args.any { it == "--test" }) configureTest(args)
+  else if (args.any { it == "--prod" }) configureProd(args)
 }
 
 fun registerProd() {
@@ -47,6 +47,18 @@ fun registerDev() {
   register(UserClient::class.java, UserClientStub::class.java)
   register(ExpenseClient::class.java, ExpenseClientStub::class.java)
   register(TotalClient::class.java, TotalClientStub::class.java)
+}
+
+private fun configureTest(args: Array<String>) {
+  val botConfig = getInstance(BotConfig::class.java)
+  botConfig.apiBaseUrl = "http://localhost:8080"
+  botConfig.apiToken = args[2]
+}
+
+private fun configureProd(args: Array<String>) {
+  val botConfig = getInstance(BotConfig::class.java)
+  botConfig.apiBaseUrl = "https://wasted.cash"
+  botConfig.apiToken = args[0]
 }
 
 private fun startBot(args: Array<String>) {

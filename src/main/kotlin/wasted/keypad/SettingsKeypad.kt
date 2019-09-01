@@ -32,7 +32,7 @@ class SettingsKeypad {
         listOf(
           listOf(
             InlineKeyboardButton("Go web")
-              .setUrl("${botConfig.apiBaseUrl}/?userId=$userId&apiToken=${sha256Hex("$userId${botConfig.apiToken}")}")
+              .setUrl("https://wasted.cash/?userId=$userId&apiToken=${sha256Hex("$userId${botConfig.apiToken}")}")
           ),
           listOf(
             InlineKeyboardButton(if (whatsNew) "${WHITE_CHECK_MARK.code} What's new" else "What's new")
