@@ -17,11 +17,12 @@ class RestClient {
   lateinit var botConfig: BotConfig
 
   fun <T> getForObject(url: String, userId: Int, type: Class<T>, gson: Gson = Gson()): T {
-    return gson.fromJson(
-      Get("${botConfig.apiBaseUrl}$url")
-        .executeToString(userId),
-      type
-    )
+    return gson.fromJson(getForString(url, userId), type)
+  }
+
+  fun getForString(url: String, userId: Int): String {
+    return Get("${botConfig.apiBaseUrl}$url")
+      .executeToString(userId)
   }
 
   fun <T> postForObject(url: String, userId: Int, body: Any, type: Class<T>, gson: Gson = Gson()): T {
@@ -40,7 +41,7 @@ class RestClient {
   }
 
   fun delete(url: String, userId: Int) {
-    
+
   }
 
   private fun Request.executeToString(userId: Int): String {

@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.google.inject.Singleton
 import org.apache.http.client.fluent.Request.*
 import wasted.bot.BotConfig
+import wasted.rest.RestClient
 import java.util.*
 import javax.inject.Inject
 
@@ -14,11 +15,11 @@ class UserRestClient : UserClient {
 
   @Inject
   lateinit var botConfig: BotConfig
+  @Inject
+  lateinit var restClient: RestClient
 
   override fun existsUser(userId: Int): Boolean {
-    return Get("${botConfig.apiBaseUrl}/user/$userId/exists")
-      .addHeader("api-token", botConfig.apiToken)
-      .execute().returnContent().asString() == "true"
+    return restClient.getForObject("/user/$userId/exists", userId, Boolean::class.java)
   }
 
   override fun createUser(userId: Int) {

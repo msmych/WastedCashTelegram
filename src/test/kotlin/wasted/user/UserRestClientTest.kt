@@ -10,6 +10,7 @@ import org.junit.Test
 import wasted.bot.BotConfig
 import wasted.expense.Expense
 import wasted.expense.Expense.Category.OTHER
+import wasted.rest.RestClient
 import java.time.Instant.now
 import java.util.*
 
@@ -18,6 +19,7 @@ internal class UserRestClientTest {
   companion object {
 
     private val userRestClient = UserRestClient()
+    private val restClient = RestClient()
 
     @JvmStatic
     @get:ClassRule
@@ -30,8 +32,11 @@ internal class UserRestClientTest {
     @JvmStatic
     fun setUp() {
       val botConfig = BotConfig()
+      botConfig.apiBaseUrl = "http://localhost:8080"
       botConfig.apiToken = "1234"
       userRestClient.botConfig = botConfig
+      restClient.botConfig = botConfig
+      userRestClient.restClient = restClient
       wireMockClassRule.stubFor(
         get(urlEqualTo("/user/1234/exists"))
           .willReturn(aResponse().withStatus(200).withBody("true"))
