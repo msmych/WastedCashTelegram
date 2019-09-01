@@ -9,7 +9,6 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 import wasted.bot.Emoji.E1234
 import wasted.bot.Emoji.X
-import wasted.bot.ikb
 import wasted.expense.Expense
 import wasted.expense.Expense.Category.*
 import wasted.expense.formatAmount
@@ -31,10 +30,30 @@ class CategoriesKeypad {
     private fun markup(): InlineKeyboardMarkup {
         return InlineKeyboardMarkup()
             .setKeyboard(listOf(
-                listOf(ikb(GROCERIES), ikb(SHOPPING), ikb(TRANSPORT), ikb(HOME)),
-                listOf(ikb(FEES), ikb(ENTERTAINMENT), ikb(TRAVEL), ikb(HEALTH)),
-                listOf(ikb(CAREER), ikb(GIFTS), ikb(SPORT), ikb(HOBBIES)),
-                listOf(ikb(X, "remove-expense"), ikb(BEAUTY), ikb(OTHER), ikb(E1234, "edit-amount"))))
+                listOf(
+                  ikb(GROCERIES),
+                  ikb(SHOPPING),
+                  ikb(TRANSPORT),
+                  ikb(HOME)
+                ),
+                listOf(
+                  ikb(FEES),
+                  ikb(ENTERTAINMENT),
+                  ikb(TRAVEL),
+                  ikb(HEALTH)
+                ),
+                listOf(
+                  ikb(CAREER),
+                  ikb(GIFTS),
+                  ikb(SPORT),
+                  ikb(HOBBIES)
+                ),
+                listOf(
+                  ikb(X, "remove-expense"),
+                  ikb(BEAUTY),
+                  ikb(OTHER),
+                  ikb(E1234, "edit-amount")
+                )))
     }
 
     fun update(chatId: Long, messageId: Int, expense: Expense) {

@@ -8,7 +8,6 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 import wasted.bot.Emoji.E1234
 import wasted.bot.Emoji.X
-import wasted.bot.ikb
 import wasted.expense.Expense
 import wasted.expense.formatAmount
 import java.util.*
@@ -27,9 +26,10 @@ class OptionsKeypad {
             .setText("${formatAmount(expense.amount, currency)} ${expense.category.emoji.code}")
             .setParseMode(MARKDOWN)
             .setReplyMarkup(InlineKeyboardMarkup().setKeyboard(listOf(listOf(
-                ikb(X, "remove-expense"),
-                ikb(E1234, "edit-amount"),
-                ikb(currency.symbol, "next-currency-option"),
-                ikb(expense.category.emoji.code, "edit-category"))))))
+              ikb(X, "remove-expense"),
+              ikb(E1234, "edit-amount"),
+              ikb(currency.symbol, "next-currency-option"),
+              ikb(expense.category.emoji.code, "edit-category")
+            )))))
     }
 }

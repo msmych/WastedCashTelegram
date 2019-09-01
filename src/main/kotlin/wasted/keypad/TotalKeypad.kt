@@ -8,7 +8,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 import wasted.bot.Emoji.RADIO_BUTTON
-import wasted.bot.ikb
 import wasted.expense.formatAmount
 import wasted.total.Total
 import wasted.total.Total.Type
@@ -61,8 +60,9 @@ class TotalKeypad {
     private fun inlineKeyboardMarkup(type: Type): InlineKeyboardMarkup {
         return InlineKeyboardMarkup()
             .setKeyboard(listOf(listOf(
-                ikb(if (type == MONTH) "${RADIO_BUTTON.code} Month" else "Month", "totalMONTH"),
-                ikb(if (type == ALL) "${RADIO_BUTTON.code} All" else "All", "totalALL"))))
+              ikb(if (type == MONTH) "${RADIO_BUTTON.code} Month" else "Month", "totalMONTH"),
+              ikb(if (type == ALL) "${RADIO_BUTTON.code} All" else "All", "totalALL")
+            )))
     }
 
     fun update(chatId: Long, messageId: Int, total: List<Total>, type: Type) {

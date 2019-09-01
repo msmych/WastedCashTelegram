@@ -1,4 +1,4 @@
-package wasted
+package wasted.bot.update.processor
 
 import org.telegram.telegrambots.meta.ApiContext
 import wasted.bot.HelpUpdateProcessor

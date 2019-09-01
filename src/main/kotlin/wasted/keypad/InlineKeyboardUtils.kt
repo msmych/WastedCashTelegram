@@ -1,6 +1,7 @@
-package wasted.bot
+package wasted.keypad
 
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
+import wasted.bot.Emoji
 import wasted.expense.Expense.Category
 
 fun ikb(label: String, data: String): InlineKeyboardButton {

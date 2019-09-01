@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.ApiContext.register
 import org.telegram.telegrambots.meta.TelegramBotsApi
 import wasted.bot.Bot
 import wasted.bot.BotConfig
+import wasted.bot.update.processor.updateProcessors
 import wasted.expense.ExpenseClient
 import wasted.expense.ExpenseRestClient
 import wasted.stub.ExpenseClientStub
