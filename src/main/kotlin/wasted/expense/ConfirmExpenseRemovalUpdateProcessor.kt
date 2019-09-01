@@ -30,9 +30,10 @@ class ConfirmExpenseRemovalUpdateProcessor : UpdateProcessor {
   }
 
   override fun process(update: Update) {
+    val userId = update.callbackQuery.from.id
     val chatId = update.callbackQuery.message.chatId
     val messageId = update.callbackQuery.message.messageId
-    expenseClient.removeExpenseByGroupIdAndTelegramMessageId(chatId, messageId)
+    expenseClient.removeExpenseByGroupIdAndTelegramMessageId(chatId, messageId, userId)
     bot.execute(
       EditMessageText()
         .setChatId(chatId)

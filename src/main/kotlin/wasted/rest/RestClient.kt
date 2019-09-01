@@ -39,6 +39,10 @@ class RestClient {
       .executeWithHeaders(userId)
   }
 
+  fun delete(url: String, userId: Int) {
+    
+  }
+
   private fun Request.executeToString(userId: Int): String {
     return this.executeWithHeaders(userId).returnContent().asString()
   }

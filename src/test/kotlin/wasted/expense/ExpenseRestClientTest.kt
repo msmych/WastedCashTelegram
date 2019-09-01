@@ -37,7 +37,6 @@ internal class ExpenseRestClientTest {
       val botConfig = BotConfig()
       botConfig.apiBaseUrl = "http://localhost:8080"
       botConfig.apiToken = "1234"
-      expenseRestClient.botConfig = botConfig
       expenseRestClient.restClient = restClient
       restClient.botConfig = botConfig
       wireMockClassRule.stubFor(
@@ -100,11 +99,11 @@ internal class ExpenseRestClientTest {
 
   @Test
   fun removingExpenseByGroupIdAndTelegramMessageId() {
-    expenseRestClient.removeExpenseByGroupIdAndTelegramMessageId(1234, 890)
+    expenseRestClient.removeExpenseByGroupIdAndTelegramMessageId(1234, 890, 1234)
   }
 
   @Test
   fun removingExpenseByType() {
-    expenseRestClient.removeExpenseByType(1234, ALL)
+    expenseRestClient.removeExpenseByType(1234, ALL, 1234)
   }
 }

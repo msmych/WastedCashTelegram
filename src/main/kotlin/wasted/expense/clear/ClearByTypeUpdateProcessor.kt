@@ -12,26 +12,31 @@ import wasted.expense.ExpenseClient
 @Singleton
 class ClearByTypeUpdateProcessor : UpdateProcessor {
 
-    @Inject
-    lateinit var expenseClient: ExpenseClient
+  @Inject
+  lateinit var expenseClient: ExpenseClient
 
-    @Inject
-    lateinit var bot: TelegramLongPollingBot
+  @Inject
+  lateinit var bot: TelegramLongPollingBot
 
-    override fun appliesTo(update: Update): Boolean {
-        val callbackQuery = update.callbackQuery ?: return false
-        val data = callbackQuery.data ?: return false
-        return ClearExpenseType.values().any { data == "clear$it" }
-    }
+  override fun appliesTo(update: Update): Boolean {
+    val callbackQuery = update.callbackQuery ?: return false
+    val data = callbackQuery.data ?: return false
+    return ClearExpenseType.values().any { data == "clear$it" }
+  }
 
-    override fun process(update: Update) {
-        val chatId = update.callbackQuery.message.chatId
-        expenseClient.removeExpenseByType(
-            chatId,
-            ClearExpenseType.valueOf(update.callbackQuery.data.substring("clear".length)))
-        bot.execute(EditMessageText()
-            .setChatId(chatId)
-            .setMessageId(update.callbackQuery.message.messageId)
-            .setText("${HEAVY_MULTIPLICATION_X.code} Cleared"))
-    }
+  override fun process(update: Update) {
+    val userId = update.callbackQuery.from.id
+    val chatId = update.callbackQuery.message.chatId
+    expenseClient.removeExpenseByType(
+      chatId,
+      ClearExpenseType.valueOf(update.callbackQuery.data.substring("clear".length)),
+      userId
+    )
+    bot.execute(
+      EditMessageText()
+        .setChatId(chatId)
+        .setMessageId(update.callbackQuery.message.messageId)
+        .setText("${HEAVY_MULTIPLICATION_X.code} Cleared")
+    )
+  }
 }

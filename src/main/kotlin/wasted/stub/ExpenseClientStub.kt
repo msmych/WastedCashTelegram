@@ -50,11 +50,11 @@ class ExpenseClientStub : ExpenseClient {
     ims.expenses[ims.expenses.indexOfFirst { it.id == expense.id }] = expense
   }
 
-  override fun removeExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int) {
+  override fun removeExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int, userId: Int) {
     ims.expenses.remove(ims.expenses.find { it.groupId == groupId && it.telegramMessageId == telegramMessageId })
   }
 
-  override fun removeExpenseByType(groupId: Long, type: ClearExpenseType) {
+  override fun removeExpenseByType(groupId: Long, type: ClearExpenseType, userId: Int) {
     when (type) {
       ALL -> ims.expenses.removeAll(ims.expenses.filter { it.groupId == groupId })
       UP_TO_THIS_MONTH -> ims.expenses.removeAll(ims.expenses

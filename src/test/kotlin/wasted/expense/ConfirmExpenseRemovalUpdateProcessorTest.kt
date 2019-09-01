@@ -56,7 +56,7 @@ internal class ConfirmExpenseRemovalUpdateProcessorTest {
   @Test
   fun processing() {
     confirmExpenseRemovalUpdateProcessor.process(update)
-    verify(expenseClient).removeExpenseByGroupIdAndTelegramMessageId(any(), any())
+    verify(expenseClient).removeExpenseByGroupIdAndTelegramMessageId(any(), any(), any())
     verify(bot).execute(any<EditMessageText>())
   }
 }

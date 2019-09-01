@@ -4,8 +4,6 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
-import org.apache.http.client.fluent.Request.Delete
-import wasted.bot.BotConfig
 import wasted.expense.clear.ClearExpenseType
 import wasted.rest.RestClient
 import java.lang.reflect.Type
@@ -28,8 +26,6 @@ class ExpenseRestClient : ExpenseClient {
   }).create()
 
   @Inject
-  lateinit var botConfig: BotConfig
-  @Inject
   lateinit var restClient: RestClient
 
   override fun expenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int, userId: Int): Expense {
@@ -49,22 +45,11 @@ class ExpenseRestClient : ExpenseClient {
     restClient.put("/expense", userId, expense)
   }
 
-  data class UpdateExpenseRequest(
-    val id: Long,
-    val amount: Long,
-    val currency: String,
-    val category: Expense.Category
-  )
-
-  override fun removeExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int) {
-    Delete("${botConfig.apiBaseUrl}/expense?groupId=$groupId&telegramMessageId=$telegramMessageId")
-      .addHeader("api-token", botConfig.apiToken)
-      .execute()
+  override fun removeExpenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int, userId: Int) {
+    restClient.delete("/expense?groupId=$groupId&telegramMessageId=$telegramMessageId", userId)
   }
 
-  override fun removeExpenseByType(groupId: Long, type: ClearExpenseType) {
-    Delete("${botConfig.apiBaseUrl}/expense/in/$groupId/type/${type.name}")
-      .addHeader("api-token", botConfig.apiToken)
-      .execute()
+  override fun removeExpenseByType(groupId: Long, type: ClearExpenseType, userId: Int) {
+    restClient.delete("/expense/in/$groupId/type/${type.name}", userId)
   }
 }
