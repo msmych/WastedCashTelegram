@@ -9,24 +9,32 @@ import javax.inject.Singleton
 @Singleton
 class CancelExpenseRemovalUpdateProcessor : UpdateProcessor {
 
-    @Inject lateinit var expenseClient: ExpenseClient
-    @Inject lateinit var optionsKeypad: OptionsKeypad
+  @Inject
+  lateinit var expenseClient: ExpenseClient
+  @Inject
+  lateinit var optionsKeypad: OptionsKeypad
 
-    override fun appliesTo(update: Update): Boolean {
-        val callbackQuery = update.callbackQuery ?: return false
-        val data = callbackQuery.data ?: return false
-        val fromId = callbackQuery.from.id
-        return data == "cancel-expense-removal" &&
-                expenseClient.expenseByGroupIdAndTelegramMessageId(
-                    callbackQuery.message.chatId,
-                    callbackQuery.message.messageId)
-                    .userId == fromId
-    }
+  override fun appliesTo(update: Update): Boolean {
+    val callbackQuery = update.callbackQuery ?: return false
+    val data = callbackQuery.data ?: return false
+    val fromId = callbackQuery.from.id
+    return data == "cancel-expense-removal" &&
+      expenseClient.expenseByGroupIdAndTelegramMessageId(
+        callbackQuery.message.chatId,
+        callbackQuery.message.messageId,
+        callbackQuery.from.id
+      )
+        .userId == fromId
+  }
 
-    override fun process(update: Update) {
-        optionsKeypad.update(expenseClient.expenseByGroupIdAndTelegramMessageId(
-            update.callbackQuery.message.chatId,
-            update.callbackQuery.message.messageId))
-    }
+  override fun process(update: Update) {
+    optionsKeypad.update(
+      expenseClient.expenseByGroupIdAndTelegramMessageId(
+        update.callbackQuery.message.chatId,
+        update.callbackQuery.message.messageId,
+        update.callbackQuery.from.id
+      )
+    )
+  }
 
 }

@@ -17,7 +17,7 @@ class ExpenseClientStub : ExpenseClient {
   @Inject
   lateinit var ims: InMemoryStorage
 
-  override fun expenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int): Expense {
+  override fun expenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int, userId: Int): Expense {
     return ims.expenses
       .find { it.groupId == groupId && it.telegramMessageId == telegramMessageId }
       ?: throw IllegalArgumentException()

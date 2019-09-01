@@ -25,59 +25,59 @@ import java.util.*
 
 internal class NextCurrencyUpdateProcessorTest {
 
-    private val bot = mock<TelegramLongPollingBot>()
-    private val numericKeypad = NumericKeypad()
-    private val userClient = mock<UserClient>()
-    private val expenseClient = mock<ExpenseClient>()
+  private val bot = mock<TelegramLongPollingBot>()
+  private val numericKeypad = NumericKeypad()
+  private val userClient = mock<UserClient>()
+  private val expenseClient = mock<ExpenseClient>()
 
-    private val nextCurrencyUpdateProcessor = NextCurrencyUpdateProcessor()
+  private val nextCurrencyUpdateProcessor = NextCurrencyUpdateProcessor()
 
-    private val update = mock<Update>()
-    private val callbackQuery = mock<CallbackQuery>()
-    private val message = mock<Message>()
-    private val from = mock<User>()
+  private val update = mock<Update>()
+  private val callbackQuery = mock<CallbackQuery>()
+  private val message = mock<Message>()
+  private val from = mock<User>()
 
-    @BeforeEach
-    fun setUp() {
-        numericKeypad.bot = bot
-        nextCurrencyUpdateProcessor.numericKeypad = numericKeypad
-        nextCurrencyUpdateProcessor.userClient = userClient
-        nextCurrencyUpdateProcessor.expenseClient = expenseClient
-        whenever(update.callbackQuery).thenReturn(callbackQuery)
-        whenever(callbackQuery.data).thenReturn("next-currency")
-        whenever(callbackQuery.from).thenReturn(from)
-        whenever(from.id).thenReturn(2)
-        whenever(callbackQuery.message).thenReturn(message)
-        whenever(message.chatId).thenReturn(1)
-        whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
-            .thenReturn(Expense(1, 2, 1, 3, 1000, "USD", SHOPPING, now()))
-        whenever(userClient.userCurrencies(any()))
-            .thenReturn(listOf(Currency.getInstance("USD"), Currency.getInstance("EUR")))
-    }
+  @BeforeEach
+  fun setUp() {
+    numericKeypad.bot = bot
+    nextCurrencyUpdateProcessor.numericKeypad = numericKeypad
+    nextCurrencyUpdateProcessor.userClient = userClient
+    nextCurrencyUpdateProcessor.expenseClient = expenseClient
+    whenever(update.callbackQuery).thenReturn(callbackQuery)
+    whenever(callbackQuery.data).thenReturn("next-currency")
+    whenever(callbackQuery.from).thenReturn(from)
+    whenever(from.id).thenReturn(2)
+    whenever(callbackQuery.message).thenReturn(message)
+    whenever(message.chatId).thenReturn(1)
+    whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any(), any()))
+      .thenReturn(Expense(1, 2, 1, 3, 1000, "USD", SHOPPING, now()))
+    whenever(userClient.userCurrencies(any()))
+      .thenReturn(listOf(Currency.getInstance("USD"), Currency.getInstance("EUR")))
+  }
 
-    @Test
-    fun applies() {
-        assertTrue(nextCurrencyUpdateProcessor.appliesTo(update))
-    }
+  @Test
+  fun applies() {
+    assertTrue(nextCurrencyUpdateProcessor.appliesTo(update))
+  }
 
-    @Test
-    fun notOwnNotApplies() {
-        whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
-            .thenReturn(Expense(1, 111, 1, 3, 1000, "USD", SHOPPING, now()))
-        assertFalse(nextCurrencyUpdateProcessor.appliesTo(update))
-    }
+  @Test
+  fun notOwnNotApplies() {
+    whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any(), any()))
+      .thenReturn(Expense(1, 111, 1, 3, 1000, "USD", SHOPPING, now()))
+    assertFalse(nextCurrencyUpdateProcessor.appliesTo(update))
+  }
 
-    @Test
-    fun lastCurrencyNotApplies() {
-        whenever(userClient.userCurrencies(any())).thenReturn(listOf(Currency.getInstance("USD")))
-        assertFalse(nextCurrencyUpdateProcessor.appliesTo(update))
-    }
+  @Test
+  fun lastCurrencyNotApplies() {
+    whenever(userClient.userCurrencies(any())).thenReturn(listOf(Currency.getInstance("USD")))
+    assertFalse(nextCurrencyUpdateProcessor.appliesTo(update))
+  }
 
-    @Test
-    fun processing() {
-        whenever(userClient.userCurrencies(any()))
-            .thenReturn(listOf(Currency.getInstance("USD")))
-        nextCurrencyUpdateProcessor.process(update)
-        verify(bot).execute(any<EditMessageText>())
-    }
+  @Test
+  fun processing() {
+    whenever(userClient.userCurrencies(any()))
+      .thenReturn(listOf(Currency.getInstance("USD")))
+    nextCurrencyUpdateProcessor.process(update)
+    verify(bot).execute(any<EditMessageText>())
+  }
 }

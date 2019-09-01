@@ -9,24 +9,30 @@ import wasted.keypad.NumericKeypad
 @Singleton
 class EditAmountUpdateProcessor : UpdateProcessor {
 
-    @Inject
-    lateinit var expenseClient: ExpenseClient
-    @Inject
-    lateinit var numericKeypad: NumericKeypad
+  @Inject
+  lateinit var expenseClient: ExpenseClient
+  @Inject
+  lateinit var numericKeypad: NumericKeypad
 
-    override fun appliesTo(update: Update): Boolean {
-        val callbackQuery = update.callbackQuery ?: return false
-        val data = callbackQuery.data ?: return false
-        return data == "edit-amount"
-                && expenseClient.expenseByGroupIdAndTelegramMessageId(
-            callbackQuery.message.chatId,
-            callbackQuery.message.messageId)
-            .userId == callbackQuery.from.id
-    }
+  override fun appliesTo(update: Update): Boolean {
+    val callbackQuery = update.callbackQuery ?: return false
+    val data = callbackQuery.data ?: return false
+    return data == "edit-amount"
+      && expenseClient.expenseByGroupIdAndTelegramMessageId(
+      callbackQuery.message.chatId,
+      callbackQuery.message.messageId,
+      callbackQuery.from.id
+    )
+      .userId == callbackQuery.from.id
+  }
 
-    override fun process(update: Update) {
-        numericKeypad.update(expenseClient.expenseByGroupIdAndTelegramMessageId(
-            update.callbackQuery.message.chatId,
-            update.callbackQuery.message.messageId))
-    }
+  override fun process(update: Update) {
+    numericKeypad.update(
+      expenseClient.expenseByGroupIdAndTelegramMessageId(
+        update.callbackQuery.message.chatId,
+        update.callbackQuery.message.messageId,
+        update.callbackQuery.from.id
+      )
+    )
+  }
 }

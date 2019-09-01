@@ -1,0 +1,48 @@
+package wasted.rest
+
+import com.google.gson.Gson
+import org.apache.commons.codec.digest.DigestUtils.sha256Hex
+import org.apache.http.client.fluent.Request
+import org.apache.http.client.fluent.Request.Get
+import org.apache.http.client.fluent.Request.Post
+import org.apache.http.client.fluent.Response
+import org.apache.http.entity.ContentType.APPLICATION_JSON
+import wasted.bot.BotConfig
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class RestClient {
+
+  @Inject
+  lateinit var botConfig: BotConfig
+
+  fun <T> getForObject(url: String, userId: Int, type: Class<T>, gson: Gson = Gson()): T {
+    return gson.fromJson(
+      Get("${botConfig.apiBaseUrl}$url")
+        .executeToString(userId),
+      type
+    )
+  }
+
+  fun <T> postForObject(url: String, userId: Int, body: Any, type: Class<T>, gson: Gson = Gson()): T {
+    return gson.fromJson(
+      Post("${botConfig.apiBaseUrl}$url")
+        .bodyString(gson.toJson(body), APPLICATION_JSON)
+        .executeToString(userId),
+      type
+    )
+  }
+
+  private fun Request.executeToString(userId: Int): String {
+    return this.executeWithHeaders(userId).returnContent().asString()
+  }
+
+  private fun Request.executeWithHeaders(userId: Int): Response {
+    val userIdString = userId.toString()
+    return this
+      .addHeader("user-id", userIdString)
+      .addHeader("api-token", sha256Hex("$userIdString${botConfig.apiToken}"))
+      .execute()
+  }
+}

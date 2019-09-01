@@ -4,7 +4,7 @@ import wasted.expense.clear.ClearExpenseType
 
 interface ExpenseClient {
 
-    fun expenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int): Expense
+    fun expenseByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int, userId: Int): Expense
 
     fun createExpense(request: CreateExpenseRequest): Expense
 

@@ -18,44 +18,44 @@ import java.time.Instant.now
 
 internal class RemoveExpenseUpdateProcessorTest {
 
-    private val expenseClient = mock<ExpenseClient>()
-    private val bot = mock<TelegramLongPollingBot>()
+  private val expenseClient = mock<ExpenseClient>()
+  private val bot = mock<TelegramLongPollingBot>()
 
-    private val removeExpenseUpdateProcessor = RemoveExpenseUpdateProcessor()
+  private val removeExpenseUpdateProcessor = RemoveExpenseUpdateProcessor()
 
-    private val update = mock<Update>()
+  private val update = mock<Update>()
 
-    private val callbackQuery = mock<CallbackQuery>()
-    private val user = mock<User>()
+  private val callbackQuery = mock<CallbackQuery>()
+  private val user = mock<User>()
 
-    @BeforeEach
-    fun setUp() {
-        removeExpenseUpdateProcessor.expenseClient = expenseClient
-        removeExpenseUpdateProcessor.bot = bot
-        whenever(update.callbackQuery).thenReturn(callbackQuery)
-        whenever(callbackQuery.data).thenReturn("remove-expense")
-        whenever(callbackQuery.message).thenReturn(mock())
-        whenever(callbackQuery.from).thenReturn(user)
-        whenever(user.id).thenReturn(1)
-        whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
-            .thenReturn(Expense(1, 1, 2, 3, 1000, "USD", SHOPPING, now()))
-    }
+  @BeforeEach
+  fun setUp() {
+    removeExpenseUpdateProcessor.expenseClient = expenseClient
+    removeExpenseUpdateProcessor.bot = bot
+    whenever(update.callbackQuery).thenReturn(callbackQuery)
+    whenever(callbackQuery.data).thenReturn("remove-expense")
+    whenever(callbackQuery.message).thenReturn(mock())
+    whenever(callbackQuery.from).thenReturn(user)
+    whenever(user.id).thenReturn(1)
+    whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any(), any()))
+      .thenReturn(Expense(1, 1, 2, 3, 1000, "USD", SHOPPING, now()))
+  }
 
-    @Test
-    fun applies() {
-        assertTrue(removeExpenseUpdateProcessor.appliesTo(update))
-    }
+  @Test
+  fun applies() {
+    assertTrue(removeExpenseUpdateProcessor.appliesTo(update))
+  }
 
-    @Test
-    fun notOwnNotApplies() {
-        whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any()))
-            .thenReturn(Expense(1, 111, 2, 3, 1000, "USD", SHOPPING, now()))
-        assertFalse(removeExpenseUpdateProcessor.appliesTo(update))
-    }
+  @Test
+  fun notOwnNotApplies() {
+    whenever(expenseClient.expenseByGroupIdAndTelegramMessageId(any(), any(), any()))
+      .thenReturn(Expense(1, 111, 2, 3, 1000, "USD", SHOPPING, now()))
+    assertFalse(removeExpenseUpdateProcessor.appliesTo(update))
+  }
 
-    @Test
-    fun processing() {
-        removeExpenseUpdateProcessor.process(update)
-        verify(bot).execute(any<EditMessageText>())
-    }
+  @Test
+  fun processing() {
+    removeExpenseUpdateProcessor.process(update)
+    verify(bot).execute(any<EditMessageText>())
+  }
 }

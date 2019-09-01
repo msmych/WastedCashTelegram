@@ -25,18 +25,19 @@ class NextCurrencyUpdateProcessor : UpdateProcessor {
     return data == "next-currency"
       && expenseClient.expenseByGroupIdAndTelegramMessageId(
       callbackQuery.message.chatId,
-      callbackQuery.message.messageId
+      callbackQuery.message.messageId,
+      callbackQuery.from.id
     )
       .userId == fromId &&
       userClient.userCurrencies(fromId).size > 1
   }
 
   override fun process(update: Update) {
-    val fromId = update.callbackQuery.from.id
+    val userId = update.callbackQuery.from.id
     val chatId = update.callbackQuery.message.chatId
     val messageId = update.callbackQuery.message.messageId
-    val currencies = userClient.userCurrencies(fromId)
-    val lastExpense = expenseClient.expenseByGroupIdAndTelegramMessageId(chatId, messageId)
+    val currencies = userClient.userCurrencies(userId)
+    val lastExpense = expenseClient.expenseByGroupIdAndTelegramMessageId(chatId, messageId, userId)
     val currency =
       currencies[(currencies.indexOf(Currency.getInstance(lastExpense.currency)) + 1) % currencies.size].currencyCode
     val expense = Expense(

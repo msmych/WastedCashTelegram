@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import wasted.bot.BotConfig
 import wasted.expense.Expense.Category.OTHER
 import wasted.expense.clear.ClearExpenseType.ALL
+import wasted.rest.RestClient
 import java.time.Instant.now
 
 internal class ExpenseRestClientTest {
@@ -17,6 +18,7 @@ internal class ExpenseRestClientTest {
   companion object {
 
     private val expenseRestClient = ExpenseRestClient()
+    private val restClient = RestClient()
 
     @JvmStatic
     @get:ClassRule
@@ -33,8 +35,11 @@ internal class ExpenseRestClientTest {
     @JvmStatic
     fun setUp() {
       val botConfig = BotConfig()
+      botConfig.apiBaseUrl = "http://localhost:8080"
       botConfig.apiToken = "1234"
       expenseRestClient.botConfig = botConfig
+      expenseRestClient.restClient = restClient
+      restClient.botConfig = botConfig
       wireMockClassRule.stubFor(
         get(urlPathEqualTo("/expense"))
           .withQueryParam("groupId", equalTo("1234"))
@@ -76,7 +81,7 @@ internal class ExpenseRestClientTest {
   fun gettingExpenseByGroupIdAndTelegramMessageId() {
     assertEquals(
       expense.toString(),
-      expenseRestClient.expenseByGroupIdAndTelegramMessageId(1234, 890).toString()
+      expenseRestClient.expenseByGroupIdAndTelegramMessageId(1234, 890, 1234).toString()
     )
   }
 
