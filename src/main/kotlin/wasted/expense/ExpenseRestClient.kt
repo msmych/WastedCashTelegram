@@ -4,8 +4,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
-import org.apache.http.client.fluent.Request.*
-import org.apache.http.entity.ContentType.APPLICATION_JSON
+import org.apache.http.client.fluent.Request.Delete
 import wasted.bot.BotConfig
 import wasted.expense.clear.ClearExpenseType
 import wasted.rest.RestClient
@@ -42,31 +41,12 @@ class ExpenseRestClient : ExpenseClient {
     )
   }
 
-  override fun createExpense(request: CreateExpenseRequest): Expense {
-    return gson.fromJson(
-      Post("${botConfig.apiBaseUrl}/expense")
-        .addHeader("api-token", botConfig.apiToken)
-        .bodyString(gson.toJson(request), APPLICATION_JSON)
-        .execute().returnContent().asString(),
-      Expense::class.java
-    )
+  override fun createExpense(request: CreateExpenseRequest, userId: Int): Expense {
+    return restClient.postForObject("/expense", userId, request, Expense::class.java, gson)
   }
 
-  override fun updateExpense(expense: Expense) {
-    Put("${botConfig.apiBaseUrl}/expense")
-      .addHeader("api-token", botConfig.apiToken)
-      .bodyString(
-        gson.toJson(
-          UpdateExpenseRequest(
-            expense.id,
-            expense.amount,
-            expense.currency,
-            expense.category
-          )
-        ),
-        APPLICATION_JSON
-      )
-      .execute()
+  override fun updateExpense(expense: Expense, userId: Int) {
+    restClient.put("/expense", userId, expense)
   }
 
   data class UpdateExpenseRequest(

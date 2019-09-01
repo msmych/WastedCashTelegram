@@ -60,7 +60,7 @@ internal class CategoryUpdateProcessorTest {
   @Test
   fun processing() {
     categoryUpdateProcessor.process(update)
-    verify(expenseClient).updateExpense(any())
+    verify(expenseClient).updateExpense(any(), any())
     verify(bot).execute(any<EditMessageText>())
   }
 }

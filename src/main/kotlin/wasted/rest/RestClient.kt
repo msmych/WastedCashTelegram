@@ -3,8 +3,7 @@ package wasted.rest
 import com.google.gson.Gson
 import org.apache.commons.codec.digest.DigestUtils.sha256Hex
 import org.apache.http.client.fluent.Request
-import org.apache.http.client.fluent.Request.Get
-import org.apache.http.client.fluent.Request.Post
+import org.apache.http.client.fluent.Request.*
 import org.apache.http.client.fluent.Response
 import org.apache.http.entity.ContentType.APPLICATION_JSON
 import wasted.bot.BotConfig
@@ -32,6 +31,12 @@ class RestClient {
         .executeToString(userId),
       type
     )
+  }
+
+  fun put(url: String, userId: Int, body: Any, gson: Gson = Gson()) {
+    Put("${botConfig.apiBaseUrl}$url")
+      .bodyString(gson.toJson(body), APPLICATION_JSON)
+      .executeWithHeaders(userId)
   }
 
   private fun Request.executeToString(userId: Int): String {

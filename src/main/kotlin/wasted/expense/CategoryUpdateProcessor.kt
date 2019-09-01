@@ -42,7 +42,7 @@ class CategoryUpdateProcessor : UpdateProcessor {
       Expense.Category.fromName(update.callbackQuery.data) ?: OTHER,
       lastExpense.date
     )
-    expenseClient.updateExpense(expense)
+    expenseClient.updateExpense(expense, userId)
     optionsKeypad.update(expense)
   }
 }

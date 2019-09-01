@@ -50,7 +50,7 @@ class NextCurrencyOptionsUpdateProcessor : UpdateProcessor {
       lastExpense.category,
       lastExpense.date
     )
-    expenseClient.updateExpense(expense)
+    expenseClient.updateExpense(expense, userId)
     optionsKeypad.update(expense)
   }
 }

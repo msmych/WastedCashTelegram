@@ -23,7 +23,7 @@ class ExpenseClientStub : ExpenseClient {
       ?: throw IllegalArgumentException()
   }
 
-  override fun createExpense(request: CreateExpenseRequest): Expense {
+  override fun createExpense(request: CreateExpenseRequest, userId: Int): Expense {
     if (ims.users.find { it.id == request.userId } == null) {
       ims.users[ims.users.indexOfFirst { it.id == request.userId }] =
         User(
@@ -46,7 +46,7 @@ class ExpenseClientStub : ExpenseClient {
     return expense
   }
 
-  override fun updateExpense(expense: Expense) {
+  override fun updateExpense(expense: Expense, userId: Int) {
     ims.expenses[ims.expenses.indexOfFirst { it.id == expense.id }] = expense
   }
 

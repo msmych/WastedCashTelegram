@@ -72,7 +72,7 @@ internal class NextCurrencyOptionsUpdateProcessorTest {
   @Test
   fun processing() {
     nextCurrencyOptionsUpdateProcessor.process(update)
-    verify(expenseClient).updateExpense(any())
+    verify(expenseClient).updateExpense(any(), any())
     verify(bot).execute(any<EditMessageText>())
   }
 }

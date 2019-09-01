@@ -89,13 +89,13 @@ internal class ExpenseRestClientTest {
   fun creatingExpense() {
     assertEquals(
       expense.toString(),
-      expenseRestClient.createExpense(createExpenseRequest).toString()
+      expenseRestClient.createExpense(createExpenseRequest, 1234).toString()
     )
   }
 
   @Test
   fun updatingExpense() {
-    expenseRestClient.updateExpense(expense)
+    expenseRestClient.updateExpense(expense, 1234)
   }
 
   @Test

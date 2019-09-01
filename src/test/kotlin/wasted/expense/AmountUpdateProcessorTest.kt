@@ -81,6 +81,6 @@ internal class AmountUpdateProcessorTest {
   @Test
   fun processing() {
     amountUpdateProcessor.process(update)
-    verify(expenseClient).updateExpense(any())
+    verify(expenseClient).updateExpense(any(), any())
   }
 }
