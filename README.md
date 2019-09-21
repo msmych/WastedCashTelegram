@@ -11,17 +11,17 @@ gradle clean shadowJar
 
 **Prod**
 ```
-java -jar <jar> <telegram token> --prod
+java -jar <jar> <telegram token> --prod --admin-id=<admin id>
 ```
 
 **Test**
 ```
-java -jar <jar> <telegram token> --test <api token>
+java -jar <jar> <telegram token> --test <api token> --admin-id=<admin id>
 ```
 
 **Local**
 ```
-java -jar <jar> <telegram token>
+java -jar <jar> <telegram token> --admin-id=<admin id>
 ```
 
 **Optional parameters**
