@@ -7,7 +7,6 @@ import wasted.expense.*
 import wasted.expense.clear.ClearByTypeUpdateProcessor
 import wasted.expense.clear.ClearUpdateProcessor
 import wasted.settings.SettingsUpdateProcessor
-import wasted.settings.ToggleMonthlyReportUpdateProcessor
 import wasted.settings.ToggleWhatsNewUpdateProcessor
 import wasted.total.TotalMonthUpdateProcessor
 import wasted.total.TotalUpdateProcessor
@@ -38,6 +37,5 @@ val updateProcessors = setOf(
   TotalMonthUpdateProcessor::class.java,
   TotalUpdateProcessor::class.java,
   SettingsUpdateProcessor::class.java,
-  ToggleWhatsNewUpdateProcessor::class.java,
-  ToggleMonthlyReportUpdateProcessor::class.java)
+  ToggleWhatsNewUpdateProcessor::class.java)
   .map { ApiContext.getInstance(it) }

@@ -25,12 +25,9 @@ class ToggleWhatsNewUpdateProcessor : UpdateProcessor {
   override fun process(update: Update) {
     val callbackQuery = update.callbackQuery
     val message = callbackQuery.message
-    val userId = callbackQuery.from.id
     settingsKeypad.update(
       message.chatId,
       message.messageId,
-      userClient.userMonthlyReport(userId),
-      userClient.toggleUserWhatsNew(userId)
-    )
+      userClient.toggleUserWhatsNew(callbackQuery.from.id))
   }
 }

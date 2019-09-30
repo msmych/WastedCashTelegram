@@ -19,24 +19,20 @@ class SettingsKeypad {
   @Inject
   lateinit var botConfig: BotConfig
 
-  fun send(chatId: Long, monthlyReport: Boolean, whatsNew: Boolean) {
+  fun send(chatId: Long, whatsNew: Boolean) {
     bot.execute(
       SendMessage(chatId, "Wasted settings")
-        .setReplyMarkup(settingsMarkup(chatId.toInt(), monthlyReport, whatsNew))
+        .setReplyMarkup(settingsMarkup(chatId.toInt(), whatsNew))
     )
   }
 
-  private fun settingsMarkup(userId: Int, monthlyReport: Boolean, whatsNew: Boolean): InlineKeyboardMarkup? {
+  private fun settingsMarkup(userId: Int, whatsNew: Boolean): InlineKeyboardMarkup? {
     return InlineKeyboardMarkup()
       .setKeyboard(
         listOf(
           listOf(
             InlineKeyboardButton("Go web")
               .setUrl("https://wasted.cash/?userId=$userId&apiToken=${sha256Hex("$userId${botConfig.apiToken}")}")
-          ),
-          listOf(
-            InlineKeyboardButton(if (monthlyReport) "${WHITE_CHECK_MARK.code} Monthly report" else "Monthly report")
-              .setCallbackData("monthly report")
           ),
           listOf(
             InlineKeyboardButton(if (whatsNew) "${WHITE_CHECK_MARK.code} What's new" else "What's new")
@@ -46,12 +42,12 @@ class SettingsKeypad {
       )
   }
 
-  fun update(chatId: Long, messageId: Int, monthlyReport: Boolean, whatsNew: Boolean) {
+  fun update(chatId: Long, messageId: Int, whatsNew: Boolean) {
     bot.execute(
       EditMessageReplyMarkup()
         .setChatId(chatId)
         .setMessageId(messageId)
-        .setReplyMarkup(settingsMarkup(chatId.toInt(), monthlyReport, whatsNew))
+        .setReplyMarkup(settingsMarkup(chatId.toInt(), whatsNew))
     )
   }
 }

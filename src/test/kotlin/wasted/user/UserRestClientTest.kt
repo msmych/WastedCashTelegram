@@ -53,22 +53,11 @@ internal class UserRestClientTest {
           )
       )
       wireMockClassRule.stubFor(
-        get(urlEqualTo("/user/1234/monthly-report"))
-          .willReturn(
-            aResponse()
-              .withBody("true")
-          )
-      )
-      wireMockClassRule.stubFor(
         get(urlEqualTo("/user/1234/whats-new"))
           .willReturn(
             aResponse()
               .withBody("true")
           )
-      )
-      wireMockClassRule.stubFor(
-        get(urlEqualTo("/users/monthly-report/ids"))
-          .willReturn(aResponse().withBody("[1,2,3]"))
       )
       wireMockClassRule.stubFor(
         get(urlEqualTo("/users/whats-new/ids"))
@@ -81,10 +70,6 @@ internal class UserRestClientTest {
               .withStatus(200)
               .withBody(listOf("EUR", "RUB").toString())
           )
-      )
-      wireMockClassRule.stubFor(
-        patch(urlEqualTo("/user/1234/monthly-report"))
-          .willReturn(aResponse().withBody("true"))
       )
       wireMockClassRule.stubFor(
         patch(urlEqualTo("/user/1234/whats-new"))
@@ -112,18 +97,8 @@ internal class UserRestClientTest {
   }
 
   @Test
-  fun getting_monthly_report() {
-    assertTrue(userRestClient.userMonthlyReport(1234))
-  }
-
-  @Test
   fun getting_whats_new() {
     assertTrue(userRestClient.userWhatsNew(1234))
-  }
-
-  @Test
-  fun getting_user_monthly_report_ids() {
-    assertEquals(listOf(1, 2, 3), userRestClient.monthlyReportSubscribedIds(1234))
   }
 
   @Test
@@ -137,11 +112,6 @@ internal class UserRestClientTest {
       listOf("EUR", "RUB").map { Currency.getInstance(it) },
       userRestClient.toggleUserCurrency(1234, "usd")
     )
-  }
-
-  @Test
-  fun toggling_monthly_report() {
-    assertTrue(userRestClient.toggleUserMonthlyReport(1234))
   }
 
   @Test

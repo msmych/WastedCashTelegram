@@ -22,13 +22,13 @@ internal class SettingsKeypadTest {
 
   @Test
   fun sending() {
-    settingsKeypad.send(1, monthlyReport = true, whatsNew = true)
+    settingsKeypad.send(1, true)
     verify(bot).execute(any<SendMessage>())
   }
 
   @Test
   fun updating() {
-    settingsKeypad.update(1, 2, monthlyReport = false, whatsNew = false)
+    settingsKeypad.update(1, 2, false)
     verify(bot).execute(any<EditMessageReplyMarkup>())
   }
 }
