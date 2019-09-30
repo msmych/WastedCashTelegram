@@ -17,48 +17,52 @@ import kotlin.streams.toList
 @Singleton
 class CurrenciesKeypad {
 
-    companion object {
-        val AVAILABLE_CURRENCIES = Stream.of(
-            "USD", "EUR", "RUB",
-            "GBP", "CHF", "JPY")
-            .map { Currency.getInstance(it) }
-            .toList()
-    }
+  companion object {
+    val AVAILABLE_CURRENCIES = listOf(
+      "USD", "EUR", "GBP",
+      "CHF", "RUB", "BYN",
+      "JPY", "CNY", "INR"
+    ).map { Currency.getInstance(it) }
+  }
 
-    @Inject
-    lateinit var bot: TelegramLongPollingBot
+  @Inject
+  lateinit var bot: TelegramLongPollingBot
 
-    fun send(chatId: Long, currencies: List<Currency>) {
-        bot.execute(SendMessage(chatId, "Your currencies")
-            .setReplyMarkup(getMarkup(currencies)))
-    }
+  fun send(chatId: Long, currencies: List<Currency>) {
+    bot.execute(
+      SendMessage(chatId, "Your currencies")
+        .setReplyMarkup(getMarkup(currencies))
+    )
+  }
 
-    fun update(chatId: Long, messageId: Int, currencies: List<Currency>) {
-        bot.execute(EditMessageReplyMarkup()
-            .setChatId(chatId)
-            .setMessageId(messageId)
-            .setReplyMarkup(getMarkup(currencies)))
-    }
+  fun update(chatId: Long, messageId: Int, currencies: List<Currency>) {
+    bot.execute(
+      EditMessageReplyMarkup()
+        .setChatId(chatId)
+        .setMessageId(messageId)
+        .setReplyMarkup(getMarkup(currencies))
+    )
+  }
 
-    private fun getMarkup(currencies: List<Currency>): InlineKeyboardMarkup {
-        val buttons = ArrayList<InlineKeyboardButton>()
-        buttons.addAll(currencies
-            .map{ ikb("${WHITE_CHECK_MARK.code} ${it.symbol}", it.currencyCode) })
-        buttons.addAll(AVAILABLE_CURRENCIES
-            .filter{ !currencies.contains(it) }
-            .map{ ikb(it.symbol, it.currencyCode) })
-        val keyboard = ArrayList<List<InlineKeyboardButton>>()
-        var index = 0
-        while (index < buttons.size) {
-            val row = ArrayList<InlineKeyboardButton>()
-            row.add(buttons[index++])
-            if (index < buttons.size)
-                row.add(buttons[index++])
-            if (index < buttons.size)
-                row.add(buttons[index++])
-            keyboard.add(row)
-        }
-        keyboard.add(listOf(ikb("${BALLOT_BOX_WITH_CHECK.code} Confirm", "confirm-currencies")))
-        return InlineKeyboardMarkup().setKeyboard(keyboard)
+  private fun getMarkup(currencies: List<Currency>): InlineKeyboardMarkup {
+    val buttons = ArrayList<InlineKeyboardButton>()
+    buttons.addAll(currencies
+      .map { ikb("${WHITE_CHECK_MARK.code} ${it.symbol}", it.currencyCode) })
+    buttons.addAll(AVAILABLE_CURRENCIES
+      .filter { !currencies.contains(it) }
+      .map { ikb(it.symbol, it.currencyCode) })
+    val keyboard = ArrayList<List<InlineKeyboardButton>>()
+    var index = 0
+    while (index < buttons.size) {
+      val row = ArrayList<InlineKeyboardButton>()
+      row.add(buttons[index++])
+      if (index < buttons.size)
+        row.add(buttons[index++])
+      if (index < buttons.size)
+        row.add(buttons[index++])
+      keyboard.add(row)
     }
+    keyboard.add(listOf(ikb("${BALLOT_BOX_WITH_CHECK.code} Confirm", "confirm-currencies")))
+    return InlineKeyboardMarkup().setKeyboard(keyboard)
+  }
 }
