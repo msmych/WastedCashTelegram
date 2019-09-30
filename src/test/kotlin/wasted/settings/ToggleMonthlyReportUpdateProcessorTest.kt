@@ -18,14 +18,14 @@ import wasted.bot.BotConfig
 import wasted.keypad.SettingsKeypad
 import wasted.user.UserClient
 
-internal class ToggleWhatsNewUpdateProcessorTest {
+internal class ToggleMonthlyReportUpdateProcessorTest {
 
   private val bot = mock<TelegramLongPollingBot>()
   private val userClient = mock<UserClient>()
   private val settingsKeypad = SettingsKeypad()
   private val botConfig = BotConfig()
 
-  private val toggleWhatsNewUpdateProcessor = ToggleWhatsNewUpdateProcessor()
+  private val toggleMonthlyReportUpdateProcessor = ToggleMonthlyReportUpdateProcessor()
 
   private val update = mock<Update>()
   private val callbackQuery = mock<CallbackQuery>()
@@ -34,14 +34,14 @@ internal class ToggleWhatsNewUpdateProcessorTest {
 
   @Before
   fun setUp() {
-    toggleWhatsNewUpdateProcessor.userClient = userClient
+    toggleMonthlyReportUpdateProcessor.userClient = userClient
     settingsKeypad.botConfig = botConfig
     botConfig.apiToken = "apiToken"
     settingsKeypad.bot = bot
-    toggleWhatsNewUpdateProcessor.settingsKeypad = settingsKeypad
+    toggleMonthlyReportUpdateProcessor.settingsKeypad = settingsKeypad
 
     whenever(update.callbackQuery).thenReturn(callbackQuery)
-    whenever(callbackQuery.data).thenReturn("what's new")
+    whenever(callbackQuery.data).thenReturn("monthly report")
     whenever(callbackQuery.message).thenReturn(message)
     whenever(callbackQuery.from).thenReturn(user)
     whenever(user.id).thenReturn(1234)
@@ -50,19 +50,19 @@ internal class ToggleWhatsNewUpdateProcessorTest {
 
   @Test
   fun applies() {
-    assertTrue(toggleWhatsNewUpdateProcessor.appliesTo(update))
+    assertTrue(toggleMonthlyReportUpdateProcessor.appliesTo(update))
   }
 
   @Test
   fun not_applies_to_group_chat() {
     whenever(message.chatId).thenReturn(777)
-    assertFalse(toggleWhatsNewUpdateProcessor.appliesTo(update))
+    assertFalse(toggleMonthlyReportUpdateProcessor.appliesTo(update))
   }
 
   @Test
   fun processing() {
-    toggleWhatsNewUpdateProcessor.process(update)
-    verify(userClient).toggleUserWhatsNew(any())
+    toggleMonthlyReportUpdateProcessor.process(update)
+    verify(userClient).toggleUserMonthlyReport(any())
     verify(bot).execute(any<EditMessageReplyMarkup>())
   }
 }
