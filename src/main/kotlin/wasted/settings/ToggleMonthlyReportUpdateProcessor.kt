@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ToggleWhatsNewUpdateProcessor : UpdateProcessor {
+class ToggleMonthlyReportUpdateProcessor : UpdateProcessor {
 
   @Inject
   lateinit var userClient: UserClient
@@ -19,7 +19,7 @@ class ToggleWhatsNewUpdateProcessor : UpdateProcessor {
     val callbackQuery = update.callbackQuery ?: return false
     val data = callbackQuery.data ?: return false
     return callbackQuery.from.id == callbackQuery.message.chatId.toInt()
-      && data == "what's new"
+      && data == "monthly report"
   }
 
   override fun process(update: Update) {
@@ -29,8 +29,8 @@ class ToggleWhatsNewUpdateProcessor : UpdateProcessor {
     settingsKeypad.update(
       message.chatId,
       message.messageId,
-      userClient.userMonthlyReport(userId),
-      userClient.toggleUserWhatsNew(userId)
+      userClient.toggleUserMonthlyReport(userId),
+      userClient.userWhatsNew(userId)
     )
   }
 }

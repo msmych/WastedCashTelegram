@@ -13,25 +13,27 @@ class UserClientStub : UserClient {
   @Inject
   lateinit var ims: InMemoryStorage
 
-  override fun existsUser(userId: Int): Boolean {
-    return ims.users.any { it.id == userId }
-  }
+  override fun existsUser(userId: Int): Boolean =
+    ims.users.any { it.id == userId }
 
   override fun createUser(userId: Int) {
     ims.users.add(User(userId, ArrayList(ims.currencies), false))
   }
 
-  override fun userCurrencies(userId: Int): List<Currency> {
-    return ims.users.find { it.id == userId }?.currencies ?: emptyList()
-  }
+  override fun userCurrencies(userId: Int): List<Currency> =
+    ims.users.find { it.id == userId }?.currencies ?: emptyList()
 
-  override fun userWhatsNew(userId: Int): Boolean {
-    return ims.users.find { it.id == userId }?.whatsNew ?: false
-  }
+  override fun userMonthlyReport(userId: Int): Boolean =
+    ims.users.find { it.id == userId }?.monthlyReport ?: false
 
-  override fun whatsNewSubscribedIds(userId: Int): List<Int> {
-    return ims.users.filter { it.whatsNew }.map { it.id }
-  }
+  override fun userWhatsNew(userId: Int): Boolean =
+    ims.users.find { it.id == userId }?.whatsNew ?: false
+
+  override fun monthlyReportSubscribedIds(userId: Int): List<Int> =
+    ims.users.filter { it.monthlyReport }.map { it.id }
+
+  override fun whatsNewSubscribedIds(userId: Int): List<Int> =
+    ims.users.filter { it.whatsNew }.map { it.id }
 
   override fun toggleUserCurrency(userId: Int, currency: String): List<Currency> {
     val cur = Currency.getInstance(currency)
@@ -43,11 +45,21 @@ class UserClientStub : UserClient {
     return ims.users.find { it.id == userId }?.currencies ?: emptyList()
   }
 
+  override fun toggleUserMonthlyReport(userId: Int): Boolean {
+    if (ims.users.none { it.id == userId })
+      ims.users.add(User(userId, ArrayList(ims.currencies)))
+    val user = ims.users.find { it.id == userId } ?: return false
+    ims.users[ims.users.indexOfFirst { it.id == userId }] =
+      User(user.id, user.currencies, monthlyReport = !user.monthlyReport, whatsNew = user.whatsNew)
+    return !user.monthlyReport
+  }
+
   override fun toggleUserWhatsNew(userId: Int): Boolean {
     if (ims.users.none { it.id == userId })
       ims.users.add(User(userId, ArrayList(ims.currencies), false))
     val user = ims.users.find { it.id == userId } ?: return false
-    ims.users[ims.users.indexOfFirst { it.id == userId }] = User(user.id, user.currencies, !user.whatsNew)
+    ims.users[ims.users.indexOfFirst { it.id == userId }] =
+      User(user.id, user.currencies, monthlyReport = user.monthlyReport, whatsNew = !user.whatsNew)
     return !user.whatsNew
   }
 }
