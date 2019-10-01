@@ -10,20 +10,24 @@ import javax.inject.Singleton
 @Singleton
 class CurrenciesUpdateProcessor : UpdateProcessor {
 
-    @Inject lateinit var bot: TelegramLongPollingBot
-    @Inject lateinit var userClient: UserClient
-    @Inject lateinit var currenciesKeypad: CurrenciesKeypad
+  @Inject
+  lateinit var bot: TelegramLongPollingBot
+  @Inject
+  lateinit var userClient: UserClient
+  @Inject
+  lateinit var currenciesKeypad: CurrenciesKeypad
 
-    override fun appliesTo(update: Update): Boolean {
-        val message = update.message ?: return false
-        val text = message.text ?: return false
-        return text == "/currencies" || text == "/currencies@${bot.botUsername}"
-    }
+  override fun appliesTo(update: Update): Boolean {
+    val message = update.message ?: return false
+    val text = message.text ?: return false
+    return (text == "/currencies" || text == "/currencies@${bot.botUsername}")
+      && message.chatId.toInt() == message.from.id
+  }
 
-    override fun process(update: Update) {
-        val userId = update.message.from.id
-        if (!userClient.existsUser(userId))
-            userClient.createUser(userId)
-        currenciesKeypad.send(update.message.chatId, userClient.userCurrencies(userId))
-    }
+  override fun process(update: Update) {
+    val userId = update.message.from.id
+    if (!userClient.existsUser(userId))
+      userClient.createUser(userId)
+    currenciesKeypad.send(update.message.chatId, userClient.userCurrencies(userId))
+  }
 }
