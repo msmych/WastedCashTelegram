@@ -5,13 +5,13 @@ import wasted.bot.Emoji
 import wasted.expense.Expense.Category
 
 fun ikb(label: String, data: String): InlineKeyboardButton {
-    return InlineKeyboardButton(label).setCallbackData(data)
+  return InlineKeyboardButton(label).setCallbackData(data)
 }
 
 fun ikb(emoji: Emoji, data: String): InlineKeyboardButton {
-    return ikb(emoji.code, data)
+  return ikb(emoji.code, data)
 }
 
 fun ikb(category: Category): InlineKeyboardButton {
-    return ikb(category.emoji, category.name)
+  return ikb(category.emoji, category.name)
 }

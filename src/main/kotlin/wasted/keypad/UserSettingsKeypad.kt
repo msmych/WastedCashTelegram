@@ -12,7 +12,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SettingsKeypad {
+class UserSettingsKeypad {
 
   @Inject
   lateinit var bot: TelegramLongPollingBot

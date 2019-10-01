@@ -14,14 +14,14 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
-import wasted.keypad.SettingsKeypad
+import wasted.keypad.UserSettingsKeypad
 import wasted.user.UserClient
 
 internal class ToggleWhatsNewUpdateProcessorTest {
 
   private val bot = mock<TelegramLongPollingBot>()
   private val userClient = mock<UserClient>()
-  private val settingsKeypad = SettingsKeypad()
+  private val userSettingsKeypad = UserSettingsKeypad()
 
   private val toggleWhatsNewUpdateProcessor = ToggleWhatsNewUpdateProcessor()
 
@@ -33,8 +33,8 @@ internal class ToggleWhatsNewUpdateProcessorTest {
   @Before
   fun setUp() {
     toggleWhatsNewUpdateProcessor.userClient = userClient
-    settingsKeypad.bot = bot
-    toggleWhatsNewUpdateProcessor.settingsKeypad = settingsKeypad
+    userSettingsKeypad.bot = bot
+    toggleWhatsNewUpdateProcessor.userSettingsKeypad = userSettingsKeypad
 
     whenever(update.callbackQuery).thenReturn(callbackQuery)
     whenever(callbackQuery.data).thenReturn("what's new")

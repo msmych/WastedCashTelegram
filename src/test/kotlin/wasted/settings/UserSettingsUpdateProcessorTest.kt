@@ -13,16 +13,16 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
-import wasted.keypad.SettingsKeypad
+import wasted.keypad.UserSettingsKeypad
 import wasted.user.UserClient
 
-internal class SettingsUpdateProcessorTest {
+internal class UserSettingsUpdateProcessorTest {
 
   private val bot = mock<TelegramLongPollingBot>()
   private val userClient = mock<UserClient>()
-  private val settingsKeypad = SettingsKeypad()
+  private val userSettingsKeypad = UserSettingsKeypad()
 
-  private val settingsUpdateProcessor = SettingsUpdateProcessor()
+  private val settingsUpdateProcessor = UserSettingsUpdateProcessor()
 
   private val update = mock<Update>()
   private val message = mock<Message>()
@@ -31,8 +31,8 @@ internal class SettingsUpdateProcessorTest {
   @Before
   fun setUp() {
     settingsUpdateProcessor.userClient = userClient
-    settingsKeypad.bot = bot
-    settingsUpdateProcessor.settingsKeypad = settingsKeypad
+    userSettingsKeypad.bot = bot
+    settingsUpdateProcessor.userSettingsKeypad = userSettingsKeypad
     whenever(update.message).thenReturn(message)
     whenever(message.text).thenReturn("/settings")
     whenever(message.from).thenReturn(user)

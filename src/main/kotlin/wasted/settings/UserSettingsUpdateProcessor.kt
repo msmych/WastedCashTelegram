@@ -2,18 +2,18 @@ package wasted.settings
 
 import org.telegram.telegrambots.meta.api.objects.Update
 import wasted.bot.update.processor.UpdateProcessor
-import wasted.keypad.SettingsKeypad
+import wasted.keypad.UserSettingsKeypad
 import wasted.user.UserClient
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SettingsUpdateProcessor : UpdateProcessor {
+class UserSettingsUpdateProcessor : UpdateProcessor {
 
   @Inject
   lateinit var userClient: UserClient
   @Inject
-  lateinit var settingsKeypad: SettingsKeypad
+  lateinit var userSettingsKeypad: UserSettingsKeypad
 
   override fun appliesTo(update: Update): Boolean {
     val message = update.message ?: return false
@@ -22,6 +22,6 @@ class SettingsUpdateProcessor : UpdateProcessor {
   }
 
   override fun process(update: Update) {
-    settingsKeypad.send(update.message.chatId, userClient.userWhatsNew(update.message.from.id))
+    userSettingsKeypad.send(update.message.chatId, userClient.userWhatsNew(update.message.from.id))
   }
 }
