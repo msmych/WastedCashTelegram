@@ -35,6 +35,7 @@ internal class ClearByTypeUpdateProcessorTest {
     whenever(callbackQuery.data).thenReturn("clearALL")
     whenever(callbackQuery.message).thenReturn(message)
     whenever(message.from).thenReturn(user)
+    whenever(callbackQuery.from).thenReturn(user)
   }
 
   @Test

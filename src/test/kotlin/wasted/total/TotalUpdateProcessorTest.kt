@@ -31,10 +31,10 @@ internal class TotalUpdateProcessorTest {
     totalKeypad.bot = bot
     totalUpdateProcessor.totalKeypad = totalKeypad
     totalUpdateProcessor.totalClient = totalClient
-
     whenever(update.callbackQuery).thenReturn(callbackQuery)
     whenever(callbackQuery.data).thenReturn("totalMONTH")
     whenever(callbackQuery.message).thenReturn(message)
+    whenever(callbackQuery.from).thenReturn(mock())
   }
 
   @Test

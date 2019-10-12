@@ -34,6 +34,7 @@ internal class TotalMonthUpdateProcessorTest {
     whenever(update.message).thenReturn(message)
     whenever(message.text).thenReturn("/total")
     whenever(totalClient.total(any(), any(), any())).thenReturn(listOf(Total(1, 2, 1000, "USD", SHOPPING)))
+    whenever(message.from).thenReturn(mock())
   }
 
   @Test

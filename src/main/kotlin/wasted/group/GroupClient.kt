@@ -2,5 +2,6 @@ package wasted.group
 
 interface GroupClient {
 
-  fun monthlyReportGroupsIds(): List<Long>
+  fun groupMonthlyReport(groupId: Long, userId: Int): Boolean
+  fun monthlyReportGroupsIds(userId: Int): List<Long>
 }

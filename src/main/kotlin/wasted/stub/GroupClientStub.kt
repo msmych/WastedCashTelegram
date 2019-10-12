@@ -10,6 +10,9 @@ class GroupClientStub : GroupClient {
   @Inject
   lateinit var ims: InMemoryStorage
 
-  override fun monthlyReportGroupsIds(): List<Long> =
+  override fun groupMonthlyReport(groupId: Long, userId: Int): Boolean =
+    ims.groups.find { it.id == groupId }?.monthlyReport ?: false
+
+  override fun monthlyReportGroupsIds(userId: Int): List<Long> =
     ims.groups.filter { it.monthlyReport }.map { it.id }
 }

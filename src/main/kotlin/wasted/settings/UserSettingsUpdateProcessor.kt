@@ -18,7 +18,7 @@ class UserSettingsUpdateProcessor : UpdateProcessor {
   override fun appliesTo(update: Update): Boolean {
     val message = update.message ?: return false
     val text = message.text ?: return false
-    return message.from.id == message.chatId.toInt() && text == "/settings"
+    return message.from.id.toLong() == message.chatId && text == "/settings"
   }
 
   override fun process(update: Update) {
