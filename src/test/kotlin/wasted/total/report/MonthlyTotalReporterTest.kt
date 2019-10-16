@@ -6,12 +6,14 @@ import org.junit.Test
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import wasted.expense.Expense.Category.*
+import wasted.group.GroupClient
 import wasted.keypad.TotalKeypad
 import wasted.total.Total
 import wasted.total.TotalClient
 
 internal class MonthlyTotalReporterTest {
 
+  private val groupClient = mock<GroupClient>()
   private val totalClient = mock<TotalClient>()
   private val bot = mock<TelegramLongPollingBot>()
   private val totalKeypad = TotalKeypad()
@@ -26,12 +28,13 @@ internal class MonthlyTotalReporterTest {
 
   @Before
   fun setUp() {
+    reporter.userId = "1234"
+    reporter.groupClient = groupClient
     reporter.totalClient = totalClient
     reporter.totalKeypad = totalKeypad
     totalKeypad.bot = bot
-
-    whenever(totalClient.totals(any(), any()))
-      .thenReturn(totals)
+    whenever(totalClient.total(any(), any(), any())).thenReturn(totals)
+    whenever(groupClient.monthlyReportGroupsIds(any())).thenReturn(listOf(1, 10))
   }
 
   @Test
